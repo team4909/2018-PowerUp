@@ -29,4 +29,9 @@ public class RobotMap {
 	 * To Create Compressor Object (to see pressure feedback)
 	 * public final Compressor compressor = new Compressor();
 	 */
+	
+	/* 
+	 * To Create PDP Object (to see voltage/temp/current feedback)
+	 * public final PowerDistributionPanel pdp = new PowerDistributionPanel();
+	 */
 }
