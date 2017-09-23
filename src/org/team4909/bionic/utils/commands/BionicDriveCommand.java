@@ -7,9 +7,11 @@ import org.team4909.bionic.utils.subsystem.BionicDrivetrain;
 public class BionicDriveCommand extends BionicCommand {
 	public BionicDriveCommand(BionicDrivetrain drivetrain) {
 		requires(drivetrain);
-		
-		BionicRobot.robotMap.drivetrain.Drive();
 	}
+	
+	protected void execute() {
+		BionicRobot.robotMap.drivetrain.Drive();
+    }
 
 	protected boolean isFinished() {
 		return false;
