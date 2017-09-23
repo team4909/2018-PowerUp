@@ -1,16 +1,19 @@
 package org.team4909.bionic.utils.commands;
 
 import org.team4909.bionic.utils.core.BionicCommand;
-import org.team4909.bionic.utils.core.BionicRobot;
 import org.team4909.bionic.utils.subsystem.BionicDrivetrain;
 
 public class BionicDriveCommand extends BionicCommand {
+	private BionicDrivetrain drivetrainSubsystem;
+	
 	public BionicDriveCommand(BionicDrivetrain drivetrain) {
 		requires(drivetrain);
+		
+		drivetrainSubsystem = drivetrain;
 	}
 	
 	protected void execute() {
-		BionicRobot.robotMap.drivetrain.Drive();
+		drivetrainSubsystem.Drive();
     }
 
 	protected boolean isFinished() {
