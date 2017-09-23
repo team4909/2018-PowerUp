@@ -44,7 +44,7 @@ public class BionicDrivetrain extends Subsystem {
 		setDefaultCommand(new BionicDriveCommand(this));
 	}
 	
-	public void Drive () {
+	public void Drive() {
 		robotDrive.arcadeDrive(moveStick, moveAxis, rotateStick, rotateAxis);
 	}
 }
