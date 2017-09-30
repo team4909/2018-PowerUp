@@ -9,6 +9,10 @@ public class BionicJoystick extends Joystick {
 		super(port);
 	}
 	
+	public double getThresholdAxis(int axis){
+		return getThresholdAxis(axis, 0.15);
+	}
+	
 	public double getThresholdAxis(int axis, double deadzone){
 		if(Math.abs(this.getRawAxis(axis)) > Math.abs(deadzone))
 			return this.getRawAxis(axis);
