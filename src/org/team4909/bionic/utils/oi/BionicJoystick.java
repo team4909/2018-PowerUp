@@ -5,8 +5,15 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class BionicJoystick extends Joystick {
+	private final double defaultAxisThreshold = 0.15;
+	private final double defaultAxisButtonThreshold = 0.5;
+	
 	public BionicJoystick(int port) {
 		super(port);
+	}
+	
+	public double getThresholdAxis(int axis){
+		return getThresholdAxis(axis, defaultAxisThreshold);
 	}
 	
 	public double getThresholdAxis(int axis, double deadzone){
@@ -22,15 +29,45 @@ public class BionicJoystick extends Joystick {
 		newButton.whenPressed(command);
 	}
 	
+	public void axisButtonPressed(int axis, Command command)	{
+		axisButtonPressed(axis, command, defaultAxisButtonThreshold);
+	}
+	
+	public void axisButtonPressed(int axis, Command command, double threshold)	{
+		BionicJoystickAxisButton newButton = new BionicJoystickAxisButton(this, axis, threshold);
+		
+		newButton.whenActive(command);
+	}
+	
 	public void buttonHeld(int button, Command command){
 		JoystickButton newButton = new JoystickButton(this, button);
 		
 		newButton.whileHeld(command);
+	}
+
+	public void axisButtonHeld(int axis, Command command)	{
+		axisButtonHeld(axis, command, defaultAxisButtonThreshold);
+	}
+	
+	public void axisButtonHeld(int axis, Command command, double threshold)	{
+		BionicJoystickAxisButton newButton = new BionicJoystickAxisButton(this, axis, threshold);
+		
+		newButton.whileActive(command);
 	}
 	
 	public void buttonToggled(int button, Command command){
 		JoystickButton newButton = new JoystickButton(this, button);
 		
 		newButton.toggleWhenPressed(command);
+	}
+
+	public void axisButtonToggled(int axis, Command command)	{
+		axisButtonToggled(axis, command, defaultAxisButtonThreshold);
+	}
+	
+	public void axisButtonToggled(int axis, Command command, double threshold)	{
+		BionicJoystickAxisButton newButton = new BionicJoystickAxisButton(this, axis, threshold);
+		
+		newButton.toggleWhenActive(command);
 	}
 }
