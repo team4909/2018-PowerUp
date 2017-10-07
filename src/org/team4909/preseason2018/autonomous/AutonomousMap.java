@@ -7,5 +7,8 @@ public class AutonomousMap extends BionicAutoMap {
 	public void setAutoCommands(){
 		picker.addDefault("Do Nothing", new BionicCommand());
 		picker.addObject("Break Baseline", new PassBaseline());
+		picker.addObject("Place Boiler Gear", new PlaceBoilerGear());
+		picker.addObject("Place Center Gear", new PlaceCenterGear());
+		picker.addObject("Place Loader Gear", new PlaceLoaderGear());
 	}
 }
