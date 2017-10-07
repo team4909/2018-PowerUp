@@ -28,7 +28,7 @@ public class Robot extends IterativeRobot {
 			new VictorSP(0), // Drive Left Motor
 			new Encoder(0, 1, true, EncodingType.k4X), // Drive Left Encoder
 	
-			new VictorSP(1),  // Drive Right Motor
+			new VictorSP(1), // Drive Right Motor
 			new Encoder(2, 3, true, EncodingType.k4X), // Drive Right Encoder
 			
 			1.0, // Distance per Encoder Pulse - Wheel Circumference / Pulses per Revolution - Allows for Encoder.getDistance(); on Output Shaft
