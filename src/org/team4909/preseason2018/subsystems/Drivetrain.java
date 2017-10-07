@@ -1,7 +1,7 @@
 package org.team4909.preseason2018.subsystems;
 
 import org.team4909.bionic.utils.setpoints.PIDConstants;
-import org.team4909.bionic.utils.subsystem.BionicDrivetrain;
+import org.team4909.bionic.utils.subsystems.BionicDrivetrain;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.GenericHID;

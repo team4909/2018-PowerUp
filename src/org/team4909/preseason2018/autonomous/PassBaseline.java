@@ -3,8 +3,8 @@ package org.team4909.preseason2018.autonomous;
 import org.team4909.bionic.utils.commands.DriveDistance;
 import org.team4909.bionic.utils.commands.SetDriveDirection;
 import org.team4909.bionic.utils.commands.SetDriveGear;
-import org.team4909.bionic.utils.subsystem.BionicDrivetrain.Direction;
-import org.team4909.bionic.utils.subsystem.BionicDrivetrain.Gear;
+import org.team4909.bionic.utils.subsystems.BionicDrivetrain.Direction;
+import org.team4909.bionic.utils.subsystems.BionicDrivetrain.Gear;
 import org.team4909.preseason2018.core.Robot;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;

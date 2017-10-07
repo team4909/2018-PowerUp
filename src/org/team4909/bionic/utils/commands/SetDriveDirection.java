@@ -1,8 +1,8 @@
 package org.team4909.bionic.utils.commands;
 
 import org.team4909.bionic.utils.core.BionicCommand;
-import org.team4909.bionic.utils.subsystem.BionicDrivetrain;
-import org.team4909.bionic.utils.subsystem.BionicDrivetrain.Direction;
+import org.team4909.bionic.utils.subsystems.BionicDrivetrain;
+import org.team4909.bionic.utils.subsystems.BionicDrivetrain.Direction;
 
 public class SetDriveDirection extends BionicCommand {
 	private BionicDrivetrain drivetrainSubsystem;

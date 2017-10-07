@@ -2,7 +2,7 @@ package org.team4909.bionic.utils.commands;
 
 import org.team4909.bionic.utils.core.BionicCommand;
 import org.team4909.bionic.utils.setpoints.PIDConstants;
-import org.team4909.bionic.utils.subsystem.BionicDrivetrain;
+import org.team4909.bionic.utils.subsystems.BionicDrivetrain;
 
 public class DriveDistance extends BionicCommand {
 	private BionicDrivetrain drivetrainSubsystem;
