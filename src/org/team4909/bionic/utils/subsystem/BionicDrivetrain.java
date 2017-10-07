@@ -97,4 +97,8 @@ public class BionicDrivetrain extends Subsystem {
 			}
 		}
 	}
+	
+	public double getAngle() {
+		return 0;
+	}
 }

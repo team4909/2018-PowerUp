@@ -1,17 +1,16 @@
 package org.team4909.bionic.utils.commands;
 
 import org.team4909.bionic.utils.core.BionicCommand;
+import org.team4909.bionic.utils.setpoints.PIDConstants;
 import org.team4909.bionic.utils.subsystem.BionicDrivetrain;
 
 public class DriveDistance extends BionicCommand {
 	private BionicDrivetrain drivetrainSubsystem;
-	private double distance;
 	
-	public DriveDistance(BionicDrivetrain drivetrain, double distance) {
+	public DriveDistance(BionicDrivetrain drivetrain, PIDConstants constants, double distance) {
 		requires(drivetrain);
 		
 		drivetrainSubsystem = drivetrain;
-		this.distance = distance;
 	}
 	
 	protected void execute() {

@@ -2,8 +2,8 @@ package org.team4909.preseason2018.core;
 
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 
-import org.team4909.bionic.utils.subsystem.BionicDrivetrain;
 import org.team4909.preseason2018.autonomous.AutonomousMap;
+import org.team4909.preseason2018.subsystems.Drivetrain;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -14,7 +14,7 @@ public class Robot extends IterativeRobot {
 	public static final OI oi = new OI();
 	public static AutonomousMap autonomousMap;
 	
-	public static BionicDrivetrain drivetrain;
+	public static Drivetrain drivetrain;
 	
 	@Override
 	public void robotInit() {
@@ -23,7 +23,7 @@ public class Robot extends IterativeRobot {
 		/*
 		 * To Instantiate Basic Drivetrain 
 		 */
-		drivetrain = new BionicDrivetrain(
+		drivetrain = new Drivetrain(
 			new VictorSP(0), // Drive Left Motor
 			new Encoder(0, 1, true, EncodingType.k4X), // Drive Left Encoder
 	
