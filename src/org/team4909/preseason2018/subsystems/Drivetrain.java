@@ -5,6 +5,7 @@ import org.team4909.bionic.utils.subsystem.BionicDrivetrain;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SpeedController;
 
 public class Drivetrain extends BionicDrivetrain {
@@ -16,5 +17,12 @@ public class Drivetrain extends BionicDrivetrain {
 			GenericHID moveStick, int moveAxis, GenericHID rotateStick, int rotateAxis) {
 		super(drivetrainLeftMotor, drivetrainLeftEncoder, drivetrainRightMotor, drivetrainRightEncoder, distancePerPulse,
 				moveStick, moveAxis, rotateStick, rotateAxis);
+	}
+	
+	public Drivetrain(SpeedController drivetrainLeftMotor, Encoder drivetrainLeftEncoder,
+			SpeedController drivetrainRightMotor, Encoder drivetrainRightEncoder, double distancePerPulse,
+			GenericHID moveStick, int moveAxis, GenericHID rotateStick, int rotateAxis, Solenoid shiftingSolenoid) {
+		super(drivetrainLeftMotor, drivetrainLeftEncoder, drivetrainRightMotor, drivetrainRightEncoder, distancePerPulse,
+				moveStick, moveAxis, rotateStick, rotateAxis, shiftingSolenoid);
 	}
 }

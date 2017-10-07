@@ -36,8 +36,8 @@ public class BionicDrivetrain extends Subsystem {
 			SpeedController drivetrainLeftMotor, Encoder drivetrainLeftEncoder, 
 			SpeedController drivetrainRightMotor, Encoder drivetrainRightEncoder, 
 			double distancePerPulse,
-			GenericHID moveStick, final int moveAxis, 
-			GenericHID rotateStick, final int rotateAxis) {
+			GenericHID moveStick, int moveAxis, 
+			GenericHID rotateStick, int rotateAxis) {
 		this.robotDrive = new RobotDrive(drivetrainLeftMotor, drivetrainRightMotor);
 		
 		this.leftEncoder = drivetrainLeftEncoder;
@@ -51,6 +51,19 @@ public class BionicDrivetrain extends Subsystem {
 		
 		this.rotateStick = rotateStick;
 		this.rotateAxis = rotateAxis;
+	}
+	
+	public BionicDrivetrain(
+			SpeedController drivetrainLeftMotor, Encoder drivetrainLeftEncoder, 
+			SpeedController drivetrainRightMotor, Encoder drivetrainRightEncoder, 
+			double distancePerPulse,
+			GenericHID moveStick, int moveAxis, 
+			GenericHID rotateStick, int rotateAxis,
+			Solenoid shiftingSolenoid) {
+		this(drivetrainLeftMotor, drivetrainLeftEncoder, drivetrainRightMotor, drivetrainRightEncoder, distancePerPulse,
+			moveStick, moveAxis, rotateStick, rotateAxis);
+		
+		this.shiftingSolenoid = shiftingSolenoid;
 	}
 	
 	public void initDefaultCommand() {
