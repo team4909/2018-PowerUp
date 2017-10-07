@@ -3,20 +3,25 @@ package org.team4909.bionic.utils.commands;
 import org.team4909.bionic.utils.core.BionicCommand;
 import org.team4909.bionic.utils.subsystem.BionicDrivetrain;
 
-public class BionicDriveCommand extends BionicCommand {
+public class DriveDistance extends BionicCommand {
 	private BionicDrivetrain drivetrainSubsystem;
+	private double distance;
 	
-	public BionicDriveCommand(BionicDrivetrain drivetrain) {
+	public DriveDistance(BionicDrivetrain drivetrain, double distance) {
 		requires(drivetrain);
 		
 		drivetrainSubsystem = drivetrain;
+		this.distance = distance;
 	}
 	
 	protected void execute() {
-		drivetrainSubsystem.Drive();
+		double leftValue = 0;
+		double rightValue = 0;
+		
+		drivetrainSubsystem.driveAutoTank(leftValue, rightValue);
     }
 
 	protected boolean isFinished() {
-		return false;
+		return true;
 	}
 }
