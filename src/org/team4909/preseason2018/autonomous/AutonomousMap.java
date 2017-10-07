@@ -6,6 +6,6 @@ import org.team4909.bionic.utils.core.BionicCommand;
 public class AutonomousMap extends BionicAutoMap {
 	public void setAutoCommands(){
 		picker.addDefault("Do Nothing", new BionicCommand());
-		// picker.addObject("Drive Forward", new Drive(10.0));
+		picker.addObject("Break Baseline", new PassBaseline());
 	}
 }
