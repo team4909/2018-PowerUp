@@ -3,11 +3,13 @@ package org.team4909.preseason2018.core;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 
 import org.team4909.preseason2018.autonomous.AutonomousMap;
+import org.team4909.preseason2018.subsystems.Agitator;
 import org.team4909.preseason2018.subsystems.Drivetrain;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
@@ -16,6 +18,7 @@ public class Robot extends IterativeRobot {
 	public static AutonomousMap autonomousMap;
 	
 	public static Drivetrain drivetrain;
+	public static Agitator agitator;
 	
 	@Override
 	public void robotInit() {
@@ -38,6 +41,8 @@ public class Robot extends IterativeRobot {
 			
 			new Solenoid(0) // Shifting Solenoid
 		);
+		
+		agitator = new Agitator(new Spark(3), true);
 		
 		/* 
 		 * To Create Compressor Object (to see pressure feedback)
