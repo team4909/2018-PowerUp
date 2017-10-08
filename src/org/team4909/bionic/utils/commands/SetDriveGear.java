@@ -1,10 +1,11 @@
 package org.team4909.bionic.utils.commands;
 
-import org.team4909.bionic.utils.core.BionicCommand;
 import org.team4909.bionic.utils.subsystems.BionicDrivetrain;
 import org.team4909.bionic.utils.subsystems.BionicDrivetrain.Gear;
 
-public class SetDriveGear extends BionicCommand {
+import edu.wpi.first.wpilibj.command.InstantCommand;
+
+public class SetDriveGear extends InstantCommand {
 	private BionicDrivetrain drivetrainSubsystem;
 	private Gear gear;
 	
@@ -18,8 +19,4 @@ public class SetDriveGear extends BionicCommand {
 	protected void initialize() {
 		drivetrainSubsystem.setGear(gear);
     }
-
-	protected boolean isFinished() {
-		return true;
-	}
 }
