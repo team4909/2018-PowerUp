@@ -15,7 +15,7 @@ public class SetDriveGear extends BionicCommand {
 		this.gear = gear;
 	}
 	
-	protected void execute() {
+	protected void initialize() {
 		drivetrainSubsystem.setGear(gear);
     }
 
