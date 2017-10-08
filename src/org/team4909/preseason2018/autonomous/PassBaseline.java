@@ -12,7 +12,9 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class PassBaseline extends CommandGroup {
 	public PassBaseline() {
 		addSequential(new SetDriveDirection(Robot.drivetrain, Direction.Forward));
+		
 		addSequential(new SetDriveGear(Robot.drivetrain, Gear.Low));
+		
 		addSequential(new DriveDistance(Robot.drivetrain, Robot.drivetrain.drivePIDConstants, 120));
 	}
 }
