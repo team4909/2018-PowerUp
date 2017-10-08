@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 
 import org.team4909.preseason2018.autonomous.AutonomousMap;
 import org.team4909.preseason2018.subsystems.Agitator;
+import org.team4909.preseason2018.subsystems.Climber;
 import org.team4909.preseason2018.subsystems.Drivetrain;
 
 import edu.wpi.first.wpilibj.Encoder;
@@ -19,6 +20,7 @@ public class Robot extends IterativeRobot {
 	
 	public static Drivetrain drivetrain;
 	public static Agitator agitator;
+	public static Climber climber;
 	
 	@Override
 	public void robotInit() {
@@ -43,6 +45,7 @@ public class Robot extends IterativeRobot {
 		);
 		
 		agitator = new Agitator(new Spark(3), true);
+		climber = new Climber(new Spark(7));
 		
 		/* 
 		 * To Create Compressor Object (to see pressure feedback)
