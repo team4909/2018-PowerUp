@@ -1,5 +1,6 @@
 package org.team4909.preseason2018.subsystems;
 
+import org.team4909.bionic.utils.oi.BionicAxis;
 import org.team4909.bionic.utils.setpoints.PIDConstants;
 import org.team4909.bionic.utils.subsystems.BionicDrivetrain;
 
@@ -14,14 +15,14 @@ public class Drivetrain extends BionicDrivetrain {
 	
 	public Drivetrain(SpeedController drivetrainLeftMotor, Encoder drivetrainLeftEncoder,
 			SpeedController drivetrainRightMotor, Encoder drivetrainRightEncoder, double distancePerPulse,
-			GenericHID moveStick, int moveAxis, GenericHID rotateStick, int rotateAxis) {
+			GenericHID moveStick, BionicAxis moveAxis, GenericHID rotateStick, BionicAxis rotateAxis) {
 		super(drivetrainLeftMotor, drivetrainLeftEncoder, drivetrainRightMotor, drivetrainRightEncoder, distancePerPulse,
 				moveStick, moveAxis, rotateStick, rotateAxis);
 	}
 	
 	public Drivetrain(SpeedController drivetrainLeftMotor, Encoder drivetrainLeftEncoder,
 			SpeedController drivetrainRightMotor, Encoder drivetrainRightEncoder, double distancePerPulse,
-			GenericHID moveStick, int moveAxis, GenericHID rotateStick, int rotateAxis, Solenoid shiftingSolenoid) {
+			GenericHID moveStick, BionicAxis moveAxis, GenericHID rotateStick, BionicAxis rotateAxis, Solenoid shiftingSolenoid) {
 		super(drivetrainLeftMotor, drivetrainLeftEncoder, drivetrainRightMotor, drivetrainRightEncoder, distancePerPulse,
 				moveStick, moveAxis, rotateStick, rotateAxis, shiftingSolenoid);
 	}

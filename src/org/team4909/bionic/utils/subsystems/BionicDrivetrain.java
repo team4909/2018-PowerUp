@@ -1,6 +1,7 @@
 package org.team4909.bionic.utils.subsystems;
 
 import org.team4909.bionic.utils.commands.DriveOI;
+import org.team4909.bionic.utils.oi.BionicAxis;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -16,9 +17,9 @@ public class BionicDrivetrain extends Subsystem {
 	private Encoder rightEncoder;
 	
 	private GenericHID moveStick; 
-	private int moveAxis;
+	private BionicAxis moveAxis;
 	private GenericHID rotateStick;
-	private int rotateAxis;
+	private BionicAxis rotateAxis;
 	
 	private Solenoid shiftingSolenoid;
 	
@@ -36,8 +37,8 @@ public class BionicDrivetrain extends Subsystem {
 			SpeedController drivetrainLeftMotor, Encoder drivetrainLeftEncoder, 
 			SpeedController drivetrainRightMotor, Encoder drivetrainRightEncoder, 
 			double distancePerPulse,
-			GenericHID moveStick, int moveAxis, 
-			GenericHID rotateStick, int rotateAxis) {
+			GenericHID moveStick, BionicAxis moveAxis, 
+			GenericHID rotateStick, BionicAxis rotateAxis) {
 		this.robotDrive = new RobotDrive(drivetrainLeftMotor, drivetrainRightMotor);
 		
 		this.leftEncoder = drivetrainLeftEncoder;
@@ -57,8 +58,8 @@ public class BionicDrivetrain extends Subsystem {
 			SpeedController drivetrainLeftMotor, Encoder drivetrainLeftEncoder, 
 			SpeedController drivetrainRightMotor, Encoder drivetrainRightEncoder, 
 			double distancePerPulse,
-			GenericHID moveStick, int moveAxis, 
-			GenericHID rotateStick, int rotateAxis,
+			GenericHID moveStick, BionicAxis moveAxis, 
+			GenericHID rotateStick, BionicAxis rotateAxis,
 			Solenoid shiftingSolenoid) {
 		this(drivetrainLeftMotor, drivetrainLeftEncoder, drivetrainRightMotor, drivetrainRightEncoder, distancePerPulse,
 			moveStick, moveAxis, rotateStick, rotateAxis);
@@ -71,8 +72,8 @@ public class BionicDrivetrain extends Subsystem {
 	}
 	
 	public void driveOIArcade() {
-		double moveValue = moveStick.getRawAxis(moveAxis);
-		double rotateValue = rotateStick.getRawAxis(rotateAxis);
+		double moveValue = moveStick.getRawAxis(moveAxis.getNumber());
+		double rotateValue = rotateStick.getRawAxis(rotateAxis.getNumber());
 		
 		switch(driveDirection) {
 		case Forward:
