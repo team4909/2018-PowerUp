@@ -7,9 +7,7 @@ import edu.wpi.first.wpilibj.MotorSafety;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 
-public class BionicVoltageSubsystem extends Subsystem {
-	public final VoltageSetpoint stop = new VoltageSetpoint(0);
-	
+public abstract class BionicVoltageSubsystem extends Subsystem {
 	public SpeedController speedController;
 	
 	public BionicVoltageSubsystem(SpeedController speedController) {
@@ -28,6 +26,6 @@ public class BionicVoltageSubsystem extends Subsystem {
 	protected void initDefaultCommand() {}
 	
 	public void set(VoltageSetpoint setpoint) {
-		speedController.set(setpoint.get());
+		speedController.set(setpoint.getValue());
 	}
 }

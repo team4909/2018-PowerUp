@@ -8,10 +8,11 @@ public class SetVoltage extends BionicCommand {
 	private BionicVoltageSubsystem voltageSubsystem;
 	private VoltageSetpoint setpoint;
 	
-	public SetVoltage(BionicVoltageSubsystem voltageSubsystem, VoltageSetpoint setpoint) {
-		requires(voltageSubsystem);
+	public SetVoltage(VoltageSetpoint setpoint) {
+		this.voltageSubsystem = setpoint.getSubsystem();
 		
-		this.voltageSubsystem = voltageSubsystem;
+		requires(this.voltageSubsystem);
+		
 		this.setpoint = setpoint;
 	}
 	
