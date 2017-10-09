@@ -1,19 +1,19 @@
 package org.team4909.bionic.utils.commands;
 
 import org.team4909.bionic.utils.core.BionicCommand;
-import org.team4909.bionic.utils.subsystem.BionicDrivetrain;
+import org.team4909.bionic.utils.subsystems.BionicDrivetrain;
 
-public class BionicDriveCommand extends BionicCommand {
+public class DriveOI extends BionicCommand {
 	private BionicDrivetrain drivetrainSubsystem;
 	
-	public BionicDriveCommand(BionicDrivetrain drivetrain) {
+	public DriveOI(BionicDrivetrain drivetrain) {
 		requires(drivetrain);
 		
 		drivetrainSubsystem = drivetrain;
 	}
 	
 	protected void execute() {
-		drivetrainSubsystem.Drive();
+		drivetrainSubsystem.driveOIArcade();
     }
 
 	protected boolean isFinished() {
