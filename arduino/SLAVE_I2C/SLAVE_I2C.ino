@@ -3,14 +3,14 @@
 int RED = 9;
 int GREEN = 10;
 int BLUE = 11;
-int x;
+int x = 0;
 void setup() {
   //Set Outputs (Needs to be modified to work with LED strip)
   pinMode(RED,OUTPUT);
   pinMode(GREEN,OUTPUT);
   pinMode(BLUE,OUTPUT);
   //Start I2C as slave (With device number as 9)
-  Wire.begin(9);
+  Wire.begin(4);
   Wire.onReceive(receiveEvent);
 }
 
@@ -23,10 +23,33 @@ void loop() {
   //Add Pre-Programmed cases here:
   switch(x){
     case 0:
+    setColor(0,255,0);
+    break;
+    case 1:
     setColor(255,0,0);
+	  break;
+    case 2:
+    setColor(30,255,30);
+    break;
+    case 3:
+    setColor(0,0,255);
+    break;
+    case 4:
+    setColor(255,204,0);
+    break;
+    //ENABLE
+    case 6:
+    setColor(255, 25, 0);
+    delay(200);
+    setColor(0,0,0);
+    delay(200);
+    break;
+    //DISABLE
+    case 7:
+    setColor(255,25,0);
     break;
     default:
-    setColor(255,255,255);
+    setColor(0,255,0);
     break;
   }
 
