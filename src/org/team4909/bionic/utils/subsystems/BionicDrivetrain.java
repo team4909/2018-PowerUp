@@ -3,12 +3,9 @@ package org.team4909.bionic.utils.subsystems;
 import org.team4909.bionic.utils.commands.DriveOI;
 import org.team4909.bionic.utils.oi.BionicAxis;
 
-import com.kauailabs.navx.frc.AHRS;
-
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.RobotDrive;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -23,7 +20,6 @@ public class BionicDrivetrain extends Subsystem {
 	private BionicAxis moveAxis;
 	private GenericHID rotateStick;
 	private BionicAxis rotateAxis;
-	private AHRS ahrs;
 	
 	private Solenoid shiftingSolenoid;
 	
@@ -56,8 +52,6 @@ public class BionicDrivetrain extends Subsystem {
 		
 		this.rotateStick = rotateStick;
 		this.rotateAxis = rotateAxis;
-		
-		 ahrs = new AHRS(SPI.Port.kMXP); 
 	}
 	
 	public BionicDrivetrain(
@@ -120,6 +114,6 @@ public class BionicDrivetrain extends Subsystem {
 	}
 	
 	public double getAngle() {
-		return ahrs.getAngle();
+		return 0; // ahrs.getAngle();
 	}
 }
