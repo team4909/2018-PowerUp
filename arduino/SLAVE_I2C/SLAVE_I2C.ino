@@ -10,9 +10,9 @@ int deviceNumber = 4;
 
 void setup() {
   // Set Outputs (Needs to be modified to work with LED strip)
-  pinMode(RED,OUTPUT);
-  pinMode(GREEN,OUTPUT);
-  pinMode(BLUE,OUTPUT);
+  pinMode(RED, OUTPUT);
+  pinMode(GREEN, OUTPUT);
+  pinMode(BLUE, OUTPUT);
 	
   // Start I2C as slave
   Wire.begin(deviceNumber);
