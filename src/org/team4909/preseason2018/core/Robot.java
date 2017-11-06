@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
 public class Robot extends IterativeRobot {
-	public static final OI oi = new OI();
+	public static OI oi;
 	public static AutonomousMap autonomousMap;
 	
 	public static Drivetrain drivetrain;
@@ -24,8 +24,6 @@ public class Robot extends IterativeRobot {
 	
 	@Override
 	public void robotInit() {
-		autonomousMap = new AutonomousMap();
-		
 		/*
 		 * To Instantiate Basic Drivetrain 
 		 */
@@ -66,8 +64,11 @@ public class Robot extends IterativeRobot {
 		 * In robotInit:
 		 * 	pdp = new PowerDistributionPanel();
 		 */
-		
+
+		autonomousMap = new AutonomousMap();
 		DashboardConfig.init();
+		
+		oi = new OI();
 	}
 
 	@Override public void autonomousInit() { autonomousMap.startCommand(); }
