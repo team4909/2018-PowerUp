@@ -4,4 +4,4 @@ Going forward, our code will be designed slightly differently than the standard 
 
 As part of our BionicFramework initiative, we have focused on a select few types of subsystems that are repeated throughout the years.
 
-For more info, please visit our [wiki](https://github.com/FRCteam4909/BionicFramework/wiki).
+For more info, please visit our [wiki](https://github.com/FRCteam4909/Team4909-Software-Wiki).
