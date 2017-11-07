@@ -18,16 +18,22 @@ public class OI {
 	public final BionicF310 manipulatorGamepad;
 	
 	public OI() {
+		// Define Controllers/Axes
 		driverGamepad = new BionicF310(0);
 		driverGamepadSpeedAxis = BionicF310.LY;
 		driverGamepadRotAxis = BionicF310.RX;
+		
+		manipulatorGamepad = new BionicF310(1);
+	}
+	
+	public void initButtons() {
+		// Define Buttons
 		driverGamepad.buttonPressed(BionicF310.LB, new SetDriveGear(Robot.drivetrain, Gear.Low));
 		driverGamepad.buttonPressed(BionicF310.RB, new SetDriveGear(Robot.drivetrain, Gear.High));
 		driverGamepad.buttonPressed(BionicF310.Y, new SetDriveDirection(Robot.drivetrain, Direction.Forward));
 		driverGamepad.buttonPressed(BionicF310.A, new SetDriveDirection(Robot.drivetrain, Direction.Reverse));
 		driverGamepad.buttonHeld(BionicF310.RT, new SetVoltage(Robot.climber.climb));
-		
-		manipulatorGamepad = new BionicF310(1);
+
 		manipulatorGamepad.buttonHeld(BionicF310.LT, new SetVoltage(Robot.agitator.feedShooter));
 	}
 }
