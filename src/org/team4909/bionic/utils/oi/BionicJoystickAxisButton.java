@@ -9,6 +9,8 @@ public class BionicJoystickAxisButton extends Trigger {
 	private double thresholdValue;
 	
 	public BionicJoystickAxisButton(BionicJoystick joystick, int axis, double minThreshold) {
+		inputJoystick = joystick;
+		
 		axisNumber = axis;
 		
 		thresholdValue = minThreshold;
