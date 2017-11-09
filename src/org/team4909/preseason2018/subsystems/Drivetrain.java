@@ -14,12 +14,35 @@ public class Drivetrain extends BionicDrivetrain {
 	public PIDConstants drivePIDConstants = new PIDConstants(0.08, 0, 0, 1);
 	
 	public Drivetrain(
+			SpeedController drivetrainLeftMotor, Encoder drivetrainLeftEncoder, 
+			SpeedController drivetrainRightMotor, Encoder drivetrainRightEncoder, 
+			double distancePerPulse,
+			double rotationConst,
+			GenericHID moveStick, BionicAxis moveAxis, 
+			GenericHID rotateStick, BionicAxis rotateAxis)  {
+		super(drivetrainLeftMotor, drivetrainLeftEncoder, drivetrainRightMotor, drivetrainRightEncoder, distancePerPulse, rotationConst,
+				moveStick, moveAxis, rotateStick, rotateAxis);
+	}
+	
+	public Drivetrain(
+			SpeedController drivetrainLeftMotor, Encoder drivetrainLeftEncoder, 
+			SpeedController drivetrainRightMotor, Encoder drivetrainRightEncoder, 
+			double distancePerPulse,
+			double rotationConst,
+			GenericHID moveStick, BionicAxis moveAxis, 
+			GenericHID rotateStick, BionicAxis rotateAxis,
+			Solenoid shiftingSolenoid) {
+		super(drivetrainLeftMotor, drivetrainLeftEncoder, drivetrainRightMotor, drivetrainRightEncoder, distancePerPulse, rotationConst,
+				moveStick, moveAxis, rotateStick, rotateAxis, shiftingSolenoid);
+	}
+	public Drivetrain(
 			SpeedController drivetrainLeftMotor, SpeedController drivetrainLeftBackMotor, Encoder drivetrainLeftEncoder, 
 			SpeedController drivetrainRightMotor, SpeedController drivetrainRightBackMotor, Encoder drivetrainRightEncoder, 
 			double distancePerPulse,
+			double rotationConst,
 			GenericHID moveStick, BionicAxis moveAxis, 
 			GenericHID rotateStick, BionicAxis rotateAxis)  {
-		super(drivetrainLeftMotor, drivetrainLeftBackMotor, drivetrainLeftEncoder, drivetrainRightMotor, drivetrainRightBackMotor, drivetrainRightEncoder, distancePerPulse,
+		super(drivetrainLeftMotor, drivetrainLeftBackMotor, drivetrainLeftEncoder, drivetrainRightMotor, drivetrainRightBackMotor, drivetrainRightEncoder, distancePerPulse, rotationConst,
 				moveStick, moveAxis, rotateStick, rotateAxis);
 	}
 	
@@ -27,10 +50,11 @@ public class Drivetrain extends BionicDrivetrain {
 			SpeedController drivetrainLeftMotor, SpeedController drivetrainLeftBackMotor, Encoder drivetrainLeftEncoder, 
 			SpeedController drivetrainRightMotor, SpeedController drivetrainRightBackMotor, Encoder drivetrainRightEncoder, 
 			double distancePerPulse,
+			double rotationConst,
 			GenericHID moveStick, BionicAxis moveAxis, 
 			GenericHID rotateStick, BionicAxis rotateAxis,
 			Solenoid shiftingSolenoid) {
-		super(drivetrainLeftMotor, drivetrainLeftBackMotor, drivetrainLeftEncoder, drivetrainRightMotor, drivetrainRightBackMotor, drivetrainRightEncoder, distancePerPulse,
+		super(drivetrainLeftMotor, drivetrainLeftBackMotor, drivetrainLeftEncoder, drivetrainRightMotor, drivetrainRightBackMotor, drivetrainRightEncoder, distancePerPulse, rotationConst,
 				moveStick, moveAxis, rotateStick, rotateAxis, shiftingSolenoid);
 	}
 }

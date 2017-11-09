@@ -21,6 +21,8 @@ public class BionicDrivetrain extends Subsystem {
 	private GenericHID rotateStick;
 	private BionicAxis rotateAxis;
 	
+	private double rotationConst;
+	
 	private Solenoid shiftingSolenoid;
 	
 	public static enum Gear {
@@ -34,9 +36,48 @@ public class BionicDrivetrain extends Subsystem {
 	public Direction driveDirection = Direction.Forward;
 	
 	public BionicDrivetrain(
+			SpeedController drivetrainLeftMotor, Encoder drivetrainLeftEncoder, 
+			SpeedController drivetrainRightMotor, Encoder drivetrainRightEncoder, 
+			double distancePerPulse,
+			double rotationConst,
+			GenericHID moveStick, BionicAxis moveAxis, 
+			GenericHID rotateStick, BionicAxis rotateAxis) {
+		this.robotDrive = new RobotDrive(drivetrainLeftMotor, drivetrainRightMotor);
+		
+		this.leftEncoder = drivetrainLeftEncoder;
+		this.rightEncoder = drivetrainRightEncoder;
+		
+		this.leftEncoder.setDistancePerPulse(distancePerPulse);
+		this.rightEncoder.setDistancePerPulse(distancePerPulse);
+		
+		this.moveStick = moveStick;
+		this.moveAxis = moveAxis;
+		
+		this.rotateStick = rotateStick;
+		this.rotateAxis = rotateAxis;
+
+		this.rotationConst = rotationConst;
+	}
+	
+	public BionicDrivetrain(
+			SpeedController drivetrainLeftMotor, Encoder drivetrainLeftEncoder, 
+			SpeedController drivetrainRightMotor, Encoder drivetrainRightEncoder, 
+			double distancePerPulse,
+			double rotationConst,
+			GenericHID moveStick, BionicAxis moveAxis, 
+			GenericHID rotateStick, BionicAxis rotateAxis,
+			Solenoid shiftingSolenoid) {
+		this(drivetrainLeftMotor, drivetrainLeftEncoder, drivetrainRightMotor, drivetrainRightEncoder, distancePerPulse, rotationConst,
+			moveStick, moveAxis, rotateStick, rotateAxis);
+		
+		this.shiftingSolenoid = shiftingSolenoid;
+	}
+	
+	public BionicDrivetrain(
 			SpeedController drivetrainLeftMotor, SpeedController drivetrainLeftBackMotor, Encoder drivetrainLeftEncoder, 
 			SpeedController drivetrainRightMotor, SpeedController drivetrainRightBackMotor, Encoder drivetrainRightEncoder, 
 			double distancePerPulse,
+			double rotationConst,
 			GenericHID moveStick, BionicAxis moveAxis, 
 			GenericHID rotateStick, BionicAxis rotateAxis) {
 		this.robotDrive = new RobotDrive(drivetrainLeftMotor, drivetrainLeftBackMotor, drivetrainRightMotor, drivetrainRightBackMotor);
@@ -52,20 +93,22 @@ public class BionicDrivetrain extends Subsystem {
 		
 		this.rotateStick = rotateStick;
 		this.rotateAxis = rotateAxis;
+		
+		this.rotationConst = rotationConst;
 	}
 	
 	public BionicDrivetrain(
 			SpeedController drivetrainLeftMotor, SpeedController drivetrainLeftBackMotor, Encoder drivetrainLeftEncoder, 
 			SpeedController drivetrainRightMotor, SpeedController drivetrainRightBackMotor, Encoder drivetrainRightEncoder, 
 			double distancePerPulse,
+			double rotationConst,
 			GenericHID moveStick, BionicAxis moveAxis, 
 			GenericHID rotateStick, BionicAxis rotateAxis,
 			Solenoid shiftingSolenoid) {
-		this(drivetrainLeftMotor, drivetrainLeftBackMotor, drivetrainLeftEncoder, drivetrainRightMotor, drivetrainRightBackMotor, drivetrainRightEncoder, distancePerPulse,
+		this(drivetrainLeftMotor, drivetrainLeftBackMotor, drivetrainLeftEncoder, drivetrainRightMotor, drivetrainRightBackMotor, drivetrainRightEncoder, distancePerPulse, rotationConst,
 			moveStick, moveAxis, rotateStick, rotateAxis);
 		
 		this.shiftingSolenoid = shiftingSolenoid;
-
 	}
 	
 	public void initDefaultCommand() {
@@ -78,16 +121,16 @@ public class BionicDrivetrain extends Subsystem {
 		
 		switch(driveDirection) {
 		case Forward:
-			robotDrive.arcadeDrive(moveValue, -rotateValue);
+			robotDrive.arcadeDrive(moveValue, rotationConst*rotateValue);
 			break;
 		case Reverse:
-			robotDrive.arcadeDrive(-moveValue, -rotateValue);
+			robotDrive.arcadeDrive(-moveValue, rotationConst*rotateValue);
 			break;
 		}
 	}
 	
 	public void driveAutoArcade(double move, double rotate) {
-		robotDrive.arcadeDrive(move, -rotate);
+		robotDrive.arcadeDrive(move, rotationConst*rotate);
 	}
 	
 	public void driveAutoTank(double leftValue, double rightValue) {
