@@ -24,6 +24,8 @@ public class Robot extends IterativeRobot {
 	
 	@Override
 	public void robotInit() {
+		oi = new OI();
+		
 		/*
 		 * To Instantiate Basic Drivetrain 
 		 */
@@ -65,10 +67,12 @@ public class Robot extends IterativeRobot {
 		 * 	pdp = new PowerDistributionPanel();
 		 */
 
-		autonomousMap = new AutonomousMap();
+		// Initialize Dashboard
 		DashboardConfig.init();
 		
-		oi = new OI();
+		// Initialize Subsystems Before Commands
+		oi.initButtons();
+		autonomousMap = new AutonomousMap();
 	}
 
 	@Override public void autonomousInit() { autonomousMap.startCommand(); }
