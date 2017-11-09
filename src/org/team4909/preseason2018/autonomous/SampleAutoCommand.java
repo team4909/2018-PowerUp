@@ -11,8 +11,8 @@ import org.team4909.preseason2018.core.Robot;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
 
-public class PlaceBoilerGear extends CommandGroup {
-	public PlaceBoilerGear() {
+public class SampleAutoCommand extends CommandGroup {
+	public SampleAutoCommand() {
 		//addParallel(new HoldGear());
 		addParallel(new SetDriveDirection(Robot.drivetrain, Direction.Forward));
 		addSequential(new SetDriveGear(Robot.drivetrain, Gear.Low));
