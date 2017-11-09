@@ -36,6 +36,7 @@ public class Robot extends IterativeRobot {
 			new Encoder(2, 3, true, EncodingType.k4X), // Drive Right Encoder
 			
 			1.0, // Distance per Encoder Pulse - Wheel Circumference / Pulses per Revolution - Allows for Encoder.getDistance(); on Output Shaft
+			-1.0, // Rotation Const, used to Negate/Slow Effects of Turning
 			
 			oi.driverGamepad, oi.driverGamepadSpeedAxis,	// Move Stick/Axis
 			oi.driverGamepad, oi.driverGamepadRotAxis 	// Rotate Stick/Axis
