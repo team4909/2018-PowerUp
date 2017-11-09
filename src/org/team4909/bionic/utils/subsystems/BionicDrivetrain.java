@@ -34,12 +34,12 @@ public class BionicDrivetrain extends Subsystem {
 	public Direction driveDirection = Direction.Forward;
 	
 	public BionicDrivetrain(
-			SpeedController drivetrainLeftMotor, Encoder drivetrainLeftEncoder, 
-			SpeedController drivetrainRightMotor, Encoder drivetrainRightEncoder, 
+			SpeedController drivetrainLeftMotor, SpeedController drivetrainLeftBackMotor, Encoder drivetrainLeftEncoder, 
+			SpeedController drivetrainRightMotor, SpeedController drivetrainRightBackMotor, Encoder drivetrainRightEncoder, 
 			double distancePerPulse,
 			GenericHID moveStick, BionicAxis moveAxis, 
 			GenericHID rotateStick, BionicAxis rotateAxis) {
-		this.robotDrive = new RobotDrive(drivetrainLeftMotor, drivetrainRightMotor);
+		this.robotDrive = new RobotDrive(drivetrainLeftMotor, drivetrainLeftBackMotor, drivetrainRightMotor, drivetrainRightBackMotor);
 		
 		this.leftEncoder = drivetrainLeftEncoder;
 		this.rightEncoder = drivetrainRightEncoder;
@@ -55,13 +55,13 @@ public class BionicDrivetrain extends Subsystem {
 	}
 	
 	public BionicDrivetrain(
-			SpeedController drivetrainLeftMotor, Encoder drivetrainLeftEncoder, 
-			SpeedController drivetrainRightMotor, Encoder drivetrainRightEncoder, 
+			SpeedController drivetrainLeftMotor, SpeedController drivetrainLeftBackMotor, Encoder drivetrainLeftEncoder, 
+			SpeedController drivetrainRightMotor, SpeedController drivetrainRightBackMotor, Encoder drivetrainRightEncoder, 
 			double distancePerPulse,
 			GenericHID moveStick, BionicAxis moveAxis, 
 			GenericHID rotateStick, BionicAxis rotateAxis,
 			Solenoid shiftingSolenoid) {
-		this(drivetrainLeftMotor, drivetrainLeftEncoder, drivetrainRightMotor, drivetrainRightEncoder, distancePerPulse,
+		this(drivetrainLeftMotor, drivetrainLeftBackMotor, drivetrainLeftEncoder, drivetrainRightMotor, drivetrainRightBackMotor, drivetrainRightEncoder, distancePerPulse,
 			moveStick, moveAxis, rotateStick, rotateAxis);
 		
 		this.shiftingSolenoid = shiftingSolenoid;
@@ -78,16 +78,16 @@ public class BionicDrivetrain extends Subsystem {
 		
 		switch(driveDirection) {
 		case Forward:
-			robotDrive.arcadeDrive(moveValue, rotateValue);
+			robotDrive.arcadeDrive(moveValue, -rotateValue);
 			break;
 		case Reverse:
-			robotDrive.arcadeDrive(-moveValue, rotateValue);
+			robotDrive.arcadeDrive(-moveValue, -rotateValue);
 			break;
 		}
 	}
 	
 	public void driveAutoArcade(double move, double rotate) {
-		robotDrive.arcadeDrive(move, rotate);
+		robotDrive.arcadeDrive(move, -rotate);
 	}
 	
 	public void driveAutoTank(double leftValue, double rightValue) {

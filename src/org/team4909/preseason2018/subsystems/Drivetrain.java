@@ -13,17 +13,24 @@ public class Drivetrain extends BionicDrivetrain {
 	public PIDConstants rotatePIDConstants = new PIDConstants(0.14, 0, 0.1, 0.6);
 	public PIDConstants drivePIDConstants = new PIDConstants(0.08, 0, 0, 1);
 	
-	public Drivetrain(SpeedController drivetrainLeftMotor, Encoder drivetrainLeftEncoder,
-			SpeedController drivetrainRightMotor, Encoder drivetrainRightEncoder, double distancePerPulse,
-			GenericHID moveStick, BionicAxis moveAxis, GenericHID rotateStick, BionicAxis rotateAxis) {
-		super(drivetrainLeftMotor, drivetrainLeftEncoder, drivetrainRightMotor, drivetrainRightEncoder, distancePerPulse,
+	public Drivetrain(
+			SpeedController drivetrainLeftMotor, SpeedController drivetrainLeftBackMotor, Encoder drivetrainLeftEncoder, 
+			SpeedController drivetrainRightMotor, SpeedController drivetrainRightBackMotor, Encoder drivetrainRightEncoder, 
+			double distancePerPulse,
+			GenericHID moveStick, BionicAxis moveAxis, 
+			GenericHID rotateStick, BionicAxis rotateAxis)  {
+		super(drivetrainLeftMotor, drivetrainLeftBackMotor, drivetrainLeftEncoder, drivetrainRightMotor, drivetrainRightBackMotor, drivetrainRightEncoder, distancePerPulse,
 				moveStick, moveAxis, rotateStick, rotateAxis);
 	}
 	
-	public Drivetrain(SpeedController drivetrainLeftMotor, Encoder drivetrainLeftEncoder,
-			SpeedController drivetrainRightMotor, Encoder drivetrainRightEncoder, double distancePerPulse,
-			GenericHID moveStick, BionicAxis moveAxis, GenericHID rotateStick, BionicAxis rotateAxis, Solenoid shiftingSolenoid) {
-		super(drivetrainLeftMotor, drivetrainLeftEncoder, drivetrainRightMotor, drivetrainRightEncoder, distancePerPulse,
+	public Drivetrain(
+			SpeedController drivetrainLeftMotor, SpeedController drivetrainLeftBackMotor, Encoder drivetrainLeftEncoder, 
+			SpeedController drivetrainRightMotor, SpeedController drivetrainRightBackMotor, Encoder drivetrainRightEncoder, 
+			double distancePerPulse,
+			GenericHID moveStick, BionicAxis moveAxis, 
+			GenericHID rotateStick, BionicAxis rotateAxis,
+			Solenoid shiftingSolenoid) {
+		super(drivetrainLeftMotor, drivetrainLeftBackMotor, drivetrainLeftEncoder, drivetrainRightMotor, drivetrainRightBackMotor, drivetrainRightEncoder, distancePerPulse,
 				moveStick, moveAxis, rotateStick, rotateAxis, shiftingSolenoid);
 	}
 }
