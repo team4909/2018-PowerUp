@@ -1,13 +1,21 @@
 package org.team4909.bionic.utils.setpoints;
 
+import org.team4909.bionic.utils.subsystems.BionicVelocitySubsystem;
+
 public class VelocitySetpoint {
 	private double setpoint;
+	private BionicVelocitySubsystem velocitySubsystem;
 	
-	public VelocitySetpoint(double setpoint){
-		this.setpoint = setpoint;	
+	public VelocitySetpoint(BionicVelocitySubsystem velocitySubsystem, double setpoint){
+		this.velocitySubsystem = velocitySubsystem;
+		this.setpoint = setpoint;
 	}
 
-	public double get(){
+	public BionicVelocitySubsystem getSubsystem(){
+		return velocitySubsystem;
+	}
+	
+	public double getValue(){
 		return setpoint;
 	}	
 }
