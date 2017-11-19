@@ -10,41 +10,28 @@ import com.ctre.CANTalon.TalonControlMode;
 
 public abstract class BionicVelocitySubsystem extends Subsystem {
 	
-	public SpeedController speedController;
-	CANTalon _talon = new CANTalon(0);
+	public CANTalon speedController;
 	
-	public BionicVelocitySubsystem(SpeedController speedController) {
+	public BionicVelocitySubsystem(CANTalon speedController) {
 		this.speedController = speedController;
-		
-		((MotorSafety) this.speedController).setSafetyEnabled(true);
-		}
-		
-		public void robotInit() {
 			  /* first choose the sensor */
-			  _talon.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
-			  _talon.reverseSensor(false);
+			  this.speedController.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
+			  this.speedController.reverseSensor(false);
 
 			  /* set the peak and nominal outputs, 12V means full */
-			  _talon.configNominalOutputVoltage(+0.0f, -0.0f );
-			  _talon.configPeakOutputVoltage(+12.0f , -12.0f );
+			  this.speedController.configNominalOutputVoltage(+0.0f, -0.0f );
+			  this.speedController.configPeakOutputVoltage(+12.0f , -12.0f );
 
 			  /* set closed loop gains in slot0 */
-			  _talon.setProfile(0);
-			  _talon.setF(0.1097);
-			  _talon.setP(0.22);
-			  _talon.setI(0);
-			  _talon.setD(0);
-			  
-			 }
-			 
-			 public void teleopPeriodic() {
-			  _talon.changeControlMode(TalonControlMode.Speed);
-			  _talon.set(1500); /* 1500 RPM in either direction */
-			 }
+			  this.speedController.setProfile(0);
+			  this.speedController.setF(0.1097d);
+			  this.speedController.setP(0.22d);
+			  this.speedController.setI(0d);
+			  this.speedController.setD(0d);
+	}
 	
-	public BionicVelocitySubsystem(SpeedController speedController, boolean inverted) {
+	public BionicVelocitySubsystem(CANTalon speedController, boolean inverted) {
 		this(speedController);
-		
 		this.speedController.setInverted(inverted);
 	}
 
@@ -52,8 +39,8 @@ public abstract class BionicVelocitySubsystem extends Subsystem {
 	protected void initDefaultCommand() {}
 	
 	public void set(VelocitySetpoint setpoint) {
-
-		speedController.set(setpoint.getValue());
+		 this.speedController.changeControlMode(TalonControlMode.Speed);
+		this.speedController.set(setpoint.getValue());
 	}
 	
 	
