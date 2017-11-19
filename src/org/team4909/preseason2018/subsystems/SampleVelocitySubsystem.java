@@ -2,16 +2,16 @@ package org.team4909.preseason2018.subsystems;
 
 import org.team4909.bionic.utils.setpoints.VelocitySetpoint;
 import org.team4909.bionic.utils.subsystems.BionicVelocitySubsystem;
-import edu.wpi.first.wpilibj.SpeedController;
+import com.ctre.CANTalon;
 
 public class SampleVelocitySubsystem extends BionicVelocitySubsystem {
-	public VelocitySetpoint  VelocitySetpoint  = new VelocitySetpoint(this, 1.0);
+	public VelocitySetpoint  getVelocitySetpoint  = new VelocitySetpoint(this, 1.0);
 	
-	public SampleVelocitySubsystem(SpeedController speedController) {
+	public SampleVelocitySubsystem(CANTalon speedController) {
 		super(speedController);
 	}
 	
-	public SampleVelocitySubsystem(SpeedController speedController, boolean inverted) {
+	public SampleVelocitySubsystem(CANTalon speedController, boolean inverted) {
 		super(speedController, inverted);
 	}
 }
