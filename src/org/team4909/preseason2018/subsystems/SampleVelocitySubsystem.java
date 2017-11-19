@@ -5,7 +5,7 @@ import org.team4909.bionic.utils.subsystems.BionicVelocitySubsystem;
 import com.ctre.CANTalon;
 
 public class SampleVelocitySubsystem extends BionicVelocitySubsystem {
-	public VelocitySetpoint  getVelocitySetpoint  = new VelocitySetpoint(this, 1.0);
+	public VelocitySetpoint velocitySetpoint  = new VelocitySetpoint(this, 1.0);
 	
 	public SampleVelocitySubsystem(CANTalon speedController) {
 		super(speedController);
