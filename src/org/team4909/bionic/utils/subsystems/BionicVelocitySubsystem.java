@@ -1,15 +1,18 @@
 package org.team4909.bionic.utils.subsystems;
 
 import org.team4909.bionic.utils.setpoints.VelocitySetpoint;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import org.team4909.bionic.utils.setpoints.VoltageSetpoint;
+
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 import com.ctre.CANTalon.TalonControlMode;
 
-public abstract class BionicVelocitySubsystem extends Subsystem {
+public abstract class BionicVelocitySubsystem extends BionicVoltageSubsystem {
 	public CANTalon speedController;
 	
 	public BionicVelocitySubsystem(CANTalon speedController, double p, double i, double d, double f) {
+		super(speedController);
+		
 		this.speedController = speedController;
 		
 		this.speedController.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
@@ -37,6 +40,11 @@ public abstract class BionicVelocitySubsystem extends Subsystem {
 	
 	public void set(VelocitySetpoint setpoint) {
 		this.speedController.changeControlMode(TalonControlMode.Speed);
+		this.speedController.set(setpoint.getValue());
+	}
+	
+	public void set(VoltageSetpoint setpoint) {
+		this.speedController.changeControlMode(TalonControlMode.PercentVbus);
 		this.speedController.set(setpoint.getValue());
 	}
 }
