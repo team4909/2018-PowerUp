@@ -9,7 +9,7 @@ import com.ctre.CANTalon.TalonControlMode;
 public abstract class BionicVelocitySubsystem extends Subsystem {
 	public CANTalon speedController;
 	
-	public BionicVelocitySubsystem(CANTalon speedController) {
+	public BionicVelocitySubsystem(CANTalon speedController, double F, double P, double I, double D) {
 		this.speedController = speedController;
 		
 		this.speedController.setFeedbackDevice(FeedbackDevice.CtreMagEncoder_Relative);
@@ -25,7 +25,7 @@ public abstract class BionicVelocitySubsystem extends Subsystem {
 	}
 	
 	public BionicVelocitySubsystem(CANTalon speedController, boolean inverted) {
-		this(speedController);
+		this(speedController, 0, 0, 0, 0);
 		
 		this.speedController.reverseSensor(inverted);
 	}
