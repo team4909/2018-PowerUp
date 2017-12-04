@@ -11,7 +11,7 @@ public class Arduino extends Subsystem{
 	
 	// This class creates a new Arduino on the given port. The Arduino should
 	// be set up as a slave device on this same port. 
-	public void start(int address) {
+	public Arduino(int address) {
 		i2c = new I2C(I2C.Port.kOnboard, address);
 	}
 	
