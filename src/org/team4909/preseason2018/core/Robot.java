@@ -17,7 +17,7 @@ public class Robot extends IterativeRobot {
 
 	private void subsystemInit() {
 		BionicDrivetrain drivetrain = new BionicDrivetrain(
-				new	Spark(0), 
+				new Spark(0), 
 				new Spark(1),
 				-1.0, 
 				oi.driverGamepad, oi.driverGamepadDriveSpeedAxis,
