@@ -1,20 +1,28 @@
 package org.team4909.preseason2018.core;
 
+import org.team4909.bionic.utils.subsystems.BionicDrivetrain;
 import org.team4909.preseason2018.autonomous.AutonomousMap;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
 public class Robot extends IterativeRobot {
 	public static OI oi;
 	public static AutonomousMap autonomousMap;
 	
-	// TODO:  Create Drivetrain
+	public static BionicDrivetrain drivetrain;
 
 	// TODO:  Create Pneumatics
 
 	private void subsystemInit() {
-		// TODO: Initialize Drivetrain
+		BionicDrivetrain drivetrain = new BionicDrivetrain(
+				new	Spark(0), 
+				new Spark(1),
+				-1.0, 
+				oi.driverGamepad, oi.driverGamepadDriveSpeedAxis,
+				oi.driverGamepad, oi.driverGamepadDriveRotationAxis
+		);
 		
 		// TODO: Initialize Pneumatics
 	}
