@@ -6,10 +6,10 @@ import org.team4909.bionic.utils.subsystems.BionicDrivetrain;
 public class DriveOI extends BionicCommand {
 	private BionicDrivetrain drivetrainSubsystem;
 	
-	public DriveOI(BionicDrivetrain drivetrain) {
-		requires(drivetrain);
+	public DriveOI(BionicDrivetrain bionicDrivetrain) {
+		requires(bionicDrivetrain);
 		
-		drivetrainSubsystem = drivetrain;
+		drivetrainSubsystem = bionicDrivetrain;
 	}
 	
 	protected void execute() {

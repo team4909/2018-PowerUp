@@ -3,7 +3,6 @@ package org.team4909.bionic.utils.subsystems;
 import org.team4909.bionic.utils.commands.DriveOI;
 import org.team4909.bionic.utils.oi.BionicAxis;
 
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -12,16 +11,13 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class BionicDrivetrain extends Subsystem {
 	private RobotDrive robotDrive;
-	
-	private Encoder leftEncoder;
-	private Encoder rightEncoder;
+
+	private double rotationConst;
 	
 	private GenericHID moveStick; 
 	private BionicAxis moveAxis;
 	private GenericHID rotateStick;
 	private BionicAxis rotateAxis;
-	
-	private double rotationConst;
 	
 	private Solenoid shiftingSolenoid;
 	
@@ -36,76 +32,59 @@ public class BionicDrivetrain extends Subsystem {
 	public Direction driveDirection = Direction.Forward;
 	
 	public BionicDrivetrain(
-			SpeedController drivetrainLeftMotor, Encoder drivetrainLeftEncoder, 
-			SpeedController drivetrainRightMotor, Encoder drivetrainRightEncoder, 
-			double distancePerPulse,
+			SpeedController drivetrainLeftMotor,
+			SpeedController drivetrainRightMotor,
 			double rotationConst,
 			GenericHID moveStick, BionicAxis moveAxis, 
 			GenericHID rotateStick, BionicAxis rotateAxis) {
 		this.robotDrive = new RobotDrive(drivetrainLeftMotor, drivetrainRightMotor);
-		
-		this.leftEncoder = drivetrainLeftEncoder;
-		this.rightEncoder = drivetrainRightEncoder;
-		
-		this.leftEncoder.setDistancePerPulse(distancePerPulse);
-		this.rightEncoder.setDistancePerPulse(distancePerPulse);
+
+		this.rotationConst = rotationConst;
 		
 		this.moveStick = moveStick;
 		this.moveAxis = moveAxis;
 		
 		this.rotateStick = rotateStick;
 		this.rotateAxis = rotateAxis;
-
-		this.rotationConst = rotationConst;
 	}
 	
 	public BionicDrivetrain(
-			SpeedController drivetrainLeftMotor, Encoder drivetrainLeftEncoder, 
-			SpeedController drivetrainRightMotor, Encoder drivetrainRightEncoder, 
-			double distancePerPulse,
+			SpeedController drivetrainLeftMotor, 
+			SpeedController drivetrainRightMotor,
 			double rotationConst,
 			GenericHID moveStick, BionicAxis moveAxis, 
 			GenericHID rotateStick, BionicAxis rotateAxis,
 			Solenoid shiftingSolenoid) {
-		this(drivetrainLeftMotor, drivetrainLeftEncoder, drivetrainRightMotor, drivetrainRightEncoder, distancePerPulse, rotationConst,
-			moveStick, moveAxis, rotateStick, rotateAxis);
+		this(drivetrainLeftMotor, drivetrainRightMotor, rotationConst, moveStick, moveAxis, rotateStick, rotateAxis);
 		
 		this.shiftingSolenoid = shiftingSolenoid;
 	}
 	
 	public BionicDrivetrain(
-			SpeedController drivetrainLeftMotor, SpeedController drivetrainLeftBackMotor, Encoder drivetrainLeftEncoder, 
-			SpeedController drivetrainRightMotor, SpeedController drivetrainRightBackMotor, Encoder drivetrainRightEncoder, 
-			double distancePerPulse,
+			SpeedController drivetrainLeftMotor, SpeedController drivetrainLeftBackMotor,
+			SpeedController drivetrainRightMotor, SpeedController drivetrainRightBackMotor,
 			double rotationConst,
 			GenericHID moveStick, BionicAxis moveAxis, 
 			GenericHID rotateStick, BionicAxis rotateAxis) {
 		this.robotDrive = new RobotDrive(drivetrainLeftMotor, drivetrainLeftBackMotor, drivetrainRightMotor, drivetrainRightBackMotor);
 		
-		this.leftEncoder = drivetrainLeftEncoder;
-		this.rightEncoder = drivetrainRightEncoder;
-		
-		this.leftEncoder.setDistancePerPulse(distancePerPulse);
-		this.rightEncoder.setDistancePerPulse(distancePerPulse);
+		this.rotationConst = rotationConst;
 		
 		this.moveStick = moveStick;
 		this.moveAxis = moveAxis;
 		
 		this.rotateStick = rotateStick;
 		this.rotateAxis = rotateAxis;
-		
-		this.rotationConst = rotationConst;
 	}
 	
 	public BionicDrivetrain(
-			SpeedController drivetrainLeftMotor, SpeedController drivetrainLeftBackMotor, Encoder drivetrainLeftEncoder, 
-			SpeedController drivetrainRightMotor, SpeedController drivetrainRightBackMotor, Encoder drivetrainRightEncoder, 
-			double distancePerPulse,
+			SpeedController drivetrainLeftMotor, SpeedController drivetrainLeftBackMotor,
+			SpeedController drivetrainRightMotor, SpeedController drivetrainRightBackMotor, 
 			double rotationConst,
 			GenericHID moveStick, BionicAxis moveAxis, 
 			GenericHID rotateStick, BionicAxis rotateAxis,
 			Solenoid shiftingSolenoid) {
-		this(drivetrainLeftMotor, drivetrainLeftBackMotor, drivetrainLeftEncoder, drivetrainRightMotor, drivetrainRightBackMotor, drivetrainRightEncoder, distancePerPulse, rotationConst,
+		this(drivetrainLeftMotor, drivetrainLeftBackMotor, drivetrainRightMotor, drivetrainRightBackMotor, rotationConst, 
 			moveStick, moveAxis, rotateStick, rotateAxis);
 		
 		this.shiftingSolenoid = shiftingSolenoid;
@@ -128,14 +107,6 @@ public class BionicDrivetrain extends Subsystem {
 			break;
 		}
 	}
-	
-	public void driveAutoArcade(double move, double rotate) {
-		robotDrive.arcadeDrive(move, rotationConst*rotate);
-	}
-	
-	public void driveAutoTank(double leftValue, double rightValue) {
-		robotDrive.tankDrive(leftValue, rightValue);
-	}
 
 	public Gear getGear() {
 		return driveGear;
@@ -154,9 +125,5 @@ public class BionicDrivetrain extends Subsystem {
 				break;
 			}
 		}
-	}
-	
-	public double getAngle() {
-		return 0; // ahrs.getAngle();
 	}
 }
