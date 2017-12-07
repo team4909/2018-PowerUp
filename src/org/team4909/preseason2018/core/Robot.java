@@ -3,6 +3,7 @@ package org.team4909.preseason2018.core;
 import org.team4909.bionic.utils.subsystems.BionicDrivetrain;
 import org.team4909.preseason2018.autonomous.AutonomousMap;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -12,9 +13,8 @@ public class Robot extends IterativeRobot {
 	public static AutonomousMap autonomousMap;
 	
 	public static BionicDrivetrain drivetrain;
-
-	// TODO:  Create Pneumatics
-
+	public static DoubleSolenoid flag;
+	
 	private void subsystemInit() {
 		drivetrain = new BionicDrivetrain(
 			new Spark(0), 
@@ -24,7 +24,7 @@ public class Robot extends IterativeRobot {
 			oi.driverGamepad, oi.driverGamepadDriveRotationAxis
 		);
 		
-		// TODO: Initialize Pneumatics
+		flag = new DoubleSolenoid(0,1);
 	}
 	
 	@Override
