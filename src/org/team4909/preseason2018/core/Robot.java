@@ -56,14 +56,16 @@ public class Robot extends IterativeRobot {
 	}
 
 	@Override public void autonomousInit() { 
+		autonomousMap.startCommand();
+
 		arduino.sendData(6);
-		autonomousMap.startCommand(); 
-		}
+	}
 	
 	@Override public void teleopInit() {
-		arduino.sendData(6);	
 		autonomousMap.endCommand();
-		}
+		
+		arduino.sendData(6);	
+	}
 	
 	@Override public void disabledInit() { arduino.sendData(7); }
 
