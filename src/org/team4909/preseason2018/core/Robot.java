@@ -32,7 +32,7 @@ public class Robot extends IterativeRobot {
 			oi.driverGamepad, oi.driverGamepadDriveRotationAxis
 		);
 		
-		flag = new DoubleSolenoid(0,1);
+		flag = new DoubleSolenoid(0, 1);
 
 		arduino = new Arduino(4);
 		
