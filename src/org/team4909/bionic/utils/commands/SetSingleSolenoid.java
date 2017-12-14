@@ -17,4 +17,8 @@ public class SetSingleSolenoid extends BionicCommand  {
 	public void initialize() {
 		solenoid.set(setpoint);
 	}
+	
+	public boolean isFinished() {
+		return true;
+	}
 }
