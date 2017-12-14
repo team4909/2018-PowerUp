@@ -2,8 +2,8 @@ package org.team4909.preseason2018.core;
 
 import org.team4909.bionic.utils.subsystems.Arduino;
 import org.team4909.bionic.utils.subsystems.BionicDrivetrain;
-import org.team4909.bionic.utils.subsystems.Shooter;
 import org.team4909.preseason2018.autonomous.AutonomousMap;
+import org.team4909.preseason2018.subsystems.Shooter;
 
 import com.ctre.CANTalon;
 
@@ -33,7 +33,9 @@ public class Robot extends IterativeRobot {
 		);
 		
 		flag = new DoubleSolenoid(0,1);
+
 		arduino = new Arduino(4);
+		
 		shooter = new Shooter(new CANTalon(5), 0.004, 0, 0, 0.028);
 	}
 	
