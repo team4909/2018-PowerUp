@@ -2,7 +2,7 @@
 #include <Wire.h>
 
 #define PIXEL_PIN    6
-#define PIXEL_COUNT 16
+#define PIXEL_COUNT 30
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(PIXEL_COUNT, PIXEL_PIN, NEO_GRB + NEO_KHZ800);
 
 // Set Configuration
@@ -60,5 +60,5 @@ void loop() {
 }
 
 void setColor(int red, int green, int blue) {
-  colorWipe(strip.Color(red, green, blue), 50);
+  strip.Color(red, green, blue);
 }
