@@ -1,5 +1,6 @@
 package org.team4909.bionic.utils.subsystems;
 
+import org.team4909.bionic.utils.setpoints.PIDConstants;
 import org.team4909.bionic.utils.setpoints.VelocitySetpoint;
 import org.team4909.bionic.utils.setpoints.VoltageSetpoint;
 
@@ -10,7 +11,7 @@ import com.ctre.CANTalon.TalonControlMode;
 public abstract class BionicVelocitySubsystem extends BionicVoltageSubsystem {
 	public CANTalon speedController;
 	
-	public BionicVelocitySubsystem(CANTalon speedController, double p, double i, double d, double f) {
+	public BionicVelocitySubsystem(CANTalon speedController, PIDConstants pid, double f) {
 		super(speedController);
 		
 		this.speedController = speedController;
@@ -22,15 +23,15 @@ public abstract class BionicVelocitySubsystem extends BionicVoltageSubsystem {
 
 		this.speedController.setProfile(0);
 		
-		this.speedController.setP(p);
-		this.speedController.setI(i);
-		this.speedController.setD(d);
+		this.speedController.setP(pid.p);
+		this.speedController.setI(pid.i);
+		this.speedController.setD(pid.d);
 		
 		this.speedController.setF(f);
 	}
 	
-	public BionicVelocitySubsystem(CANTalon speedController, double p, double i, double d, double f, boolean inverted) {
-		this(speedController, p, i, d, f);
+	public BionicVelocitySubsystem(CANTalon speedController, PIDConstants pid, double f, boolean inverted) {
+		this(speedController, pid, f);
 		
 		this.speedController.reverseSensor(inverted);
 	}

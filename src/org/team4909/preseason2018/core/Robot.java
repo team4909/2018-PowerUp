@@ -1,5 +1,6 @@
 package org.team4909.preseason2018.core;
 
+import org.team4909.bionic.utils.setpoints.PIDConstants;
 import org.team4909.bionic.utils.subsystems.Arduino;
 import org.team4909.bionic.utils.subsystems.BionicDrivetrain;
 import org.team4909.preseason2018.autonomous.AutonomousMap;
@@ -36,7 +37,7 @@ public class Robot extends IterativeRobot {
 
 		arduino = new Arduino(4);
 		
-		shooter = new Shooter(new CANTalon(5), 0.004, 0, 0, 0.028);
+		shooter = new Shooter(new CANTalon(5), new PIDConstants(0.004, 0, 0), 0.028);
 	}
 	
 	@Override
