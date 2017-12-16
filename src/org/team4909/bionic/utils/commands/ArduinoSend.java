@@ -17,6 +17,7 @@ public class ArduinoSend extends InstantCommand {
 		this.arduino = arduino;
 	}
 	
-	protected void initialize(){ arduino.sendData(toSend); }
-	protected boolean isFinished() { return true; }
+	protected void initialize(){
+		arduino.sendData(toSend);
+	}
 }
