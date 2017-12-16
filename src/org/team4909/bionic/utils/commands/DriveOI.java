@@ -1,9 +1,10 @@
 package org.team4909.bionic.utils.commands;
 
-import org.team4909.bionic.utils.core.BionicCommand;
 import org.team4909.bionic.utils.subsystems.BionicDrivetrain;
 
-public class DriveOI extends BionicCommand {
+import edu.wpi.first.wpilibj.command.Command;
+
+public class DriveOI extends Command {
 	private BionicDrivetrain drivetrainSubsystem;
 	
 	public DriveOI(BionicDrivetrain bionicDrivetrain) {

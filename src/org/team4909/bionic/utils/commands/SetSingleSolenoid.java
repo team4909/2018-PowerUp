@@ -1,10 +1,9 @@
 package org.team4909.bionic.utils.commands;
 
-import org.team4909.bionic.utils.core.BionicCommand;
-
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.command.InstantCommand;
 
-public class SetSingleSolenoid extends BionicCommand  {
+public class SetSingleSolenoid extends InstantCommand  {
 	Solenoid solenoid;
 	boolean setpoint;
 	
@@ -16,9 +15,5 @@ public class SetSingleSolenoid extends BionicCommand  {
 	
 	public void initialize() {
 		solenoid.set(setpoint);
-	}
-	
-	public boolean isFinished() {
-		return true;
 	}
 }
