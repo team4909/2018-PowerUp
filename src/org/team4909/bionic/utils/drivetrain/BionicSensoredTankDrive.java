@@ -9,16 +9,14 @@ import com.ctre.phoenix.Sensors.PigeonImu;
 
 public class BionicSensoredTankDrive extends BionicSensoredDriveBase {
 	private SensoredTank sensoredTank;
-	private PigeonImu pigeonImu;
 	
 	public BionicSensoredTankDrive(
 			SensoredTank sensoredTank,
 			PigeonImu pigeonImu,
 			BionicDriveOIConstants driveOIConstants) {
-		super(driveOIConstants);
+		super(pigeonImu, driveOIConstants);
 		
 		this.sensoredTank = sensoredTank;
-		this.pigeonImu = pigeonImu;
 	}
 	
 	public BionicSensoredTankDrive(
