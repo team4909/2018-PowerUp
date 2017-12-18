@@ -14,14 +14,10 @@ public class BionicDrivetrain extends Subsystem {
 	
 	private Solenoid shiftingSolenoid;
 	
-	public static enum Gear {
-		Low, High
-	}
+	public static enum Gear { Low, High }
 	private Gear driveGear = Gear.Low;
 	
-	public static enum Direction {
-		Forward, Reverse
-	}
+	public static enum Direction { Forward, Reverse }
 	public Direction driveDirection = Direction.Forward;
 	
 	public BionicDrivetrain(BionicDriveBase driveBase, BionicAxisHandle moveAxis, BionicAxisHandle rotateAxis) {
