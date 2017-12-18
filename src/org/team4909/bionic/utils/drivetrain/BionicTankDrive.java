@@ -6,18 +6,26 @@ import edu.wpi.first.wpilibj.SpeedController;
 public class BionicTankDrive extends BionicDriveBase {
 	private RobotDrive robotDrive;
 	
-	public BionicTankDrive(SpeedController drivetrainLeftMotor, SpeedController drivetrainRightMotor, BionicDriveOIConstants driveOIConstants) {
+	public BionicTankDrive(RobotDrive robotDrive, BionicDriveOIConstants driveOIConstants) {
 		super(driveOIConstants);
 		
-		this.robotDrive = new RobotDrive(drivetrainLeftMotor, drivetrainRightMotor);
+		this.robotDrive = robotDrive;
+	}
+	
+	public BionicTankDrive(SpeedController drivetrainLeftMotor, SpeedController drivetrainRightMotor, BionicDriveOIConstants driveOIConstants) {
+		this(
+			new RobotDrive(drivetrainLeftMotor, drivetrainRightMotor),
+			driveOIConstants
+		);
 	}
 	
 	public BionicTankDrive(
 			SpeedController drivetrainLeftMotor, SpeedController drivetrainLeftBackMotor,
 			SpeedController drivetrainRightMotor, SpeedController drivetrainRightBackMotor, BionicDriveOIConstants driveOIConstants) {
-		super(driveOIConstants);
-		
-		this.robotDrive = new RobotDrive(drivetrainLeftMotor, drivetrainLeftBackMotor, drivetrainRightMotor, drivetrainRightBackMotor);
+		this(
+			new RobotDrive(drivetrainLeftMotor, drivetrainLeftBackMotor, drivetrainRightMotor, drivetrainRightBackMotor),
+			driveOIConstants
+		);
 	}
 
 	public void arcadeDriveDirect(double speed, double rotation) {

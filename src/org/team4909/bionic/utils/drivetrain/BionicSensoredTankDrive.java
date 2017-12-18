@@ -17,20 +17,6 @@ public class BionicSensoredTankDrive extends BionicDriveBase {
 		
 		robotDrive = new SensoredTank(drivetrainLeftGearbox, drivetrainRightGearbox, false, true, wheelRadius, drivetrainWidth);
 	}
-	
-	public BionicSensoredTankDrive(
-			TalonSRX drivetrainLeftMotor, TalonSRX drivetrainLeftBackMotor,
-			TalonSRX drivetrainRightMotor, TalonSRX drivetrainRightBackMotor, 
-			SmartMotorController.FeedbackDevice feedbackDevice, 
-			float wheelRadius, float drivetrainWidth, 
-			float unitsPerRevolution, BionicDriveOIConstants driveOIConstants) {
-		this(
-			new SensoredGearbox(unitsPerRevolution, drivetrainLeftMotor, drivetrainLeftBackMotor, feedbackDevice),
-			new SensoredGearbox(unitsPerRevolution, drivetrainRightMotor, drivetrainRightBackMotor, feedbackDevice),
-			wheelRadius, drivetrainWidth,
-			driveOIConstants
-		);
-	}
 
 	public BionicSensoredTankDrive(
 			TalonSRX drivetrainLeftMotor,
@@ -41,6 +27,20 @@ public class BionicSensoredTankDrive extends BionicDriveBase {
 		this(
 			new SensoredGearbox(unitsPerRevolution, drivetrainLeftMotor, feedbackDevice),
 			new SensoredGearbox(unitsPerRevolution, drivetrainRightMotor, feedbackDevice),
+			wheelRadius, drivetrainWidth,
+			driveOIConstants
+		);
+	}
+	
+	public BionicSensoredTankDrive(
+			TalonSRX drivetrainLeftMotor, TalonSRX drivetrainLeftBackMotor,
+			TalonSRX drivetrainRightMotor, TalonSRX drivetrainRightBackMotor, 
+			SmartMotorController.FeedbackDevice feedbackDevice, 
+			float wheelRadius, float drivetrainWidth, 
+			float unitsPerRevolution, BionicDriveOIConstants driveOIConstants) {
+		this(
+			new SensoredGearbox(unitsPerRevolution, drivetrainLeftMotor, drivetrainLeftBackMotor, feedbackDevice),
+			new SensoredGearbox(unitsPerRevolution, drivetrainRightMotor, drivetrainRightBackMotor, feedbackDevice),
 			wheelRadius, drivetrainWidth,
 			driveOIConstants
 		);
