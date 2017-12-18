@@ -14,7 +14,7 @@ public class DriveOI extends Command {
 	}
 	
 	protected void execute() {
-		drivetrainSubsystem.driveOIArcade();
+		drivetrainSubsystem.arcadeDriveScaled();
     }
 
 	protected boolean isFinished() {
