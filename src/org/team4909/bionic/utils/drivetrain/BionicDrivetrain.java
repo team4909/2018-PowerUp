@@ -31,7 +31,7 @@ public class BionicDrivetrain extends Subsystem {
 	public BionicDrivetrain(
 			SpeedController drivetrainLeftMotor,
 			SpeedController drivetrainRightMotor,
-			BionicDriveConstants bionicDriveConstants,
+			BionicDriveOIConstants bionicDriveConstants,
 			BionicAxisHandle moveAxis, 
 			BionicAxisHandle rotateAxis) {
 		this.robotDrive = new RobotDrive(drivetrainLeftMotor, drivetrainRightMotor);
@@ -45,7 +45,7 @@ public class BionicDrivetrain extends Subsystem {
 	public BionicDrivetrain(
 			SpeedController drivetrainLeftMotor, 
 			SpeedController drivetrainRightMotor,
-			BionicDriveConstants bionicDriveConstants,
+			BionicDriveOIConstants bionicDriveConstants,
 			BionicAxisHandle moveAxis, 
 			BionicAxisHandle rotateAxis,
 			Solenoid shiftingSolenoid) {
@@ -57,7 +57,7 @@ public class BionicDrivetrain extends Subsystem {
 	public BionicDrivetrain(
 			SpeedController drivetrainLeftMotor, SpeedController drivetrainLeftBackMotor,
 			SpeedController drivetrainRightMotor, SpeedController drivetrainRightBackMotor,
-			BionicDriveConstants bionicDriveConstants,
+			BionicDriveOIConstants bionicDriveConstants,
 			BionicAxisHandle moveAxis, 
 			BionicAxisHandle rotateAxis) {
 		this.robotDrive = new RobotDrive(drivetrainLeftMotor, drivetrainLeftBackMotor, drivetrainRightMotor, drivetrainRightBackMotor);
@@ -71,7 +71,7 @@ public class BionicDrivetrain extends Subsystem {
 	public BionicDrivetrain(
 			SpeedController drivetrainLeftMotor, SpeedController drivetrainLeftBackMotor,
 			SpeedController drivetrainRightMotor, SpeedController drivetrainRightBackMotor, 
-			BionicDriveConstants bionicDriveConstants,
+			BionicDriveOIConstants bionicDriveConstants,
 			BionicAxisHandle moveAxis, 
 			BionicAxisHandle rotateAxis,
 			Solenoid shiftingSolenoid) {

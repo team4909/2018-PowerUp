@@ -1,6 +1,6 @@
 package org.team4909.preseason2018.core;
 
-import org.team4909.bionic.utils.drivetrain.BionicDriveConstants;
+import org.team4909.bionic.utils.drivetrain.BionicDriveOIConstants;
 import org.team4909.bionic.utils.drivetrain.BionicDrivetrain;
 import org.team4909.bionic.utils.oi.BionicAxisHandle;
 import org.team4909.bionic.utils.setpoints.PIDConstants;
@@ -30,7 +30,7 @@ public class Robot extends IterativeRobot {
 		drivetrain = new BionicDrivetrain(
 			new Spark(0), 
 			new Spark(1),
-			new BionicDriveConstants(1.0, -1.0),
+			new BionicDriveOIConstants(1.0, -1.0),
 			new BionicAxisHandle(oi.driverGamepad, oi.driverGamepadDriveSpeedAxis),
 			new BionicAxisHandle(oi.driverGamepad, oi.driverGamepadDriveRotationAxis)
 		);
