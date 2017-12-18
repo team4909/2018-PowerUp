@@ -52,6 +52,8 @@ public class BionicSensoredTankDrive extends BionicDriveBase {
 	}
 	
 	public void arcadeDriveDirect(float speed, float rotation) {
+		 Math.copySign(speed, rotation);
+		 
 		robotDrive.set(Smart.PercentOutput, speed, rotation);
 	}
 }

@@ -21,6 +21,8 @@ public class BionicTankDrive extends BionicDriveBase {
 	}
 
 	public void arcadeDriveDirect(double speed, double rotation) {
+		 Math.copySign(speed, rotation);
+		 
 		robotDrive.arcadeDrive(speed, rotation);
 	}
 }
