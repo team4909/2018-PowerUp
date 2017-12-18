@@ -1,9 +1,8 @@
 package org.team4909.bionic.utils.drivetrain;
 
 import org.team4909.bionic.utils.commands.DriveOI;
-import org.team4909.bionic.utils.oi.BionicAxis;
+import org.team4909.bionic.utils.oi.BionicAxisHandle;
 
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -14,10 +13,8 @@ public class BionicDrivetrain extends Subsystem {
 
 	private double rotationConst;
 	
-	private GenericHID moveStick; 
-	private BionicAxis moveAxis;
-	private GenericHID rotateStick;
-	private BionicAxis rotateAxis;
+	private BionicAxisHandle moveAxis;
+	private BionicAxisHandle rotateAxis;
 	
 	private Solenoid shiftingSolenoid;
 	
@@ -35,16 +32,13 @@ public class BionicDrivetrain extends Subsystem {
 			SpeedController drivetrainLeftMotor,
 			SpeedController drivetrainRightMotor,
 			double rotationConst,
-			GenericHID moveStick, BionicAxis moveAxis, 
-			GenericHID rotateStick, BionicAxis rotateAxis) {
+			BionicAxisHandle moveAxis, 
+			BionicAxisHandle rotateAxis) {
 		this.robotDrive = new RobotDrive(drivetrainLeftMotor, drivetrainRightMotor);
 
 		this.rotationConst = rotationConst;
 		
-		this.moveStick = moveStick;
 		this.moveAxis = moveAxis;
-		
-		this.rotateStick = rotateStick;
 		this.rotateAxis = rotateAxis;
 	}
 	
@@ -52,10 +46,10 @@ public class BionicDrivetrain extends Subsystem {
 			SpeedController drivetrainLeftMotor, 
 			SpeedController drivetrainRightMotor,
 			double rotationConst,
-			GenericHID moveStick, BionicAxis moveAxis, 
-			GenericHID rotateStick, BionicAxis rotateAxis,
+			BionicAxisHandle moveAxis, 
+			BionicAxisHandle rotateAxis,
 			Solenoid shiftingSolenoid) {
-		this(drivetrainLeftMotor, drivetrainRightMotor, rotationConst, moveStick, moveAxis, rotateStick, rotateAxis);
+		this(drivetrainLeftMotor, drivetrainRightMotor, rotationConst, moveAxis, rotateAxis);
 		
 		this.shiftingSolenoid = shiftingSolenoid;
 	}
@@ -64,16 +58,13 @@ public class BionicDrivetrain extends Subsystem {
 			SpeedController drivetrainLeftMotor, SpeedController drivetrainLeftBackMotor,
 			SpeedController drivetrainRightMotor, SpeedController drivetrainRightBackMotor,
 			double rotationConst,
-			GenericHID moveStick, BionicAxis moveAxis, 
-			GenericHID rotateStick, BionicAxis rotateAxis) {
+			BionicAxisHandle moveAxis, 
+			BionicAxisHandle rotateAxis) {
 		this.robotDrive = new RobotDrive(drivetrainLeftMotor, drivetrainLeftBackMotor, drivetrainRightMotor, drivetrainRightBackMotor);
 		
 		this.rotationConst = rotationConst;
 		
-		this.moveStick = moveStick;
 		this.moveAxis = moveAxis;
-		
-		this.rotateStick = rotateStick;
 		this.rotateAxis = rotateAxis;
 	}
 	
@@ -81,11 +72,10 @@ public class BionicDrivetrain extends Subsystem {
 			SpeedController drivetrainLeftMotor, SpeedController drivetrainLeftBackMotor,
 			SpeedController drivetrainRightMotor, SpeedController drivetrainRightBackMotor, 
 			double rotationConst,
-			GenericHID moveStick, BionicAxis moveAxis, 
-			GenericHID rotateStick, BionicAxis rotateAxis,
+			BionicAxisHandle moveAxis, 
+			BionicAxisHandle rotateAxis,
 			Solenoid shiftingSolenoid) {
-		this(drivetrainLeftMotor, drivetrainLeftBackMotor, drivetrainRightMotor, drivetrainRightBackMotor, rotationConst, 
-			moveStick, moveAxis, rotateStick, rotateAxis);
+		this(drivetrainLeftMotor, drivetrainLeftBackMotor, drivetrainRightMotor, drivetrainRightBackMotor, rotationConst, moveAxis, rotateAxis);
 		
 		this.shiftingSolenoid = shiftingSolenoid;
 	}
@@ -95,8 +85,8 @@ public class BionicDrivetrain extends Subsystem {
 	}
 	
 	public void driveOIArcade() {
-		double moveValue = moveStick.getRawAxis(moveAxis.getNumber());
-		double rotateValue = rotateStick.getRawAxis(rotateAxis.getNumber());
+		double moveValue = moveAxis.getValue();
+		double rotateValue = rotateAxis.getValue();
 		
 		switch(driveDirection) {
 		case Forward:
