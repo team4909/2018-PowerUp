@@ -1,11 +1,11 @@
 package org.team4909.bionic.utils.drivetrain;
 
 public class BionicDriveOIConstants {
-	public final double speed;
-	public final double rotation;
+	public final double speedFactor;
+	public final double rotationFactor;
 	
-	public BionicDriveOIConstants(double speed, double rotation) {
-		this.speed = speed;
-		this.rotation = rotation;
+	public BionicDriveOIConstants(double speedFactor, double rotationFactor) {
+		this.speedFactor = speedFactor;
+		this.rotationFactor = rotationFactor;
 	}
 }

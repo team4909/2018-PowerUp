@@ -3,16 +3,12 @@ package org.team4909.bionic.utils.drivetrain;
 import org.team4909.bionic.utils.commands.DriveOI;
 import org.team4909.bionic.utils.oi.BionicAxisHandle;
 
-import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class BionicDrivetrain extends Subsystem {
-	private RobotDrive robotDrive;
+	private BionicDriveBase driveBase;
 
-	private double rotationConst;
-	
 	private BionicAxisHandle moveAxis;
 	private BionicAxisHandle rotateAxis;
 	
@@ -29,53 +25,21 @@ public class BionicDrivetrain extends Subsystem {
 	public Direction driveDirection = Direction.Forward;
 	
 	public BionicDrivetrain(
-			SpeedController drivetrainLeftMotor,
-			SpeedController drivetrainRightMotor,
-			BionicDriveOIConstants bionicDriveConstants,
+			BionicDriveBase driveBase,
 			BionicAxisHandle moveAxis, 
 			BionicAxisHandle rotateAxis) {
-		this.robotDrive = new RobotDrive(drivetrainLeftMotor, drivetrainRightMotor);
+		this.driveBase = driveBase;
 
-		this.rotationConst = bionicDriveConstants.rotation;
-		
 		this.moveAxis = moveAxis;
 		this.rotateAxis = rotateAxis;
 	}
 	
 	public BionicDrivetrain(
-			SpeedController drivetrainLeftMotor, 
-			SpeedController drivetrainRightMotor,
-			BionicDriveOIConstants bionicDriveConstants,
+			BionicDriveBase driveBase,
 			BionicAxisHandle moveAxis, 
 			BionicAxisHandle rotateAxis,
 			Solenoid shiftingSolenoid) {
-		this(drivetrainLeftMotor, drivetrainRightMotor, bionicDriveConstants, moveAxis, rotateAxis);
-		
-		this.shiftingSolenoid = shiftingSolenoid;
-	}
-	
-	public BionicDrivetrain(
-			SpeedController drivetrainLeftMotor, SpeedController drivetrainLeftBackMotor,
-			SpeedController drivetrainRightMotor, SpeedController drivetrainRightBackMotor,
-			BionicDriveOIConstants bionicDriveConstants,
-			BionicAxisHandle moveAxis, 
-			BionicAxisHandle rotateAxis) {
-		this.robotDrive = new RobotDrive(drivetrainLeftMotor, drivetrainLeftBackMotor, drivetrainRightMotor, drivetrainRightBackMotor);
-
-		this.rotationConst = bionicDriveConstants.rotation;
-		
-		this.moveAxis = moveAxis;
-		this.rotateAxis = rotateAxis;
-	}
-	
-	public BionicDrivetrain(
-			SpeedController drivetrainLeftMotor, SpeedController drivetrainLeftBackMotor,
-			SpeedController drivetrainRightMotor, SpeedController drivetrainRightBackMotor, 
-			BionicDriveOIConstants bionicDriveConstants,
-			BionicAxisHandle moveAxis, 
-			BionicAxisHandle rotateAxis,
-			Solenoid shiftingSolenoid) {
-		this(drivetrainLeftMotor, drivetrainLeftBackMotor, drivetrainRightMotor, drivetrainRightBackMotor, bionicDriveConstants, moveAxis, rotateAxis);
+		this(driveBase, moveAxis, rotateAxis);
 		
 		this.shiftingSolenoid = shiftingSolenoid;
 	}
@@ -84,18 +48,13 @@ public class BionicDrivetrain extends Subsystem {
 		setDefaultCommand(new DriveOI(this));
 	}
 	
-	public void driveOIArcade() {
+	public void arcadeDriveScaled() {
 		double moveValue = moveAxis.getValue();
 		double rotateValue = rotateAxis.getValue();
 		
-		switch(driveDirection) {
-		case Forward:
-			robotDrive.arcadeDrive(moveValue, rotationConst*rotateValue);
-			break;
-		case Reverse:
-			robotDrive.arcadeDrive(-moveValue, rotationConst*rotateValue);
-			break;
-		}
+		if(driveDirection == Direction.Reverse) moveValue *= -1;
+
+		driveBase.arcadeDriveScaled(moveValue, rotateValue);
 	}
 
 	public Gear getGear() {
