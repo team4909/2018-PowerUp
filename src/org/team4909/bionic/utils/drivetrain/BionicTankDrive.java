@@ -3,7 +3,7 @@ package org.team4909.bionic.utils.drivetrain;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SpeedController;
 
-public class BionicTankDrive implements BionicDriveBase {
+public class BionicTankDrive implements IBionicDriveBase {
 	private RobotDrive robotDrive;
 	private BionicDriveOIConstants driveOIConstants;
 	
