@@ -6,7 +6,7 @@ import com.ctre.phoenix.Mechanical.SensoredGearbox;
 import com.ctre.phoenix.MotorControl.SmartMotorController;
 import com.ctre.phoenix.MotorControl.CAN.TalonSRX;
 
-public class BionicSensoredTankDrive extends BionicDriveBase {
+public class BionicSensoredTankDrive extends BionicSensoredDriveBase {
 	private SensoredTank robotDrive;
 	
 	public BionicSensoredTankDrive(
