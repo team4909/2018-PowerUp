@@ -31,12 +31,12 @@ public class BionicDrivetrain extends Subsystem {
 	public BionicDrivetrain(
 			SpeedController drivetrainLeftMotor,
 			SpeedController drivetrainRightMotor,
-			double rotationConst,
+			BionicDriveConstants bionicDriveConstants,
 			BionicAxisHandle moveAxis, 
 			BionicAxisHandle rotateAxis) {
 		this.robotDrive = new RobotDrive(drivetrainLeftMotor, drivetrainRightMotor);
 
-		this.rotationConst = rotationConst;
+		this.rotationConst = bionicDriveConstants.rotation;
 		
 		this.moveAxis = moveAxis;
 		this.rotateAxis = rotateAxis;
@@ -45,11 +45,11 @@ public class BionicDrivetrain extends Subsystem {
 	public BionicDrivetrain(
 			SpeedController drivetrainLeftMotor, 
 			SpeedController drivetrainRightMotor,
-			double rotationConst,
+			BionicDriveConstants bionicDriveConstants,
 			BionicAxisHandle moveAxis, 
 			BionicAxisHandle rotateAxis,
 			Solenoid shiftingSolenoid) {
-		this(drivetrainLeftMotor, drivetrainRightMotor, rotationConst, moveAxis, rotateAxis);
+		this(drivetrainLeftMotor, drivetrainRightMotor, bionicDriveConstants, moveAxis, rotateAxis);
 		
 		this.shiftingSolenoid = shiftingSolenoid;
 	}
@@ -57,12 +57,12 @@ public class BionicDrivetrain extends Subsystem {
 	public BionicDrivetrain(
 			SpeedController drivetrainLeftMotor, SpeedController drivetrainLeftBackMotor,
 			SpeedController drivetrainRightMotor, SpeedController drivetrainRightBackMotor,
-			double rotationConst,
+			BionicDriveConstants bionicDriveConstants,
 			BionicAxisHandle moveAxis, 
 			BionicAxisHandle rotateAxis) {
 		this.robotDrive = new RobotDrive(drivetrainLeftMotor, drivetrainLeftBackMotor, drivetrainRightMotor, drivetrainRightBackMotor);
-		
-		this.rotationConst = rotationConst;
+
+		this.rotationConst = bionicDriveConstants.rotation;
 		
 		this.moveAxis = moveAxis;
 		this.rotateAxis = rotateAxis;
@@ -71,15 +71,15 @@ public class BionicDrivetrain extends Subsystem {
 	public BionicDrivetrain(
 			SpeedController drivetrainLeftMotor, SpeedController drivetrainLeftBackMotor,
 			SpeedController drivetrainRightMotor, SpeedController drivetrainRightBackMotor, 
-			double rotationConst,
+			BionicDriveConstants bionicDriveConstants,
 			BionicAxisHandle moveAxis, 
 			BionicAxisHandle rotateAxis,
 			Solenoid shiftingSolenoid) {
-		this(drivetrainLeftMotor, drivetrainLeftBackMotor, drivetrainRightMotor, drivetrainRightBackMotor, rotationConst, moveAxis, rotateAxis);
+		this(drivetrainLeftMotor, drivetrainLeftBackMotor, drivetrainRightMotor, drivetrainRightBackMotor, bionicDriveConstants, moveAxis, rotateAxis);
 		
 		this.shiftingSolenoid = shiftingSolenoid;
 	}
-	
+
 	public void initDefaultCommand() {
 		setDefaultCommand(new DriveOI(this));
 	}
