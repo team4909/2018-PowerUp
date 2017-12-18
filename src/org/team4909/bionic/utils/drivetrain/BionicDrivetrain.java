@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class BionicDrivetrain extends Subsystem {
-	private IBionicDriveBase driveBase;
+	private BionicDriveBase driveBase;
 
 	private BionicAxisHandle moveAxis;
 	private BionicAxisHandle rotateAxis;
@@ -20,14 +20,14 @@ public class BionicDrivetrain extends Subsystem {
 	public static enum Direction { Forward, Reverse }
 	public Direction driveDirection = Direction.Forward;
 	
-	public BionicDrivetrain(IBionicDriveBase driveBase, BionicAxisHandle moveAxis, BionicAxisHandle rotateAxis) {
+	public BionicDrivetrain(BionicDriveBase driveBase, BionicAxisHandle moveAxis, BionicAxisHandle rotateAxis) {
 		this.driveBase = driveBase;
 
 		this.moveAxis = moveAxis;
 		this.rotateAxis = rotateAxis;
 	}
 	
-	public BionicDrivetrain(IBionicDriveBase driveBase, BionicAxisHandle moveAxis, BionicAxisHandle rotateAxis, Solenoid shiftingSolenoid) {
+	public BionicDrivetrain(BionicDriveBase driveBase, BionicAxisHandle moveAxis, BionicAxisHandle rotateAxis, Solenoid shiftingSolenoid) {
 		this(driveBase, moveAxis, rotateAxis);
 		
 		this.shiftingSolenoid = shiftingSolenoid;
