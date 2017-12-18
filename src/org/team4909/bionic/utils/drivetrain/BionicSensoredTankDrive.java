@@ -1,22 +1,17 @@
 package org.team4909.bionic.utils.drivetrain;
 
 import com.ctre.phoenix.Drive.SensoredTank;
-import com.ctre.phoenix.Drive.Styles.Smart;
 import com.ctre.phoenix.Mechanical.SensoredGearbox;
 import com.ctre.phoenix.MotorControl.SmartMotorController;
 import com.ctre.phoenix.MotorControl.CAN.TalonSRX;
 import com.ctre.phoenix.Sensors.PigeonImu;
 
 public class BionicSensoredTankDrive extends BionicSensoredDriveBase {
-	private SensoredTank sensoredTank;
-	
 	public BionicSensoredTankDrive(
 			SensoredTank sensoredTank,
 			PigeonImu pigeonImu,
 			BionicDriveOIConstants driveOIConstants) {
-		super(pigeonImu, driveOIConstants);
-		
-		this.sensoredTank = sensoredTank;
+		super(sensoredTank, pigeonImu, driveOIConstants);
 	}
 	
 	public BionicSensoredTankDrive(
@@ -57,16 +52,5 @@ public class BionicSensoredTankDrive extends BionicSensoredDriveBase {
 			pigeonImu,
 			driveOIConstants
 		);
-	}
-
-	
-	public void arcadeDriveDirect(double speed, double rotation) {
-		arcadeDriveDirect((float) speed, (float) rotation);
-	}
-	
-	public void arcadeDriveDirect(float speed, float rotation) {
-		 Math.copySign(speed, rotation);
-		 
-		 sensoredTank.set(Smart.PercentOutput, speed, rotation);
 	}
 }
