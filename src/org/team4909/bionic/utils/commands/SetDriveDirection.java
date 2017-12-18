@@ -1,9 +1,9 @@
 package org.team4909.bionic.utils.commands;
 
-import org.team4909.bionic.utils.subsystems.BionicDrivetrain;
-import org.team4909.bionic.utils.subsystems.BionicDrivetrain.Direction;
-
 import edu.wpi.first.wpilibj.command.InstantCommand;
+
+import org.team4909.bionic.utils.drivetrain.BionicDrivetrain;
+import org.team4909.bionic.utils.drivetrain.BionicDrivetrain.Direction;
 
 public class SetDriveDirection extends InstantCommand {
 	private BionicDrivetrain drivetrainSubsystem;
