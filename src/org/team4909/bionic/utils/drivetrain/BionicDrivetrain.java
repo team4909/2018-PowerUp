@@ -24,21 +24,14 @@ public class BionicDrivetrain extends Subsystem {
 	}
 	public Direction driveDirection = Direction.Forward;
 	
-	public BionicDrivetrain(
-			BionicDriveBase driveBase,
-			BionicAxisHandle moveAxis, 
-			BionicAxisHandle rotateAxis) {
+	public BionicDrivetrain(BionicDriveBase driveBase, BionicAxisHandle moveAxis, BionicAxisHandle rotateAxis) {
 		this.driveBase = driveBase;
 
 		this.moveAxis = moveAxis;
 		this.rotateAxis = rotateAxis;
 	}
 	
-	public BionicDrivetrain(
-			BionicDriveBase driveBase,
-			BionicAxisHandle moveAxis, 
-			BionicAxisHandle rotateAxis,
-			Solenoid shiftingSolenoid) {
+	public BionicDrivetrain(BionicDriveBase driveBase, BionicAxisHandle moveAxis, BionicAxisHandle rotateAxis, Solenoid shiftingSolenoid) {
 		this(driveBase, moveAxis, rotateAxis);
 		
 		this.shiftingSolenoid = shiftingSolenoid;
