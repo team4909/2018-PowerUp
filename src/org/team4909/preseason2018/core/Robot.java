@@ -2,7 +2,7 @@ package org.team4909.preseason2018.core;
 
 import org.team4909.bionic.utils.drivetrain.BionicDriveOIConstants;
 import org.team4909.bionic.utils.drivetrain.BionicDrivetrain;
-import org.team4909.bionic.utils.drivetrain.BionicTankDrive;
+import org.team4909.bionic.utils.drivetrain.BionicRobotDrive;
 import org.team4909.bionic.utils.oi.BionicAxisHandle;
 import org.team4909.bionic.utils.setpoints.PIDConstants;
 import org.team4909.bionic.utils.subsystems.Arduino;
@@ -29,7 +29,7 @@ public class Robot extends IterativeRobot {
 	
 	private void subsystemInit() {
 		drivetrain = new BionicDrivetrain(
-			new BionicTankDrive(new Spark(0), new Spark(1), new BionicDriveOIConstants(1.0, -1.0)),
+			new BionicRobotDrive(new Spark(0), new Spark(1), new BionicDriveOIConstants(1.0, -1.0)),
 			new BionicAxisHandle(oi.driverGamepad, oi.driverGamepadDriveSpeedAxis),
 			new BionicAxisHandle(oi.driverGamepad, oi.driverGamepadDriveRotationAxis)
 		);

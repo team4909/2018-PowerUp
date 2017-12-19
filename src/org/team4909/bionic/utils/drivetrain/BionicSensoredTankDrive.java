@@ -6,7 +6,7 @@ import com.ctre.phoenix.MotorControl.SmartMotorController;
 import com.ctre.phoenix.MotorControl.CAN.TalonSRX;
 import com.ctre.phoenix.Sensors.PigeonImu;
 
-public class BionicSensoredTankDrive extends BionicSensoredDriveBase {
+public class BionicSensoredTankDrive extends BionicSensoredRobotDrive {
 	public BionicSensoredTankDrive(
 			SensoredTank sensoredTank,
 			PigeonImu pigeonImu,

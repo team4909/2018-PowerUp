@@ -4,11 +4,11 @@ import com.ctre.phoenix.Drive.ISmartDrivetrain;
 import com.ctre.phoenix.Drive.Styles.Smart;
 import com.ctre.phoenix.Sensors.PigeonImu;
 
-public abstract class BionicSensoredDriveBase extends BionicDriveBase {
+public abstract class BionicSensoredRobotDrive extends BionicDriveBase {
 	private ISmartDrivetrain smartDrivetrain;
 	private PigeonImu pigeonImu;
 	
-	public BionicSensoredDriveBase(ISmartDrivetrain smartDrivetrain, PigeonImu pigeonImu, BionicDriveOIConstants driveOIConstants) {
+	public BionicSensoredRobotDrive(ISmartDrivetrain smartDrivetrain, PigeonImu pigeonImu, BionicDriveOIConstants driveOIConstants) {
 		super(driveOIConstants);
 		
 		this.smartDrivetrain = smartDrivetrain;

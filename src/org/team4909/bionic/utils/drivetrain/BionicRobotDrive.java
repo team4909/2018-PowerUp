@@ -3,23 +3,23 @@ package org.team4909.bionic.utils.drivetrain;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SpeedController;
 
-public class BionicTankDrive extends BionicDriveBase {
+public class BionicRobotDrive extends BionicDriveBase {
 	private RobotDrive robotDrive;
 	
-	public BionicTankDrive(RobotDrive robotDrive, BionicDriveOIConstants driveOIConstants) {
+	public BionicRobotDrive(RobotDrive robotDrive, BionicDriveOIConstants driveOIConstants) {
 		super(driveOIConstants);
 		
 		this.robotDrive = robotDrive;
 	}
 	
-	public BionicTankDrive(SpeedController drivetrainLeftMotor, SpeedController drivetrainRightMotor, BionicDriveOIConstants driveOIConstants) {
+	public BionicRobotDrive(SpeedController drivetrainLeftMotor, SpeedController drivetrainRightMotor, BionicDriveOIConstants driveOIConstants) {
 		this(
 			new RobotDrive(drivetrainLeftMotor, drivetrainRightMotor),
 			driveOIConstants
 		);
 	}
 	
-	public BionicTankDrive(
+	public BionicRobotDrive(
 			SpeedController drivetrainLeftMotor, SpeedController drivetrainLeftBackMotor,
 			SpeedController drivetrainRightMotor, SpeedController drivetrainRightBackMotor, BionicDriveOIConstants driveOIConstants) {
 		this(
