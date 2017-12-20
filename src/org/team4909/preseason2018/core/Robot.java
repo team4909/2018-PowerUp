@@ -51,7 +51,6 @@ public class Robot extends IterativeRobot {
 
 		arduino = new Arduino(4);
 		
-		// TODO: Add OI Controls for Shooter (Voltage & Velocity)
 		shooter = new Shooter(new CANTalon(3), new PIDConstants(0.04, 0, 0), 0.028);
 		
 		gearLoader = new GearLoader(new Spark(0), new AnalogPotentiometer(0), new PIDConstants(0.04, 0, 0));
