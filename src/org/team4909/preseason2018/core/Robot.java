@@ -31,7 +31,13 @@ public class Robot extends IterativeRobot {
 	
 	private void subsystemInit() {
 		drivetrain = new BionicDrivetrain(
-			new BionicSensoredTankDrive(new TalonSRX(1), new TalonSRX(2), SmartMotorController.FeedbackDevice.QuadEncoder, 0f, 0f, new PigeonImu(1), 1f, new BionicDriveOIConstants(1.0, -1.0)),
+			// TODO: Change Wheel Radius and Drivetrain Width
+			new BionicSensoredTankDrive(
+				new TalonSRX(1), new TalonSRX(2),
+				SmartMotorController.FeedbackDevice.QuadEncoder,
+				0f, 0f, new PigeonImu(1), 1f,
+				new BionicDriveOIConstants(1.0, -1.0)
+			),
 			new BionicAxisHandle(oi.driverGamepad, oi.driverGamepadDriveSpeedAxis),
 			new BionicAxisHandle(oi.driverGamepad, oi.driverGamepadDriveRotationAxis)
 		);
@@ -40,7 +46,10 @@ public class Robot extends IterativeRobot {
 
 		arduino = new Arduino(4);
 		
+		// TODO: Add OI Controls for Shooter (Voltage & Velocity)
 		shooter = new Shooter(new CANTalon(3), new PIDConstants(0.004, 0, 0), 0.028);
+		
+		// TODO: Add Potentiometer Subsystem
 	}
 	
 	@Override
