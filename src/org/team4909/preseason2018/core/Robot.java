@@ -2,7 +2,7 @@ package org.team4909.preseason2018.core;
 
 import org.team4909.bionic.utils.drivetrain.BionicDriveOIConstants;
 import org.team4909.bionic.utils.drivetrain.BionicDrivetrain;
-import org.team4909.bionic.utils.drivetrain.BionicRobotDrive;
+import org.team4909.bionic.utils.drivetrain.BionicSensoredTankDrive;
 import org.team4909.bionic.utils.oi.BionicAxisHandle;
 import org.team4909.bionic.utils.setpoints.PIDConstants;
 import org.team4909.bionic.utils.subsystems.Arduino;
@@ -10,10 +10,12 @@ import org.team4909.preseason2018.autonomous.AutonomousMap;
 import org.team4909.preseason2018.subsystems.Shooter;
 
 import com.ctre.CANTalon;
+import com.ctre.phoenix.MotorControl.SmartMotorController;
+import com.ctre.phoenix.MotorControl.CAN.TalonSRX;
+import com.ctre.phoenix.Sensors.PigeonImu;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
 public class Robot extends IterativeRobot {
@@ -29,7 +31,7 @@ public class Robot extends IterativeRobot {
 	
 	private void subsystemInit() {
 		drivetrain = new BionicDrivetrain(
-			new BionicRobotDrive(new Spark(0), new Spark(1), new BionicDriveOIConstants(1.0, -1.0)),
+			new BionicSensoredTankDrive(new TalonSRX(1), new TalonSRX(2), SmartMotorController.FeedbackDevice.QuadEncoder, 0f, 0f, new PigeonImu(1), 1f, new BionicDriveOIConstants(1.0, -1.0)),
 			new BionicAxisHandle(oi.driverGamepad, oi.driverGamepadDriveSpeedAxis),
 			new BionicAxisHandle(oi.driverGamepad, oi.driverGamepadDriveRotationAxis)
 		);
@@ -38,7 +40,7 @@ public class Robot extends IterativeRobot {
 
 		arduino = new Arduino(4);
 		
-		shooter = new Shooter(new CANTalon(5), new PIDConstants(0.004, 0, 0), 0.028);
+		shooter = new Shooter(new CANTalon(3), new PIDConstants(0.004, 0, 0), 0.028);
 	}
 	
 	@Override
