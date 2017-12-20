@@ -7,6 +7,7 @@ import org.team4909.bionic.utils.oi.BionicAxisHandle;
 import org.team4909.bionic.utils.setpoints.PIDConstants;
 import org.team4909.bionic.utils.subsystems.Arduino;
 import org.team4909.preseason2018.autonomous.AutonomousMap;
+import org.team4909.preseason2018.subsystems.GearLoader;
 import org.team4909.preseason2018.subsystems.Shooter;
 
 import com.ctre.CANTalon;
@@ -14,8 +15,10 @@ import com.ctre.phoenix.MotorControl.SmartMotorController;
 import com.ctre.phoenix.MotorControl.CAN.TalonSRX;
 import com.ctre.phoenix.Sensors.PigeonImu;
 
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
 public class Robot extends IterativeRobot {
@@ -28,6 +31,8 @@ public class Robot extends IterativeRobot {
 	public static Arduino arduino;
 	
 	public static Shooter shooter;
+	
+	public static GearLoader gearLoader;
 	
 	private void subsystemInit() {
 		drivetrain = new BionicDrivetrain(
@@ -47,9 +52,9 @@ public class Robot extends IterativeRobot {
 		arduino = new Arduino(4);
 		
 		// TODO: Add OI Controls for Shooter (Voltage & Velocity)
-		shooter = new Shooter(new CANTalon(3), new PIDConstants(0.004, 0, 0), 0.028);
+		shooter = new Shooter(new CANTalon(3), new PIDConstants(0.04, 0, 0), 0.028);
 		
-		// TODO: Add Potentiometer Subsystem
+		gearLoader = new GearLoader(new Spark(0), new AnalogPotentiometer(0), new PIDConstants(0.04, 0, 0));
 	}
 	
 	@Override
