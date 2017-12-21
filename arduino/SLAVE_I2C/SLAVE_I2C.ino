@@ -2,7 +2,7 @@
 #include <Wire.h>
 
 #define PIXEL_PIN    6
-#define PIXEL_COUNT 30
+#define PIXEL_COUNT 64
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(PIXEL_COUNT, PIXEL_PIN, NEO_GRB + NEO_KHZ800);
 
 // Set Configuration
@@ -14,14 +14,18 @@ void setup() {
   Wire.begin(deviceNumber);
   Wire.onReceive(receiveEvent);
 
+  Serial.begin(9600);
+
   // Initialize LED Strip
   strip.begin();
+      setColor(0, 255, 0);
   strip.show();
 }
 
 void receiveEvent(int bytes) {
   // Read the last number sent (0-255)
   lastValue = Wire.read();
+  Serial.println(lastValue);
 }
 
 void loop() {
@@ -44,10 +48,10 @@ void loop() {
       break;
     // ENABLE
     case 6:
-      setColor(255, 25, 0);
-      delay(200);
       setColor(0, 0, 0);
-      delay(200);
+      delay(225);
+      setColor(255, 15, 0);
+      delay(225);
       break;
     // DISABLE
     case 7:
@@ -60,5 +64,9 @@ void loop() {
 }
 
 void setColor(int red, int green, int blue) {
-  strip.Color(red, green, blue);
+  for(int i = 0; i < PIXEL_COUNT; i++){
+    strip.setPixelColor(i, red, green, blue);
+  }
+  
+  strip.show();
 }
