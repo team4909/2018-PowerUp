@@ -7,7 +7,7 @@ import org.team4909.bionic.utils.subsystems.BionicVelocitySubsystem;
 import com.ctre.CANTalon;
 
 public class Shooter extends BionicVelocitySubsystem {
-	public VelocitySetpoint fullSpeed  = new VelocitySetpoint(this, 3500.0);
+	public VelocitySetpoint fullSpeed  = new VelocitySetpoint(this, 5.0);
 	public VoltageSetpoint fullVoltage  = new VoltageSetpoint(this, 1.0);
 	
 	public Shooter(CANTalon speedController, PIDConstants pid, double f) {

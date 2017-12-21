@@ -38,7 +38,7 @@ public class Robot extends IterativeRobot {
 		drivetrain = new BionicDrivetrain(
 			// TODO: Change Wheel Radius and Drivetrain Width
 			new BionicSensoredTankDrive(
-				new TalonSRX(1), new TalonSRX(2),
+				new TalonSRX(3), new TalonSRX(1),
 				SmartMotorController.FeedbackDevice.QuadEncoder,
 				0f, 0f, new PigeonImu(1), 1f,
 				new BionicDriveOIConstants(1.0, -1.0)
@@ -51,7 +51,7 @@ public class Robot extends IterativeRobot {
 
 		arduino = new Arduino(4);
 		
-		shooter = new Shooter(new CANTalon(3), new PIDConstants(0.04, 0, 0), 0.028);
+		shooter = new Shooter(new CANTalon(2), new PIDConstants(0.04, 0, 0), 0);
 		
 		gearLoader = new GearLoader(new Spark(0), new AnalogPotentiometer(0), new PIDConstants(0.04, 0, 0));
 	}
