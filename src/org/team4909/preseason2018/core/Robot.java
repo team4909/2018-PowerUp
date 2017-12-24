@@ -51,7 +51,7 @@ public class Robot extends IterativeRobot {
 
 		arduino = new Arduino(4);
 		
-		shooter = new Shooter(new CANTalon(2), new PIDConstants(0.04, 0, 0), 0);
+		shooter = new Shooter(new CANTalon(2), new PIDConstants(0.22, 0, 0), 0.1097);
 		
 		gearLoader = new GearLoader(new Spark(0), new AnalogPotentiometer(0), new PIDConstants(0.04, 0, 0));
 	}
