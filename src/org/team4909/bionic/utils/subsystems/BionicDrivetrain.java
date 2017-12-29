@@ -99,11 +99,11 @@ public class BionicDrivetrain extends Subsystem {
 		double rotateValue = rotateStick.getRawAxis(rotateAxis.getNumber());
 		
 		switch(driveDirection) {
-		case Forward:
-			robotDrive.arcadeDrive(moveValue, rotationConst*rotateValue);
-			break;
 		case Reverse:
 			robotDrive.arcadeDrive(-moveValue, rotationConst*rotateValue);
+			break;
+		default:
+			robotDrive.arcadeDrive(moveValue, rotationConst*rotateValue);
 			break;
 		}
 	}
@@ -117,11 +117,11 @@ public class BionicDrivetrain extends Subsystem {
 		
 		if(shiftingSolenoid != null) {
 			switch(driveGear) {
-			case Low:
-				shiftingSolenoid.set(false);
-				break;
 			case High:
 				shiftingSolenoid.set(true);
+				break;
+			default:
+				shiftingSolenoid.set(false);
 				break;
 			}
 		}
