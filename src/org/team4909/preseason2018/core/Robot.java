@@ -16,59 +16,59 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 public class Robot extends IterativeRobot {
 	public static OI oi;
 	public static AutonomousMap autonomousMap;
-	
+
 	public static BionicDrivetrain drivetrain;
 	public static DoubleSolenoid flag;
-	
+
 	public static Arduino arduino;
-	
+
 	public static Shooter shooter;
-	
+
 	private void subsystemInit() {
 		drivetrain = new BionicDrivetrain(
-			new Spark(0), 
+			new Spark(0),
 			new Spark(1),
-			-1.0, 
+			-1.0,
 			oi.driverGamepad, oi.driverGamepadDriveSpeedAxis,
 			oi.driverGamepad, oi.driverGamepadDriveRotationAxis
 		);
-		
+
 		flag = new DoubleSolenoid(0, 1);
 
 		arduino = new Arduino(4);
-		
+
 		shooter = new Shooter(new CANTalon(5), new PIDConstants(0.004, 0, 0), 0.028);
 	}
-	
+
 	@Override
 	public void robotInit() {
 		// Initialize Operator Input
 		oi = new OI();
-		
+
 		// Initialize Subsystems
 		subsystemInit();
 
 		// Initialize Commands
 		oi.initButtons();
 		autonomousMap = new AutonomousMap();
-		
+
 		// Initialize Dashboard
 		DashboardConfig.init();
 	}
 
-	@Override public void autonomousInit() { 
+	@Override public void autonomousInit() {
 		autonomousMap.startCommand();
 
-		arduino.sendData(6);
+		arduino.sendData(LED.enabled);
 	}
-	
+
 	@Override public void teleopInit() {
 		autonomousMap.endCommand();
-		
-		arduino.sendData(6);	
+
+		arduino.sendData(LED.enabled);
 	}
-	
-	@Override public void disabledInit() { arduino.sendData(7); }
+
+	@Override public void disabledInit() { arduino.sendData(LED.disabled); }
 
 	@Override public void disabledPeriodic() { Scheduler.getInstance().run(); }
 	@Override public void autonomousPeriodic() { Scheduler.getInstance().run(); }
