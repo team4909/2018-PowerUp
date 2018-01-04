@@ -1,13 +1,10 @@
 package org.team4909.bionic.utils.subsystems;
 
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.command.Subsystem;
 
-public class Arduino extends Subsystem{
+public class Arduino {
 	static I2C i2c;
 	byte[] toSend = new byte[1];
-
-	protected void initDefaultCommand() {}
 	
 	// This class creates a new Arduino on the given port. The Arduino should
 	// be set up as a slave device on this same port. 
