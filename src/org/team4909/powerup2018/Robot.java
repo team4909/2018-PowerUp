@@ -5,14 +5,13 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 import org.team4909.bionicframework.hardware.Arduino;
 import org.team4909.bionicframework.hardware.BionicSRX;
 import org.team4909.bionicframework.hardware.BionicSolenoid;
-import org.team4909.bionicframework.hardware.BionicSpeedController;
+import org.team4909.bionicframework.hardware.BionicSpark;
 import org.team4909.bionicframework.hardware.PotentiometerController;
 import org.team4909.bionicframework.hardware.RoboRio;
 import org.team4909.bionicframework.hardware.Arduino.State;
@@ -22,7 +21,7 @@ public class Robot extends RoboRio {
 	/* Subsystem Initialization */
 	private static Arduino arduino;
 	private static BionicSolenoid flag;
-	private static BionicSpeedController feeder;
+	private static BionicSpark feeder;
 	private static BionicSRX shooter;
 	private static PotentiometerController loader;
 	// private static BionicDrive drivetrain;
@@ -35,14 +34,14 @@ public class Robot extends RoboRio {
 		arduino = new Arduino(4);
 		
 		flag = new BionicSolenoid(0, 1);
-		feeder = new BionicSpeedController(new Spark(0));
+		feeder = new BionicSpark(0);
 		
 		shooter = new BionicSRX(0);
 		shooter.setFeedbackDevice(FeedbackDevice.CTRE_MagEncoder_Relative);
 		shooter.setPIDF(0.22, 0, 0, 0.1097);
 		
 		loader = new PotentiometerController(
-			new BionicSpeedController(new Spark(1)),
+			new BionicSpark(1),
 			new AnalogPotentiometer(0),
 			0.023, 0, 0 // PID Constants.
 		);
@@ -78,9 +77,9 @@ public class Robot extends RoboRio {
 		driverGamepad.buttonPressed(BionicF310.B, Robot.flag.setState(Value.kForward));
 		driverGamepad.buttonPressed(BionicF310.X, Robot.flag.setState(Value.kForward));
 		
-		driverGamepad.buttonPressed(BionicF310.LT, 0.5, Robot.feeder.set(1.0));
+		driverGamepad.buttonPressed(BionicF310.LT, 0.5, Robot.feeder.setPercentOutput(1.0));
 
-		driverGamepad.buttonPressed(BionicF310.RT, 0.5, Robot.shooter.set(ControlMode.Velocity, 3400.0));
+		driverGamepad.buttonPressed(BionicF310.RT, 0.5, Robot.shooter.setMode(ControlMode.Velocity, 3400.0));
 		driverGamepad.buttonPressed(BionicF310.A, Robot.loader.setPosition(75.2));
 	}
 

@@ -7,8 +7,11 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 
-public class BionicSRX {
+public class BionicSRX implements BionicSpeedController {
 	private TalonSRX speedController;
+	
+	private double _setpoint;
+	
 	private final int timeoutMs = 0;
 	private final int pidIdx = 0;
 	
@@ -33,25 +36,65 @@ public class BionicSRX {
 		speedController.config_kF(pidIdx, f, timeoutMs);
 	}
 	
-	public void setDirect(ControlMode mode, double setpoint) {
-		speedController.set(mode, setpoint);
+	public void set(double setpoint) {
+		set(ControlMode.PercentOutput, setpoint);
 	}
 	
-	public Command set(ControlMode mode, double setpoint) {
-		return new Set(mode, setpoint);
+	public Command setPercentOutput(double setpoint) {
+		return new SetMode(ControlMode.PercentOutput, setpoint);
 	}
 	
-	private class Set extends InstantCommand {
+	public void set(ControlMode mode, double setpoint) {
+		_setpoint = setpoint;
+		
+		speedController.set(mode, _setpoint);
+	}
+	
+	public Command setMode(ControlMode mode, double setpoint) {
+		return new SetMode(mode, setpoint);
+	}
+	
+	private class SetMode extends InstantCommand {
 		private ControlMode mode;
 		private double setpoint;
 		
-		public Set(ControlMode mode, double setpoint) {
+		public SetMode(ControlMode mode, double setpoint) {
 			this.mode = mode;
 			this.setpoint = setpoint;
 		}
 		
 		public void initialize() {
-			setDirect(mode, setpoint);
+			setMode(mode, setpoint);
 		}
+	}
+	
+	@Override
+	public double get() {
+		return _setpoint;
+	}
+
+	@Override
+	public void setInverted(boolean isInverted) {
+		speedController.setInverted(isInverted);
+	}
+
+	@Override
+	public boolean getInverted() {
+		return speedController.getInverted();
+	}
+
+	@Override
+	public void disable() {
+		stopMotor();
+	}
+
+	@Override
+	public void stopMotor() {
+		speedController.neutralOutput();
+	}
+
+	@Override
+	public void pidWrite(double output) {
+		set(output);
 	}
 }
