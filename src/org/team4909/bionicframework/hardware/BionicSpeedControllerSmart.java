@@ -10,6 +10,9 @@ public interface BionicSpeedControllerSmart extends BionicSpeedController {
 	void addFollower(int deviceNumber);
 	
 	void setPIDF(double p, double i, double d, double f);
+
+	void setDefaultModePercentOutput();
+	void setDefaultModeVelocity(double maxOutput);
 	
 	void set(ControlMode mode, double setpoint);
 	Command setMode(ControlMode mode, double setpoint);
