@@ -9,11 +9,11 @@ import org.team4909.preseason2018.subsystems.Shooter;
 import com.ctre.CANTalon;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
-public class Robot extends IterativeRobot {
+public class Robot extends TimedRobot {
 	public static OI oi;
 	public static AutonomousMap autonomousMap;
 
