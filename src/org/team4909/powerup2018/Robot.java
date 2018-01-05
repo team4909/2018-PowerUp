@@ -9,14 +9,14 @@ import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
-import org.team4909.bionic.utils.devices.Arduino;
-import org.team4909.bionic.utils.devices.Arduino.State;
-import org.team4909.bionic.utils.devices.BionicSRX;
-import org.team4909.bionic.utils.devices.BionicSolenoid;
-import org.team4909.bionic.utils.devices.RoboRio;
-import org.team4909.bionic.utils.devices.BionicSpeedController;
-import org.team4909.bionic.utils.devices.PotentiometerController;
-import org.team4909.bionic.utils.oi.BionicF310;
+import org.team4909.bionicframework.devices.Arduino;
+import org.team4909.bionicframework.devices.BionicSRX;
+import org.team4909.bionicframework.devices.BionicSolenoid;
+import org.team4909.bionicframework.devices.BionicSpeedController;
+import org.team4909.bionicframework.devices.PotentiometerController;
+import org.team4909.bionicframework.devices.RoboRio;
+import org.team4909.bionicframework.devices.Arduino.State;
+import org.team4909.bionicframework.oi.BionicF310;
 
 public class Robot extends RoboRio {
 	/* Subsystem Initialization */

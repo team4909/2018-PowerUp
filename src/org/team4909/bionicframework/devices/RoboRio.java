@@ -1,4 +1,4 @@
-package org.team4909.bionic.utils.devices;
+package org.team4909.bionicframework.devices;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;

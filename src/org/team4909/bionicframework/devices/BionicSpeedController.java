@@ -1,11 +1,11 @@
-package org.team4909.bionic.utils.devices;
+package org.team4909.bionicframework.devices;
 
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 
 public class BionicSpeedController {
-	private SpeedController speedController;
+	protected SpeedController speedController;
 	
 	public BionicSpeedController(SpeedController speedController) {
 		this.speedController = speedController;

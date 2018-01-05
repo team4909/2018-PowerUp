@@ -1,4 +1,4 @@
-package org.team4909.bionic.utils.oi;
+package org.team4909.bionicframework.oi;
 
 public class BionicButton {
 	private int button;

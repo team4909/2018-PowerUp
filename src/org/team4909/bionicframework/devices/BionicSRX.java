@@ -1,4 +1,4 @@
-package org.team4909.bionic.utils.devices;
+package org.team4909.bionicframework.devices;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -32,9 +32,10 @@ public class BionicSRX {
 		speedController.config_kD(pidIdx, d, timeoutMs);
 		speedController.config_kF(pidIdx, f, timeoutMs);
 	}
-
-	// No Default Voltage/Velocity
-	protected void initDefaultCommand() {}
+	
+	public void setDirect(ControlMode mode, double setpoint) {
+		speedController.set(mode, setpoint);
+	}
 	
 	public Command set(ControlMode mode, double setpoint) {
 		return new Set(mode, setpoint);
@@ -50,7 +51,7 @@ public class BionicSRX {
 		}
 		
 		public void initialize() {
-			speedController.set(mode, setpoint);
+			setDirect(mode, setpoint);
 		}
 	}
 }
