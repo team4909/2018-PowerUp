@@ -1,4 +1,4 @@
-package org.team4909.bionicframework.devices;
+package org.team4909.bionicframework.hardware;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;

@@ -1,4 +1,4 @@
-package org.team4909.bionicframework.devices;
+package org.team4909.bionicframework.hardware;
 
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.command.Command;
