@@ -39,10 +39,6 @@ public class BionicSRX implements BionicSpeedController {
 		speedController.config_kF(pidIdx, f, timeoutMs);
 	}
 	
-	public void set(double setpoint) {
-		set(mode, setpoint * maxOutput);
-	}
-	
 	public void setDefaultModePercentOutput() {
 		mode = ControlMode.PercentOutput;
 		maxOutput = 1.0;
@@ -53,14 +49,18 @@ public class BionicSRX implements BionicSpeedController {
 		this.maxOutput = maxOutput;
 	}
 	
-	public Command setPercentOutput(double setpoint) {
-		return new SetMode(ControlMode.PercentOutput, setpoint);
+	public void set(double setpoint) {
+		set(mode, setpoint * maxOutput);
 	}
 	
 	public void set(ControlMode mode, double setpoint) {
 		this.setpoint = setpoint;
 		
 		speedController.set(mode, setpoint);
+	}
+	
+	public Command setPercentOutput(double setpoint) {
+		return new SetMode(ControlMode.PercentOutput, setpoint);
 	}
 	
 	public Command setMode(ControlMode mode, double setpoint) {
