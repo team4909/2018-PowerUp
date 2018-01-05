@@ -10,7 +10,10 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 public class BionicSRX implements BionicSpeedController {
 	private TalonSRX speedController;
 	
-	private double _setpoint;
+	private double setpoint;
+	
+	private ControlMode mode;
+	private double maxOutput;
 	
 	private final int timeoutMs = 0;
 	private final int pidIdx = 0;
@@ -37,7 +40,17 @@ public class BionicSRX implements BionicSpeedController {
 	}
 	
 	public void set(double setpoint) {
-		set(ControlMode.PercentOutput, setpoint);
+		set(mode, setpoint * maxOutput);
+	}
+	
+	public void setDefaultModePercentOutput() {
+		mode = ControlMode.PercentOutput;
+		maxOutput = 1.0;
+	}
+
+	public void setDefaultModeVelocity(double maxOutput) {	
+		mode = ControlMode.Velocity;
+		this.maxOutput = maxOutput;
 	}
 	
 	public Command setPercentOutput(double setpoint) {
@@ -45,9 +58,9 @@ public class BionicSRX implements BionicSpeedController {
 	}
 	
 	public void set(ControlMode mode, double setpoint) {
-		_setpoint = setpoint;
+		this.setpoint = setpoint;
 		
-		speedController.set(mode, _setpoint);
+		speedController.set(mode, setpoint);
 	}
 	
 	public Command setMode(ControlMode mode, double setpoint) {
@@ -70,7 +83,7 @@ public class BionicSRX implements BionicSpeedController {
 	
 	@Override
 	public double get() {
-		return _setpoint;
+		return setpoint;
 	}
 
 	@Override
