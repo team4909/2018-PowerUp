@@ -44,7 +44,7 @@ public class Robot extends RoboRio {
 		loader = new PotentiometerController(
 			new BionicSpeedController(new Spark(1)),
 			new AnalogPotentiometer(0),
-			0.023, 0, 0 // PID Config
+			0.023, 0, 0 // PID Constants.
 		);
 		loader.setToleranceDegrees(0.25);
 		loader.setMax(0.4);
