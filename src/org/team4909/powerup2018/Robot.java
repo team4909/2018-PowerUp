@@ -44,7 +44,7 @@ public class Robot extends RoboRio {
 		loader = new PotentiometerController(
 			new BionicSpeedController(new Spark(1)),
 			new AnalogPotentiometer(0),
-			0.023, 0, 0 // PID
+			0.023, 0, 0 // PID Config
 		);
 		loader.setToleranceDegrees(0.25);
 		loader.setMax(0.4);
@@ -64,15 +64,15 @@ public class Robot extends RoboRio {
 
 	@Override
 	protected void mapAutos(SendableChooser<Command> autonomousPicker) {
-		// picker.addDefault("Do Nothing", null);
-		// picker.addObject("Sample Auto. Command", new Command());
+		// autonomousPicker.addDefault("Do Nothing", null);
+		// autonomousPicker.addObject("Sample Auto. Command", new Command());
 	}
 
 	@Override
 	protected void oiInit() {
 		driverGamepad = new BionicF310(0);
 		
-		//drivetrain.setSpeedAxis(oi.driverGamepad, BionicF310.LY, 1.0)
+		// drivetrain.setSpeedAxis(oi.driverGamepad, BionicF310.LY, 1.0)
 		// drivetrain.setRotationAxis(oi.driverGamepad, BionicF310.RX, 1.0)
 		
 		driverGamepad.buttonPressed(BionicF310.B, Robot.flag.setState(Value.kForward));
