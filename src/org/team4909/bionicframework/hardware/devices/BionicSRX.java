@@ -1,4 +1,4 @@
-package org.team4909.bionicframework.hardware;
+package org.team4909.bionicframework.hardware.devices;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -6,6 +6,8 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
+
+import org.team4909.bionicframework.hardware.interfaces.BionicSpeedController;
 
 public class BionicSRX implements BionicSpeedController {
 	private TalonSRX speedController;

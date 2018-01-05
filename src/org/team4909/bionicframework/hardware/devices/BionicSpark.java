@@ -1,8 +1,10 @@
-package org.team4909.bionicframework.hardware;
+package org.team4909.bionicframework.hardware.devices;
 
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
+
+import org.team4909.bionicframework.hardware.interfaces.BionicSpeedController;
 
 public class BionicSpark extends Spark implements BionicSpeedController {
 	public BionicSpark(int channel) {

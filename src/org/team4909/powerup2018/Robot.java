@@ -8,13 +8,13 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
-import org.team4909.bionicframework.hardware.Arduino;
-import org.team4909.bionicframework.hardware.BionicSRX;
-import org.team4909.bionicframework.hardware.BionicSolenoid;
-import org.team4909.bionicframework.hardware.BionicSpark;
-import org.team4909.bionicframework.hardware.PotentiometerController;
-import org.team4909.bionicframework.hardware.RoboRio;
-import org.team4909.bionicframework.hardware.Arduino.State;
+import org.team4909.bionicframework.hardware.devices.Arduino;
+import org.team4909.bionicframework.hardware.devices.BionicSRX;
+import org.team4909.bionicframework.hardware.devices.BionicSolenoid;
+import org.team4909.bionicframework.hardware.devices.BionicSpark;
+import org.team4909.bionicframework.hardware.devices.PotentiometerController;
+import org.team4909.bionicframework.hardware.devices.RoboRio;
+import org.team4909.bionicframework.hardware.devices.Arduino.State;
 import org.team4909.bionicframework.oi.BionicF310;
 
 public class Robot extends RoboRio {
