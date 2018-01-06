@@ -115,10 +115,21 @@ public class BionicDrive extends Subsystem {
 	
 	/* Handle Control Modes */
 	@Override protected void initDefaultCommand() {
-		setDefaultCommand(new DriveOI());
+		setDefaultCommand(new DriveOI(this));
 	}
 	
 	private class DriveOI extends Command {
+		private BionicDrive bionicDrive;
+		
+		public DriveOI(BionicDrive bionicDrive) {
+			this.bionicDrive = bionicDrive;
+		}
+
+		@Override
+		public void initialize() {
+			requires(bionicDrive);
+		}
+	
 		public void execute() {
 			double speed = speedInputGamepad.getThresholdAxis(speedInputAxis, 0.15) * speedScaleFactor;
 			double rotation = rotationInputGamepad.getThresholdAxis(rotationInputAxis, 0.15) * rotationScaleFactor;
@@ -132,17 +143,34 @@ public class BionicDrive extends Subsystem {
 		}
 	}
 	
+	public Command driveWaypoints(Waypoint[] points) {
+		return new DriveWaypoints(points, this);
+	}
+	
 	private class DriveWaypoints extends Command {
+		private BionicDrive bionicDrive;
+		
 		private Trajectory left;
 		private Trajectory right;
 		
-		public DriveWaypoints(Waypoint[] points) {
+		public DriveWaypoints(Waypoint[] points, BionicDrive bionicDrive) {
+			this.bionicDrive = bionicDrive;
+			
 			Trajectory trajectory = Pathfinder.generate(points, pathfinderConfig);
 			
-			TankModifier modifier = new TankModifier(trajectory).modify(0.5);
+			TankModifier modifier = new TankModifier(trajectory).modify(drivebaseWidth);
 			
 			left = modifier.getLeftTrajectory();
 			right = modifier.getRightTrajectory();
+		}
+		
+		@Override
+		public void initialize() {
+			requires(bionicDrive);
+		}
+		
+		public void execute() {
+			
 		}
 		
 		@Override
