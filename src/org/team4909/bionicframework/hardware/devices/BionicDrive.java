@@ -4,11 +4,9 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
-import org.team4909.bionicframework.hardware.devices.BionicSpark.Set;
 import org.team4909.bionicframework.hardware.interfaces.BionicGyro;
 import org.team4909.bionicframework.oi.BionicAxis;
 import org.team4909.bionicframework.oi.BionicF310;
@@ -30,6 +28,10 @@ public class BionicDrive extends Subsystem {
 	
 	/* Sensors */
 	private BionicGyro bionicGyro;
+	private double gyroP;
+	private double gyroI;
+	private double gyroD;
+	private double gyroF;
 	
 	/* Hardware Initialization */
 	public BionicDrive(int srxLeftDeviceNumber, int srxRightDeviceNumber) {
@@ -89,7 +91,14 @@ public class BionicDrive extends Subsystem {
 	}
 	
 	public void setGyroPIDF(double p, double i, double d, double f) {
-		
+		gyroP = p;
+		gyroI = i;
+		gyroD = d;
+		gyroF = f;
+	}
+	
+	public double getHeading() {
+		return bionicGyro.getAngle();
 	}
 	
 	/* Handle Control Modes */
