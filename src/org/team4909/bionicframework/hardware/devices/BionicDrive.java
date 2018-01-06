@@ -4,8 +4,11 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
+import org.team4909.bionicframework.hardware.devices.BionicSpark.Set;
 import org.team4909.bionicframework.hardware.interfaces.BionicGyro;
 import org.team4909.bionicframework.oi.BionicAxis;
 import org.team4909.bionicframework.oi.BionicF310;
@@ -15,6 +18,7 @@ public class BionicDrive extends Subsystem {
 	private BionicSRX leftSRX;
 	private BionicSRX rightSRX;
 	private BionicSolenoid shiftingSolenoid;
+	private DifferentialDrive differentialDrive;
 	
 	/* OI */
 	private BionicF310 speedInputGamepad;
@@ -29,13 +33,14 @@ public class BionicDrive extends Subsystem {
 	
 	/* Hardware Initialization */
 	public BionicDrive(int srxLeftDeviceNumber, int srxRightDeviceNumber) {
-		this.leftSRX = new BionicSRX(srxLeftDeviceNumber);
-		this.rightSRX = new BionicSRX(srxRightDeviceNumber);
+		leftSRX = new BionicSRX(srxLeftDeviceNumber);
+		rightSRX = new BionicSRX(srxRightDeviceNumber);
+		differentialDrive = new DifferentialDrive(leftSRX, rightSRX);
 	}
 
 	public void addFollowers(int srxLeftDeviceNumber, int srxRightDeviceNumber) {
-		this.leftSRX.addFollower(srxLeftDeviceNumber);
-		this.rightSRX.addFollower(srxRightDeviceNumber);
+		leftSRX.addFollower(srxLeftDeviceNumber);
+		rightSRX.addFollower(srxRightDeviceNumber);
 	}
 	
 	/* Operator Interface Initialization */
@@ -87,11 +92,22 @@ public class BionicDrive extends Subsystem {
 		
 	}
 	
-	/* Handle Control Mode */
-	@Override
-	public void periodic() {
-		
+	/* Handle Control Modes */
+	@Override protected void initDefaultCommand() {
+		setDefaultCommand(new DriveOI());
 	}
 	
-	@Override protected void initDefaultCommand() {}
+	private class DriveOI extends Command {
+		public void execute() {
+			double speed = speedInputGamepad.getThresholdAxis(speedInputAxis, 0.15) * speedScaleFactor;
+			double rotation = rotationInputGamepad.getThresholdAxis(rotationInputAxis, 0.15) * rotationScaleFactor;
+			
+			differentialDrive.curvatureDrive(speed, rotation, false);
+		}
+
+		@Override
+		protected boolean isFinished() {
+			return false;
+		}
+	}
 }
