@@ -11,6 +11,11 @@ import org.team4909.bionicframework.hardware.interfaces.BionicGyro;
 import org.team4909.bionicframework.oi.BionicAxis;
 import org.team4909.bionicframework.oi.BionicF310;
 
+import jaci.pathfinder.Pathfinder;
+import jaci.pathfinder.Trajectory;
+import jaci.pathfinder.Waypoint;
+import jaci.pathfinder.modifiers.TankModifier;
+
 public class BionicDrive extends Subsystem {
 	/* Hardware */
 	private BionicSRX leftSRX;
@@ -32,6 +37,8 @@ public class BionicDrive extends Subsystem {
 	private double gyroI;
 	private double gyroD;
 	private double gyroF;
+	private Trajectory.Config pathfinderConfig;
+	private double drivebaseWidth;
 	
 	/* Hardware Initialization */
 	public BionicDrive(int srxLeftDeviceNumber, int srxRightDeviceNumber) {
@@ -101,6 +108,11 @@ public class BionicDrive extends Subsystem {
 		return bionicGyro.getAngle();
 	}
 	
+	public void setPathfinderConfig(Trajectory.Config config, double drivebaseWidth) {
+		this.pathfinderConfig = config;
+		this.drivebaseWidth = drivebaseWidth;
+	}
+	
 	/* Handle Control Modes */
 	@Override protected void initDefaultCommand() {
 		setDefaultCommand(new DriveOI());
@@ -114,6 +126,25 @@ public class BionicDrive extends Subsystem {
 			differentialDrive.curvatureDrive(speed, rotation, false);
 		}
 
+		@Override
+		protected boolean isFinished() {
+			return false;
+		}
+	}
+	
+	private class DriveWaypoints extends Command {
+		private Trajectory left;
+		private Trajectory right;
+		
+		public DriveWaypoints(Waypoint[] points) {
+			Trajectory trajectory = Pathfinder.generate(points, pathfinderConfig);
+			
+			TankModifier modifier = new TankModifier(trajectory).modify(0.5);
+			
+			left = modifier.getLeftTrajectory();
+			right = modifier.getRightTrajectory();
+		}
+		
 		@Override
 		protected boolean isFinished() {
 			return false;
