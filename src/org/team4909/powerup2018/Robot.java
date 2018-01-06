@@ -15,6 +15,8 @@ import org.team4909.bionicframework.hardware.devices.BionicSpark;
 import org.team4909.bionicframework.hardware.devices.PotentiometerController;
 import org.team4909.bionicframework.hardware.devices.RoboRio;
 import org.team4909.bionicframework.hardware.devices.Arduino.State;
+import org.team4909.bionicframework.hardware.devices.BionicDrive;
+import org.team4909.bionicframework.hardware.devices.BionicPigeon;
 import org.team4909.bionicframework.oi.BionicF310;
 
 public class Robot extends RoboRio {
@@ -24,7 +26,7 @@ public class Robot extends RoboRio {
 	private static BionicSpark feeder;
 	private static BionicSRX shooter;
 	private static PotentiometerController loader;
-	// private static BionicDrive drivetrain;
+	private static BionicDrive drivetrain;
 	
 	/* OI Initialization */
 	private static BionicF310 driverGamepad;
@@ -43,22 +45,18 @@ public class Robot extends RoboRio {
 		loader = new PotentiometerController(
 			new BionicSpark(1),
 			new AnalogPotentiometer(0),
-			0.023, 0, 0 // PID Constants.
+			0.023, 0, 0 // PID Constants
 		);
 		loader.setToleranceDegrees(0.25);
 		loader.setMax(0.4);
 		
-		/*
-		 * drivetrain = new BionicDrivetrain(TalonSRX, TalonSRX)
-		 * 
-		 * drivetrain.addRightSlave(TalonSRX)
-		 * drivetrain.addLeftSlave(TalonSRX)
-		 * 
-		 * drivetrain.setFeedbackDevice(QuadEncoder)
-		 * drivetrain.setGyro(new PigeonImu(1)) or drivetrain.setGyro(new AHRS()) 
-		 * 
-		 * drivetrain.setShiftingSolenoid(SingleSolenoid)
-		 */
+		drivetrain = new BionicDrive(1,2);
+		drivetrain.addFollowers(3,4);
+		drivetrain.setShiftingSolenoid(new BionicSolenoid(2));
+		drivetrain.setFeedbackDevice(FeedbackDevice.QuadEncoder);
+		drivetrain.setMotorPIDF(0,0,0,0);
+		drivetrain.setGyro(new BionicPigeon(1));
+		drivetrain.setGyroPIDF(0,0,0,0);
 	}
 
 	@Override
@@ -71,8 +69,8 @@ public class Robot extends RoboRio {
 	protected void oiInit() {
 		driverGamepad = new BionicF310(0);
 		
-		// drivetrain.setSpeedAxis(oi.driverGamepad, BionicF310.LY, 1.0)
-		// drivetrain.setRotationAxis(oi.driverGamepad, BionicF310.RX, 1.0)
+		drivetrain.setSpeedAxis(driverGamepad, BionicF310.LY, 1.0);
+		drivetrain.setRotationAxis(driverGamepad, BionicF310.RX, 1.0);
 		
 		driverGamepad.buttonPressed(BionicF310.B, Robot.flag.setState(Value.kForward));
 		driverGamepad.buttonPressed(BionicF310.X, Robot.flag.setState(Value.kForward));
