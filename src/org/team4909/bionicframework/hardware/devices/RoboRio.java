@@ -1,17 +1,12 @@
 package org.team4909.bionicframework.hardware.devices;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public abstract class RoboRio extends TimedRobot {
-	private SendableChooser<Command> autonomousPicker = new SendableChooser<>();
-	private Command autonomousCommand;
 	
 	protected abstract void subsystemInit();
 	
-	protected void mapAutos(SendableChooser<Command> autonomousPicker) {};
+	protected void mapAutos() {};
 	
 	protected abstract void oiInit();
 	
@@ -26,9 +21,7 @@ public abstract class RoboRio extends TimedRobot {
 
 		oiInit();
 		
-		mapAutos(autonomousPicker);
-		
-		SmartDashboard.putData("Auto. Command", autonomousPicker);
+		mapAutos();
 	}
 	
 	@Override
@@ -37,20 +30,12 @@ public abstract class RoboRio extends TimedRobot {
 	}
 
 	@Override
-	public void autonomousInit() { 
-		autonomousCommand = autonomousPicker.getSelected();
-
-		if (autonomousCommand != null)
-			autonomousCommand.start();
-
+	public void autonomousInit() {
 		robotEnabled();
 	}
 	
 	@Override
 	public void teleopInit() {
-		if (autonomousCommand != null)
-			autonomousCommand.cancel();
-
 		robotEnabled();
 	}
 	

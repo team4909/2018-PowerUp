@@ -9,5 +9,6 @@
 	<classpathentry kind="lib" path="libs/Pathfinder-Java.jar"/>
 	<classpathentry kind="var" path="wpiutil" sourcepath="wpiutil.sources"/>
 	<classpathentry kind="lib" path="libs/CTRE_Phoenix.jar" sourcepath="libs/CTRE_Phoenix-sources.jar"/>
+	<classpathentry kind="lib" path="libs/MatchData-2018.01.07.jar" sourcepath="libs/MatchData-2018.01.07-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

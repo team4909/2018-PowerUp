@@ -34,9 +34,6 @@ public class BionicDrive extends Subsystem {
 	/* Sensors */
 	private BionicGyro bionicGyro;
 	private double gyroP;
-	private double gyroI;
-	private double gyroD;
-	private double gyroF;
 	private Trajectory.Config pathfinderConfig;
 	private double drivebaseWidth;
 	
@@ -97,11 +94,8 @@ public class BionicDrive extends Subsystem {
 		this.bionicGyro = bionicGyro;
 	}
 	
-	public void setGyroPIDF(double p, double i, double d, double f) {
+	public void setGyroPIDF(double p) {
 		gyroP = p;
-		gyroI = i;
-		gyroD = d;
-		gyroF = f;
 	}
 	
 	public double getHeading() {
