@@ -94,7 +94,7 @@ public class BionicDrive extends Subsystem {
 		this.bionicGyro = bionicGyro;
 	}
 	
-	public void setGyroPIDF(double p) {
+	public void setGyroP(double p) {
 		gyroP = p;
 	}
 	

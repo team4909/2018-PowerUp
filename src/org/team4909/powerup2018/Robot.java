@@ -54,7 +54,7 @@ public class Robot extends RoboRio {
 		drivetrain.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 		drivetrain.setMotorPIDF(0,0,0,0);
 		drivetrain.setGyro(new BionicPigeon(1));
-		drivetrain.setGyroPIDF(0,0,0,0);
+		drivetrain.setGyroP(0);
 	}
 
 	@Override
