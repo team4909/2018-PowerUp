@@ -5,8 +5,6 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 import org.team4909.bionicframework.hardware.devices.Arduino;
 import org.team4909.bionicframework.hardware.devices.BionicSRX;
@@ -56,11 +54,11 @@ public class Robot extends RoboRio {
 		drivetrain.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 		drivetrain.setMotorPIDF(0,0,0,0);
 		drivetrain.setGyro(new BionicPigeon(1));
-		drivetrain.setGyroPIDF(0,0,0,0);
+		drivetrain.setGyroP(0);
 	}
 
 	@Override
-	protected void mapAutos(SendableChooser<Command> autonomousPicker) {
+	protected void mapAutos() {
 		// autonomousPicker.addDefault("Do Nothing", null);
 		// autonomousPicker.addObject("Sample Auto. Command", new Command());
 	}
