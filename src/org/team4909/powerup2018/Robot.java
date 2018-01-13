@@ -20,10 +20,10 @@ import org.team4909.bionicframework.oi.BionicF310;
 public class Robot extends RoboRio {
 	/* Subsystem Initialization */
 	private static Arduino arduino;
-	private static BionicSolenoid flag;
-	private static BionicSpark feeder;
-	private static BionicSRX shooter;
-	private static PotentiometerController loader;
+	//private static BionicSolenoid flag;
+	//private static BionicSpark feeder;
+	//private static BionicSRX shooter;
+	//private static PotentiometerController loader;
 	private static BionicDrive drivetrain;
 	
 	/* OI Initialization */
@@ -33,24 +33,24 @@ public class Robot extends RoboRio {
 	protected void subsystemInit() {
 		arduino = new Arduino(4);
 		
-		flag = new BionicSolenoid(0, 1);
-		feeder = new BionicSpark(0);
+		//flag = new BionicSolenoid(0, 1);
+		//feeder = new BionicSpark(0);
 		
-		shooter = new BionicSRX(0);
-		shooter.setFeedbackDevice(FeedbackDevice.CTRE_MagEncoder_Relative);
-		shooter.setPIDF(0.22, 0, 0, 0.1097);
+		//shooter = new BionicSRX(0);
+		//shooter.setFeedbackDevice(FeedbackDevice.CTRE_MagEncoder_Relative);
+		//shooter.setPIDF(0.22, 0, 0, 0.1097);
 		
-		loader = new PotentiometerController(
-			new BionicSpark(1),
-			new AnalogPotentiometer(0),
-			0.023, 0, 0 // PID Constants
-		);
-		loader.setToleranceDegrees(0.25);
-		loader.setMax(0.4);
+//		loader = new PotentiometerController(
+//			new BionicSpark(1),
+//			new AnalogPotentiometer(0),
+//			0.023, 0, 0 // PID Constants
+//		);
+//		loader.setToleranceDegrees(0.25);
+//		loader.setMax(0.4);
 		
-		drivetrain = new BionicDrive(1,2);
-		drivetrain.addFollowers(3,4);
-		drivetrain.setShiftingSolenoid(new BionicSolenoid(2));
+		drivetrain = new BionicDrive(6,5);
+		//drivetrain.addFollowers(3,4);
+		//drivetrain.setShiftingSolenoid(new BionicSolenoid(2));
 		drivetrain.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 		drivetrain.setMotorPIDF(0,0,0,0);
 		drivetrain.setGyro(new BionicPigeon(1));
@@ -70,22 +70,22 @@ public class Robot extends RoboRio {
 		drivetrain.setSpeedAxis(driverGamepad, BionicF310.LY, 1.0);
 		drivetrain.setRotationAxis(driverGamepad, BionicF310.RX, 1.0);
 		
-		driverGamepad.buttonPressed(BionicF310.B, Robot.flag.setState(Value.kForward));
-		driverGamepad.buttonPressed(BionicF310.X, Robot.flag.setState(Value.kForward));
-		
-		driverGamepad.buttonPressed(BionicF310.LT, 0.5, Robot.feeder.setPercentOutput(1.0));
-
-		driverGamepad.buttonPressed(BionicF310.RT, 0.5, Robot.shooter.setMode(ControlMode.Velocity, 3400.0));
-		driverGamepad.buttonPressed(BionicF310.A, Robot.loader.setPosition(75.2));
+//		driverGamepad.buttonPressed(BionicF310.B, Robot.flag.setState(Value.kForward));
+//		driverGamepad.buttonPressed(BionicF310.X, Robot.flag.setState(Value.kForward));
+//		
+//		driverGamepad.buttonPressed(BionicF310.LT, 0.5, Robot.feeder.setPercentOutput(1.0));
+//
+//		driverGamepad.buttonPressed(BionicF310.RT, 0.5, Robot.shooter.setMode(ControlMode.Velocity, 3400.0));
+//		driverGamepad.buttonPressed(BionicF310.A, Robot.loader.setPosition(75.2));
 	}
 
 	@Override
 	protected void robotEnabled() {
-		arduino.sendSignal(State.enabled);	
+		//arduino.sendSignal(State.enabled);	
 	}
 
 	@Override
 	protected void robotDisabled() {
-		arduino.sendSignal(State.disabled);
+		//arduino.sendSignal(State.disabled);
 	}
 }
