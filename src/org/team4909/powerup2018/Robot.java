@@ -50,7 +50,6 @@ public class Robot extends RoboRio {
 		
 		drivetrain = new BionicDrive(6,5);
 		//drivetrain.addFollowers(3,4);
-		//drivetrain.setShiftingSolenoid(new BionicSolenoid(2));
 		drivetrain.setFeedbackDevice(FeedbackDevice.QuadEncoder);
 		drivetrain.setMotorPIDF(0,0,0,0);
 		drivetrain.setGyro(new BionicPigeon(1));
