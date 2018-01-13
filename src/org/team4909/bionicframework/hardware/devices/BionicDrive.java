@@ -113,14 +113,7 @@ public class BionicDrive extends Subsystem {
 	}
 	
 	private class DriveOI extends Command {
-		private BionicDrive bionicDrive;
-		
 		public DriveOI(BionicDrive bionicDrive) {
-			this.bionicDrive = bionicDrive;
-		}
-
-		@Override
-		public void initialize() {
 			requires(bionicDrive);
 		}
 	
