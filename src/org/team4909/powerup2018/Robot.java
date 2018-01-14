@@ -66,8 +66,8 @@ public class Robot extends RoboRio {
 	protected void oiInit() {
 		driverGamepad = new BionicF310(0);
 		
-		drivetrain.setSpeedAxis(driverGamepad, BionicF310.LY, 1.0);
-		drivetrain.setRotationAxis(driverGamepad, BionicF310.RX, 1.0);
+		drivetrain.setSpeedAxis(driverGamepad, BionicF310.LY);
+		drivetrain.setRotationAxis(driverGamepad, BionicF310.RX);
 		
 //		driverGamepad.buttonPressed(BionicF310.B, Robot.flag.setState(Value.kForward));
 //		driverGamepad.buttonPressed(BionicF310.X, Robot.flag.setState(Value.kForward));
