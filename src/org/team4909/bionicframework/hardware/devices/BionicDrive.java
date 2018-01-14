@@ -41,7 +41,7 @@ public class BionicDrive extends Subsystem{
 	
 	/* Sensors */
 	private BionicGyro bionicGyro;
-	private double gyro_P;
+	private double gyro_p;
 	private Trajectory.Config pathfinderConfig;
 	private double drivebaseWidth;
 	
@@ -61,7 +61,7 @@ public class BionicDrive extends Subsystem{
 		rightSRX.setPIDF(encoder_p, encoder_i, encoder_d, encoder_f);
 		
 		this.bionicGyro = bionicGyro;
-		this.gyro_P = gyro_p;
+		this.gyro_p = gyro_p;
 		
 		this.pathfinderConfig = pathfinderConfig;
 		this.drivebaseWidth = drivebaseWidth;
@@ -76,7 +76,7 @@ public class BionicDrive extends Subsystem{
 	}
 
 	public void addFollowers(int srxLeftDeviceNumber, int srxRightDeviceNumber) {
-		leftSRX.addFollower(srxLeftDeviceNumber);
+		leftSRX.addFollower(srxLeftDeviceNumber);	
 		rightSRX.addFollower(srxRightDeviceNumber);
 	}
 	
