@@ -16,7 +16,15 @@ import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
 import jaci.pathfinder.modifiers.TankModifier;
 
-public class BionicDrive extends Subsystem {
+public class BionicDrive extends Subsystem{
+	private enum DriveMode {
+		PercentVBus,
+		Waypoints
+	};
+	
+	/* Internal State */
+	private DriveMode controlMode = DriveMode.PercentVBus;
+	
 	/* Hardware */
 	private BionicSRX leftSRX;
 	private BionicSRX rightSRX;
@@ -26,21 +34,44 @@ public class BionicDrive extends Subsystem {
 	/* OI */
 	private BionicF310 speedInputGamepad;
 	private BionicAxis speedInputAxis;
-	private double speedScaleFactor;
+	private double speedScaleFactor = 1.0;
 	private BionicF310 rotationInputGamepad;
 	private BionicAxis rotationInputAxis;
-	private double rotationScaleFactor;
+	private double rotationScaleFactor = 1.0;
 	
 	/* Sensors */
 	private BionicGyro bionicGyro;
-	private double gyroP;
+	private double gyro_P;
 	private Trajectory.Config pathfinderConfig;
 	private double drivebaseWidth;
 	
 	/* Hardware Initialization */
-	public BionicDrive(int srxLeftDeviceNumber, int srxRightDeviceNumber) {
+	public BionicDrive(int srxLeftDeviceNumber, int srxRightDeviceNumber,
+			BionicF310 speedInputGamepad, BionicAxis speedInputAxis,
+			BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis,
+			FeedbackDevice encoder, double encoder_p, double encoder_i, double encoder_d, double encoder_f,
+			BionicGyro bionicGyro, double gyro_p,
+			Trajectory.Config pathfinderConfig, double drivebaseWidth) {
 		leftSRX = new BionicSRX(srxLeftDeviceNumber);
 		rightSRX = new BionicSRX(srxRightDeviceNumber);
+		
+		leftSRX.setFeedbackDevice(encoder);
+		rightSRX.setFeedbackDevice(encoder);
+		leftSRX.setPIDF(encoder_p, encoder_i, encoder_d, encoder_f);
+		rightSRX.setPIDF(encoder_p, encoder_i, encoder_d, encoder_f);
+		
+		this.bionicGyro = bionicGyro;
+		this.gyro_P = gyro_p;
+		
+		this.pathfinderConfig = pathfinderConfig;
+		this.drivebaseWidth = drivebaseWidth;
+		
+		this.rotationInputGamepad = rotationInputGamepad;
+		this.rotationInputAxis = rotationInputAxis;
+		
+		this.speedInputGamepad = speedInputGamepad;
+		this.speedInputAxis = speedInputAxis;
+		
 		differentialDrive = new DifferentialDrive(leftSRX, rightSRX);
 	}
 
@@ -49,87 +80,45 @@ public class BionicDrive extends Subsystem {
 		rightSRX.addFollower(srxRightDeviceNumber);
 	}
 	
-	/* Operator Interface Initialization */
-	public void setSpeedAxis(BionicF310 speedInputGamepad, BionicAxis speedInputAxis) {
-		setSpeedAxis(speedInputGamepad, speedInputAxis, 1.0);
-	}
-
-	public void setSpeedAxis(BionicF310 speedInputGamepad, BionicAxis speedInputAxis, double speedScaleFactor) {
-		this.speedInputGamepad = speedInputGamepad;
-		this.speedInputAxis = speedInputAxis;
-		this.speedScaleFactor = speedScaleFactor;
-	}
-
-	public void setRotationAxis(BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis) {
-		setRotationAxis(rotationInputGamepad, rotationInputAxis, 1.0);
-	}
-	
-	public void setRotationAxis(BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis, double rotationScaleFactor) {
-		this.rotationInputGamepad = rotationInputGamepad;
-		this.rotationInputAxis = rotationInputAxis;
-		this.rotationScaleFactor = rotationScaleFactor;
-	}
-	
 	/* Shifting */
 	public void setShiftingSolenoid(BionicSolenoid shiftingSolenoid) {
 		this.shiftingSolenoid = shiftingSolenoid;
 	}
 	
 	public Command setState(DoubleSolenoid.Value value) {
-		return shiftingSolenoid.setState(value);
-	}
-	
-	/* Sensor Initialization */
-	public void setFeedbackDevice(FeedbackDevice feedbackDevice) {
-		leftSRX.setFeedbackDevice(feedbackDevice);
-		rightSRX.setFeedbackDevice(feedbackDevice);
-	}
-	
-	public void setMotorPIDF(double p, double i, double d, double f) {
-		leftSRX.setPIDF(p,i,d,f);
-		rightSRX.setPIDF(p,i,d,f);
-	}
-
-	public void setGyro(BionicGyro bionicGyro) {
-		this.bionicGyro = bionicGyro;
-	}
-	
-	public void setGyroP(double p) {
-		gyroP = p;
+		if(shiftingSolenoid != null) {
+			return shiftingSolenoid.setState(value);
+		}
+		
+		return null;
 	}
 	
 	public double getHeading() {
-		return bionicGyro.getAngle();
-	}
-	
-	public void setPathfinderConfig(Trajectory.Config config, double drivebaseWidth) {
-		this.pathfinderConfig = config;
-		this.drivebaseWidth = drivebaseWidth;
+		if(bionicGyro != null) {
+			return bionicGyro.getAngle();
+		}
+		
+		return 0;
 	}
 	
 	/* Handle Control Modes */
-	@Override protected void initDefaultCommand() {
-		setDefaultCommand(new DriveOI(this));
-	}
+	@Override 
+	protected void initDefaultCommand() {}
 	
-	private class DriveOI extends Command {
-		public DriveOI(BionicDrive bionicDrive) {
-			requires(bionicDrive);
-		}
-	
-		public void execute() {
+	@Override
+	public void periodic() {
+		switch(controlMode) {
+		case Waypoints:
+			break;
+		case PercentVBus:
+		default:
 			double speed = speedInputGamepad.getThresholdAxis(speedInputAxis, 0.15) * speedScaleFactor;
 			double rotation = rotationInputGamepad.getThresholdAxis(rotationInputAxis, 0.15) * rotationScaleFactor;
 			
 			differentialDrive.curvatureDrive(speed, rotation, false);
 		}
-
-		@Override
-		protected boolean isFinished() {
-			return false;
-		}
 	}
-	
+		
 	public Command driveWaypoints(Waypoint[] points) {
 		return new DriveWaypoints(points, this);
 	}
@@ -150,19 +139,6 @@ public class BionicDrive extends Subsystem {
 			left = modifier.getLeftTrajectory();
 			right = modifier.getRightTrajectory();
 		}
-		
-		@Override
-		public void initialize() {
-			requires(bionicDrive);
-		}
-		
-		public void execute() {
-			
-		}
-		
-		@Override
-		protected boolean isFinished() {
-			return false;
-		}
 	}
+
 }
