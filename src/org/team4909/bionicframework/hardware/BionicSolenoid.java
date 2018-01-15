@@ -1,4 +1,4 @@
-package org.team4909.bionicframework.hardware.devices;
+package org.team4909.bionicframework.hardware;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;

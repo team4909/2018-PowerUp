@@ -1,4 +1,4 @@
-package org.team4909.bionicframework.hardware.devices;
+package org.team4909.bionicframework.motion;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
@@ -6,10 +6,12 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 
-import org.team4909.bionicframework.hardware.interfaces.BionicGyro;
-import org.team4909.bionicframework.oi.BionicAxis;
-import org.team4909.bionicframework.oi.BionicF310;
+import org.team4909.bionicframework.hardware.BionicSRX;
+import org.team4909.bionicframework.hardware.BionicSolenoid;
+import org.team4909.bionicframework.operator.BionicAxis;
+import org.team4909.bionicframework.operator.BionicF310;
 
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
@@ -41,17 +43,16 @@ public class BionicDrive extends Subsystem{
 	private double rotationScaleFactor = 1.0;
 	
 	/* Sensors */
-	private BionicGyro bionicGyro;
+	private Gyro bionicGyro;
 	private double gyro_p;
-	private Trajectory.Config pathfinderConfig;
-	private double drivebaseWidth;
+	private PathgenUtil pathgen;
 	
 	/* Hardware Initialization */
 	public BionicDrive(BionicSRX leftSRX, BionicSRX rightSRX,
 			BionicF310 speedInputGamepad, BionicAxis speedInputAxis,
 			BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis,
 			FeedbackDevice encoder, double encoder_p, double encoder_i, double encoder_d, double encoder_f,
-			BionicGyro bionicGyro, double gyro_p,
+			Gyro bionicGyro, double gyro_p,
 			double maxVelocity, double maxAccel, double maxJerk, double drivebaseWidth) {
 		this.leftSRX = leftSRX;
 		this.rightSRX = rightSRX;
@@ -67,11 +68,12 @@ public class BionicDrive extends Subsystem{
 		this.bionicGyro = bionicGyro;
 		this.gyro_p = gyro_p;
 		
-		this.pathfinderConfig = new Trajectory.Config(
+		this.pathgen = new PathgenUtil(new Trajectory.Config(
 				Trajectory.FitMethod.HERMITE_CUBIC,
 				Trajectory.Config.SAMPLES_HIGH,
-				(double) profileInterval / 1000, maxVelocity, maxAccel, maxJerk);
-		this.drivebaseWidth = drivebaseWidth;
+				(double) profileInterval / 1000, 
+				maxVelocity, maxAccel, maxJerk),
+				drivebaseWidth);
 		
 		this.rotationInputGamepad = rotationInputGamepad;
 		this.rotationInputAxis = rotationInputAxis;
@@ -116,6 +118,8 @@ public class BionicDrive extends Subsystem{
 	public void periodic() {
 		switch(controlMode) {
 		case Waypoints:
+			leftSRX.processMotionProfileBuffer();
+			rightSRX.processMotionProfileBuffer();
 			break;
 		case PercentVBus:
 		default:

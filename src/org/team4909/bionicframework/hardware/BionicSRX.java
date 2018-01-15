@@ -1,4 +1,4 @@
-package org.team4909.bionicframework.hardware.devices;
+package org.team4909.bionicframework.hardware;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -6,9 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 
-import org.team4909.bionicframework.hardware.interfaces.BionicSpeedControllerSmart;
-
-public class BionicSRX extends WPI_TalonSRX implements BionicSpeedControllerSmart {
+public class BionicSRX extends WPI_TalonSRX {
 	public BionicSRX(int deviceNumber) {
 		super(deviceNumber);
 	}

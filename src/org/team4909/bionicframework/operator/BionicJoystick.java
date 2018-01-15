@@ -1,4 +1,4 @@
-package org.team4909.bionicframework.oi;
+package org.team4909.bionicframework.operator;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;

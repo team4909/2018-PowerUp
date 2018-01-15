@@ -2,15 +2,13 @@ package org.team4909.powerup2018;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
-import org.team4909.bionicframework.hardware.devices.Arduino;
-import org.team4909.bionicframework.hardware.devices.RoboRio;
-import org.team4909.bionicframework.hardware.devices.Arduino.State;
-import org.team4909.bionicframework.hardware.devices.BionicDrive;
-import org.team4909.bionicframework.hardware.devices.BionicPigeon;
-import org.team4909.bionicframework.hardware.devices.BionicSRX;
-import org.team4909.bionicframework.oi.BionicF310;
-
-import jaci.pathfinder.Trajectory;
+import org.team4909.bionicframework.hardware.Arduino;
+import org.team4909.bionicframework.hardware.BionicPigeon;
+import org.team4909.bionicframework.hardware.BionicSRX;
+import org.team4909.bionicframework.hardware.RoboRio;
+import org.team4909.bionicframework.hardware.Arduino.State;
+import org.team4909.bionicframework.motion.BionicDrive;
+import org.team4909.bionicframework.operator.BionicF310;
 
 public class Robot extends RoboRio {
 	/* Subsystem Initialization */

@@ -1,4 +1,4 @@
-package org.team4909.bionicframework.oi;
+package org.team4909.bionicframework.operator;
 
 public class BionicAxis {
 	private int axis;
