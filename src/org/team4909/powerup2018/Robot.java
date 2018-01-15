@@ -7,7 +7,10 @@ import org.team4909.bionicframework.hardware.devices.RoboRio;
 import org.team4909.bionicframework.hardware.devices.Arduino.State;
 import org.team4909.bionicframework.hardware.devices.BionicDrive;
 import org.team4909.bionicframework.hardware.devices.BionicPigeon;
+import org.team4909.bionicframework.hardware.devices.BionicSRX;
 import org.team4909.bionicframework.oi.BionicF310;
+
+import jaci.pathfinder.Trajectory;
 
 public class Robot extends RoboRio {
 	/* Subsystem Initialization */
@@ -23,12 +26,12 @@ public class Robot extends RoboRio {
 		
 		arduino = new Arduino(4);
 		
-		drivetrain = new BionicDrive(6,5,
+		drivetrain = new BionicDrive(new BionicSRX(6), new BionicSRX(5),
 				driverGamepad, BionicF310.RY, driverGamepad, BionicF310.LX, 
 				FeedbackDevice.QuadEncoder, 0, 0, 0, 0,
 				new BionicPigeon(1), 0,
-				null, 24.43);
-//		drivetrain.addFollowers(3,4);
+				1.7, 2.0, 60.0, 24.43);
+//		drivetrain.addFollowers(new BionicSRX(4), new BionicSRX(3));
 	}
 
 	@Override

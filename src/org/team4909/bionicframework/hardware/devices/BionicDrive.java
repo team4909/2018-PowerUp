@@ -24,6 +24,7 @@ public class BionicDrive extends Subsystem{
 	
 	/* Internal State */
 	private DriveMode controlMode = DriveMode.PercentVBus;
+	private int profileInterval = 10;
 	
 	/* Hardware */
 	private BionicSRX leftSRX;
@@ -46,24 +47,30 @@ public class BionicDrive extends Subsystem{
 	private double drivebaseWidth;
 	
 	/* Hardware Initialization */
-	public BionicDrive(int srxLeftDeviceNumber, int srxRightDeviceNumber,
+	public BionicDrive(BionicSRX leftSRX, BionicSRX rightSRX,
 			BionicF310 speedInputGamepad, BionicAxis speedInputAxis,
 			BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis,
 			FeedbackDevice encoder, double encoder_p, double encoder_i, double encoder_d, double encoder_f,
 			BionicGyro bionicGyro, double gyro_p,
-			Trajectory.Config pathfinderConfig, double drivebaseWidth) {
-		leftSRX = new BionicSRX(srxLeftDeviceNumber);
-		rightSRX = new BionicSRX(srxRightDeviceNumber);
+			double maxVelocity, double maxAccel, double maxJerk, double drivebaseWidth) {
+		this.leftSRX = leftSRX;
+		this.rightSRX = rightSRX;
 		
-		leftSRX.setFeedbackDevice(encoder);
-		rightSRX.setFeedbackDevice(encoder);
-		leftSRX.setPIDF(encoder_p, encoder_i, encoder_d, encoder_f);
-		rightSRX.setPIDF(encoder_p, encoder_i, encoder_d, encoder_f);
+		this.leftSRX.configSelectedFeedbackSensor(encoder);
+		this.rightSRX.configSelectedFeedbackSensor(encoder);
+		this.leftSRX.configPIDF(encoder_p, encoder_i, encoder_d, encoder_f);
+		this.rightSRX.configPIDF(encoder_p, encoder_i, encoder_d, encoder_f);
+		
+		this.leftSRX.changeMotionControlFramePeriod(profileInterval);
+		this.rightSRX.changeMotionControlFramePeriod(profileInterval);
 		
 		this.bionicGyro = bionicGyro;
 		this.gyro_p = gyro_p;
 		
-		this.pathfinderConfig = pathfinderConfig;
+		this.pathfinderConfig = new Trajectory.Config(
+				Trajectory.FitMethod.HERMITE_CUBIC,
+				Trajectory.Config.SAMPLES_HIGH,
+				(double) profileInterval / 1000, maxVelocity, maxAccel, maxJerk);
 		this.drivebaseWidth = drivebaseWidth;
 		
 		this.rotationInputGamepad = rotationInputGamepad;
@@ -74,10 +81,10 @@ public class BionicDrive extends Subsystem{
 		
 		differentialDrive = new DifferentialDrive(leftSRX, rightSRX);
 	}
-
-	public void addFollowers(int srxLeftDeviceNumber, int srxRightDeviceNumber) {
-		leftSRX.addFollower(srxLeftDeviceNumber);	
-		rightSRX.addFollower(srxRightDeviceNumber);
+	
+	public void addFollowers(BionicSRX leftSRX, BionicSRX rightSRX) {
+		this.leftSRX.addFollower(leftSRX);	
+		this.rightSRX.addFollower(rightSRX);
 	}
 	
 	/* Shifting */
@@ -138,6 +145,12 @@ public class BionicDrive extends Subsystem{
 			
 			left = modifier.getLeftTrajectory();
 			right = modifier.getRightTrajectory();
+		}
+
+		@Override
+		protected boolean isFinished() {
+			// TODO Auto-generated method stub
+			return false;
 		}
 	}
 
