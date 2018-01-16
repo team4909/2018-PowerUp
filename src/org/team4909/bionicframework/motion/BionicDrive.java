@@ -53,14 +53,17 @@ public class BionicDrive extends Subsystem{
 			BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis,
 			FeedbackDevice encoder, double encoder_p, double encoder_i, double encoder_d,
 			Gyro bionicGyro, double gyro_p,
-			double maxVelocity, double maxAccel, double maxJerk, double drivebaseWidth) {
+			double maxVelocity, double maxAccel, double maxJerk,
+			double drivebaseWidth, double wheelDiameter) {
 		this.leftSRX = leftSRX;
 		this.rightSRX = rightSRX;
 		
 		this.leftSRX.configSelectedFeedbackSensor(encoder);
 		this.rightSRX.configSelectedFeedbackSensor(encoder);
-		this.leftSRX.configPIDF(encoder_p, encoder_i, encoder_d, 1023/12);
-		this.rightSRX.configPIDF(encoder_p, encoder_i, encoder_d, 1023/12);
+		
+		// Use F of 1023 for percentVBus Feedforward (as found by @oblarg)
+		this.leftSRX.configPIDF(encoder_p, encoder_i, encoder_d, 1023);
+		this.rightSRX.configPIDF(encoder_p, encoder_i, encoder_d, 1023);
 		
 		this.leftSRX.changeMotionControlFramePeriod(profileInterval);
 		this.rightSRX.changeMotionControlFramePeriod(profileInterval);
@@ -73,7 +76,7 @@ public class BionicDrive extends Subsystem{
 				Trajectory.Config.SAMPLES_HIGH,
 				(double) profileInterval / 1000, 
 				maxVelocity, maxAccel, maxJerk),
-				drivebaseWidth);
+				drivebaseWidth, wheelDiameter);
 		
 		this.rotationInputGamepad = rotationInputGamepad;
 		this.rotationInputAxis = rotationInputAxis;

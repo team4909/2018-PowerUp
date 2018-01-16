@@ -28,7 +28,8 @@ public class Robot extends RoboRio {
 				driverGamepad, BionicF310.RY, driverGamepad, BionicF310.LX, 
 				FeedbackDevice.QuadEncoder, 0, 0, 0,
 				new BionicPigeon(1), 0,
-				1.7, 2.0, 60.0, 24.43);
+				1.7, 2.0, 60.0,
+				24.43, 6);
 //		drivetrain.addFollowers(new BionicSRX(4), new BionicSRX(3));
 	}
 
