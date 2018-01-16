@@ -26,7 +26,7 @@ public class BionicDrive extends Subsystem{
 	
 	/* Internal State */
 	private DriveMode controlMode = DriveMode.PercentVBus;
-	private int profileInterval = 10;
+	private int profileInterval = 20;
 	
 	/* Hardware */
 	private BionicSRX leftSRX;
@@ -51,7 +51,7 @@ public class BionicDrive extends Subsystem{
 	public BionicDrive(BionicSRX leftSRX, BionicSRX rightSRX,
 			BionicF310 speedInputGamepad, BionicAxis speedInputAxis,
 			BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis,
-			FeedbackDevice encoder, double encoder_p, double encoder_i, double encoder_d, double encoder_f,
+			FeedbackDevice encoder, double encoder_p, double encoder_i, double encoder_d,
 			Gyro bionicGyro, double gyro_p,
 			double maxVelocity, double maxAccel, double maxJerk, double drivebaseWidth) {
 		this.leftSRX = leftSRX;
@@ -59,8 +59,8 @@ public class BionicDrive extends Subsystem{
 		
 		this.leftSRX.configSelectedFeedbackSensor(encoder);
 		this.rightSRX.configSelectedFeedbackSensor(encoder);
-		this.leftSRX.configPIDF(encoder_p, encoder_i, encoder_d, encoder_f);
-		this.rightSRX.configPIDF(encoder_p, encoder_i, encoder_d, encoder_f);
+		this.leftSRX.configPIDF(encoder_p, encoder_i, encoder_d, 1023/12);
+		this.rightSRX.configPIDF(encoder_p, encoder_i, encoder_d, 1023/12);
 		
 		this.leftSRX.changeMotionControlFramePeriod(profileInterval);
 		this.rightSRX.changeMotionControlFramePeriod(profileInterval);
@@ -131,24 +131,12 @@ public class BionicDrive extends Subsystem{
 	}
 		
 	public Command driveWaypoints(Waypoint[] points) {
-		return new DriveWaypoints(points, this);
+		return new DriveWaypoints(points);
 	}
 	
 	private class DriveWaypoints extends Command {
-		private BionicDrive bionicDrive;
-		
-		private Trajectory left;
-		private Trajectory right;
-		
-		public DriveWaypoints(Waypoint[] points, BionicDrive bionicDrive) {
-			this.bionicDrive = bionicDrive;
-			
-			Trajectory trajectory = Pathfinder.generate(points, pathfinderConfig);
-			
-			TankModifier modifier = new TankModifier(trajectory).modify(drivebaseWidth);
-			
-			left = modifier.getLeftTrajectory();
-			right = modifier.getRightTrajectory();
+		public DriveWaypoints(Waypoint[] points) {
+			pathgen.getTrajectory(points);
 		}
 
 		@Override
