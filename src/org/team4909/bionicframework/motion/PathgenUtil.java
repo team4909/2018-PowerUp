@@ -10,12 +10,12 @@ import jaci.pathfinder.modifiers.TankModifier;
 public class PathgenUtil {
 	private Trajectory.Config config;
 	private double drivebaseWidth;
-	private double wheelDiameter;
+	private double wheelCircumference;
 	
 	public PathgenUtil(Trajectory.Config config, double drivebaseWidth, double wheelDiameter) {
 		this.config = config;
 		this.drivebaseWidth = drivebaseWidth;
-		this.wheelDiameter = wheelDiameter;
+		this.wheelCircumference = Math.PI * wheelDiameter;
 	}
 	
 	public TankTrajectory getTrajectory(Waypoint[] points) {
@@ -58,13 +58,8 @@ public class PathgenUtil {
 			return parsedSRXTrajectory;
 		}
 		
-		private double convertFeetToTicks(double meters) {
-			double revPerTick = 1 / 4096;
-					
-			// Feet
-			// Tick / Meter 
-			// Rev / Ticks 
-			return revPerTick * wheelDiameter;
+		private double convertFeetToTicks(double feet) {
+			return 4096 * (feet / wheelCircumference);
 		}
 	}
 }
