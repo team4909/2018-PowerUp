@@ -1,22 +1,21 @@
 package org.team4909.bionicframework.motion;
 
+import com.ctre.phoenix.motion.TrajectoryPoint;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 
 import org.team4909.bionicframework.hardware.BionicSRX;
-import org.team4909.bionicframework.hardware.BionicSolenoid;
+import org.team4909.bionicframework.motion.PathgenUtil.TankTrajectory;
 import org.team4909.bionicframework.operator.BionicAxis;
 import org.team4909.bionicframework.operator.BionicF310;
 
-import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
-import jaci.pathfinder.modifiers.TankModifier;
 
 public class BionicDrive extends Subsystem{
 	private enum DriveMode {
@@ -29,22 +28,21 @@ public class BionicDrive extends Subsystem{
 	private int profileInterval = 20;
 	
 	/* Hardware */
-	private BionicSRX leftSRX;
-	private BionicSRX rightSRX;
-	private BionicSolenoid shiftingSolenoid;
-	private DifferentialDrive differentialDrive;
+	private final BionicSRX leftSRX;
+	private final BionicSRX rightSRX;
+	private final DifferentialDrive differentialDrive;
 	
 	/* OI */
-	private BionicF310 speedInputGamepad;
-	private BionicAxis speedInputAxis;
-	private double speedScaleFactor = 1.0;
-	private BionicF310 rotationInputGamepad;
-	private BionicAxis rotationInputAxis;
-	private double rotationScaleFactor = 1.0;
+	private final BionicF310 speedInputGamepad;
+	private final BionicAxis speedInputAxis;
+	private final double speedScaleFactor = 1.0;
+	private final BionicF310 rotationInputGamepad;
+	private final BionicAxis rotationInputAxis;
+	private final double rotationScaleFactor = 1.0;
 	
 	/* Sensors */
 	private Gyro bionicGyro;
-	private double gyro_p;
+//	private double gyro_p;
 	private PathgenUtil pathgen;
 	
 	/* Hardware Initialization */
@@ -69,7 +67,7 @@ public class BionicDrive extends Subsystem{
 		this.rightSRX.changeMotionControlFramePeriod(profileInterval);
 		
 		this.bionicGyro = bionicGyro;
-		this.gyro_p = gyro_p;
+//		this.gyro_p = gyro_p;
 		
 		this.pathgen = new PathgenUtil(new Trajectory.Config(
 				Trajectory.FitMethod.HERMITE_CUBIC,
@@ -92,25 +90,8 @@ public class BionicDrive extends Subsystem{
 		this.rightSRX.addFollower(rightSRX);
 	}
 	
-	/* Shifting */
-	public void setShiftingSolenoid(BionicSolenoid shiftingSolenoid) {
-		this.shiftingSolenoid = shiftingSolenoid;
-	}
-	
-	public Command setState(DoubleSolenoid.Value value) {
-		if(shiftingSolenoid != null) {
-			return shiftingSolenoid.setState(value);
-		}
-		
-		return null;
-	}
-	
 	public double getHeading() {
-		if(bionicGyro != null) {
-			return bionicGyro.getAngle();
-		}
-		
-		return 0;
+		return bionicGyro.getAngle();
 	}
 	
 	/* Handle Control Modes */
@@ -138,14 +119,40 @@ public class BionicDrive extends Subsystem{
 	}
 	
 	private class DriveWaypoints extends Command {
+		private TankTrajectory trajectory; 
+		
 		public DriveWaypoints(Waypoint[] points) {
-			pathgen.getTrajectory(points);
+			trajectory = pathgen.getTrajectory(points);
+			
+			setInterruptible(false);
 		}
+		
+		protected void initialize() {
+			loadNewProfile(leftSRX, trajectory.left);
+			loadNewProfile(rightSRX, trajectory.right);
 
+			leftSRX.set(ControlMode.MotionProfile, 1);
+			
+			controlMode = DriveMode.Waypoints;
+		}
+		
+		private void loadNewProfile(BionicSRX controller, TrajectoryPoint[] points) {
+			controller.clearMotionProfileTrajectories();
+			
+			for(int i = 0; i < points.length; i++) {
+				controller.pushMotionProfileTrajectory(points[i]);
+			}
+		}
+		
 		@Override
 		protected boolean isFinished() {
-			// TODO Auto-generated method stub
+			// TODO: getMotionProfileStatus() isLast
 			return false;
+		}
+		
+		@Override
+		protected void end() {
+			controlMode = DriveMode.PercentVBus;
 		}
 	}
 
