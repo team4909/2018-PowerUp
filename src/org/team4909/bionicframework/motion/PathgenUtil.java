@@ -48,7 +48,7 @@ public class PathgenUtil {
 				
 				// Configuration Data
 				point.profileSlotSelect = 0;
-				point.zeroPos = (i == 1);
+				point.zeroPos = (i == 0);
 				point.isLastPoint = (i == length - 1);
 				point.velocity = point.zeroPos ? point.velocity : 0;
 				
