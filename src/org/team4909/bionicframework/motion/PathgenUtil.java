@@ -1,6 +1,7 @@
 package org.team4909.bionicframework.motion;
 
 import com.ctre.phoenix.motion.TrajectoryPoint;
+import com.ctre.phoenix.motion.TrajectoryPoint.TrajectoryDuration;
 
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
@@ -47,7 +48,8 @@ public class PathgenUtil {
 				point.velocity = trajectory.get(i).velocity / config.max_velocity;
 				
 				// Configuration Data
-				point.profileSlotSelect = 0;
+				point.timeDur = TrajectoryDuration.Trajectory_Duration_0ms;
+				point.profileSlotSelect0 = 0;
 				point.zeroPos = (i == 0);
 				point.isLastPoint = (i == length - 1);
 				point.velocity = point.zeroPos ? point.velocity : 0;
