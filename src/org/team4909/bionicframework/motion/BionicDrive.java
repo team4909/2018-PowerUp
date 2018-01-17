@@ -1,9 +1,5 @@
 package org.team4909.bionicframework.motion;
 
-import com.ctre.phoenix.motion.MotionProfileStatus;
-import com.ctre.phoenix.motion.SetValueMotionProfile;
-import com.ctre.phoenix.motion.TrajectoryPoint;
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -22,7 +18,7 @@ import jaci.pathfinder.Waypoint;
 public class BionicDrive extends Subsystem{
 	private enum DriveMode {
 		PercentOutput,
-		Waypoints
+		MotionProfile
 	};
 	
 	/* Internal State */
@@ -103,9 +99,9 @@ public class BionicDrive extends Subsystem{
 	@Override
 	public void periodic() {
 		switch(controlMode) {
-		case Waypoints:
-			leftSRX.processMotionProfileBuffer();
-			rightSRX.processMotionProfileBuffer();
+		case MotionProfile:
+			leftSRX.runMotionProfile();
+			rightSRX.runMotionProfile();
 			break;
 		case PercentOutput:
 		default:
@@ -121,7 +117,7 @@ public class BionicDrive extends Subsystem{
 	}
 	
 	private class DriveWaypoints extends Command {
-		private TankTrajectory trajectory; 
+		private final TankTrajectory trajectory; 
 		
 		public DriveWaypoints(Waypoint[] points) {
 			trajectory = pathgen.getTrajectory(points);
@@ -130,35 +126,14 @@ public class BionicDrive extends Subsystem{
 		}
 		
 		protected void initialize() {
-			controlMode = DriveMode.Waypoints;
+			controlMode = DriveMode.MotionProfile;
 			
-			leftSRX.set(ControlMode.MotionProfile, SetValueMotionProfile.Disable.value);
-			rightSRX.set(ControlMode.MotionProfile, SetValueMotionProfile.Disable.value);
-			
-			loadNewProfile(leftSRX, trajectory.left);
-			loadNewProfile(rightSRX, trajectory.right);
-			
-			leftSRX.set(ControlMode.MotionProfile, SetValueMotionProfile.Enable.value);
-			rightSRX.set(ControlMode.MotionProfile, SetValueMotionProfile.Enable.value);
+			leftSRX.initMotionProfile(trajectory.left);
+			rightSRX.initMotionProfile(trajectory.right);
 		}
 		
-		private void loadNewProfile(BionicSRX controller, TrajectoryPoint[] points) {
-			controller.clearMotionProfileTrajectories();
-			
-			for(int i = 0; i < points.length; i++) {
-				controller.pushMotionProfileTrajectory(points[i]);
-			}
-		}
-		
-		@Override
 		protected boolean isFinished() {
-			MotionProfileStatus leftSRXStatus = new MotionProfileStatus();
-			MotionProfileStatus rightSRXStatus = new MotionProfileStatus();
-			
-			leftSRX.getMotionProfileStatus(leftSRXStatus);
-			rightSRX.getMotionProfileStatus(rightSRXStatus);
-			
-			return (leftSRXStatus.isLast && rightSRXStatus.isLast);
+			return leftSRX.isMotionProfileFinished() && rightSRX.isMotionProfileFinished();
 		}
 		
 		@Override
