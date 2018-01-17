@@ -79,15 +79,13 @@ public class BionicSRX extends WPI_TalonSRX {
 	public void runMotionProfile() {
 		MotionProfileStatus srxStatus = this.getMotionProfileStatus();
 		
-		if(srxStatus.btmBufferCnt < minBufferPoints) {
-			return;
-		}
-	
-		this.set(ControlMode.MotionProfile, SetValueMotionProfile.Enable.value);
-		
-		if(srxStatus.topBufferCnt == 0) {
-			processMotionProfileBuffer.stop();	
-		}
+		if(srxStatus.btmBufferCnt >= minBufferPoints) {
+			this.set(ControlMode.MotionProfile, SetValueMotionProfile.Enable.value);
+			
+			if(srxStatus.topBufferCnt == 0) {
+				processMotionProfileBuffer.stop();	
+			}
+		}	
 	}
 	
 	public MotionProfileStatus getMotionProfileStatus() {
