@@ -4,11 +4,43 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 
+int a;  //Case 0 (First LED Strip)
+a = 0;
+
+int b;  //Case 1 (Second LED Strip)
+b = 2;
+
+int c;  //Case 2 (Third LED Strip)
+c = 3;
+
+int d;  //Case 3 (Fourth LED Strip)
+d = 4;
+
+int e;  //Case 4 (Fifth LED Strip)
+e = 5;
+
+int f;  //Case 5 (Sixth LED Strip)
+f = 6;
+
+int g;  //Case 6 (Seventh LED Strip)
+g = 7;
+
+int h;  //Case 7 (Eighth LED Strip)
+h = 8;
+
 public class Arduino {
 	 public static enum State {
-		 disabled(7),
-		 enabled(6);
+		 disabled(a),
+         disabled(b),
+         disabled(c),
+         disabled(d),
+         enabled(e),
+         enabled(f),
+         enabled(g),
+		 enabled(h);
 		 
+         public static int disableArray[] = {"a","b","c","d"};
+         
 		 public final int signal;
 		 State(int signal) {
 			 this.signal = signal;
