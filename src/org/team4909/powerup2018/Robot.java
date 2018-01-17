@@ -29,7 +29,7 @@ public class Robot extends RoboRio {
 				FeedbackDevice.QuadEncoder, 0, 0, 0,
 				new BionicPigeon(1), 0,
 				1.7, 2.0, 60.0,
-				24.43, 6);
+				24.43, 0.5);
 //		drivetrain.addFollowers(new BionicSRX(4), new BionicSRX(3));
 	}
 
