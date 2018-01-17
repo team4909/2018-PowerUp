@@ -1,5 +1,7 @@
 package org.team4909.bionicframework.motion;
 
+import com.ctre.phoenix.motion.MotionProfileStatus;
+import com.ctre.phoenix.motion.SetValueMotionProfile;
 import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -19,12 +21,12 @@ import jaci.pathfinder.Waypoint;
 
 public class BionicDrive extends Subsystem{
 	private enum DriveMode {
-		PercentVBus,
+		PercentOutput,
 		Waypoints
 	};
 	
 	/* Internal State */
-	private DriveMode controlMode = DriveMode.PercentVBus;
+	private DriveMode controlMode = DriveMode.PercentOutput;
 	private int profileInterval = 20;
 	
 	/* Hardware */
@@ -105,7 +107,7 @@ public class BionicDrive extends Subsystem{
 			leftSRX.processMotionProfileBuffer();
 			rightSRX.processMotionProfileBuffer();
 			break;
-		case PercentVBus:
+		case PercentOutput:
 		default:
 			double speed = speedInputGamepad.getThresholdAxis(speedInputAxis, 0.15) * speedScaleFactor;
 			double rotation = rotationInputGamepad.getThresholdAxis(rotationInputAxis, 0.15) * rotationScaleFactor;
@@ -128,12 +130,16 @@ public class BionicDrive extends Subsystem{
 		}
 		
 		protected void initialize() {
+			controlMode = DriveMode.Waypoints;
+			
+			leftSRX.set(ControlMode.MotionProfile, SetValueMotionProfile.Disable.value);
+			rightSRX.set(ControlMode.MotionProfile, SetValueMotionProfile.Disable.value);
+			
 			loadNewProfile(leftSRX, trajectory.left);
 			loadNewProfile(rightSRX, trajectory.right);
-
-			leftSRX.set(ControlMode.MotionProfile, 1);
 			
-			controlMode = DriveMode.Waypoints;
+			leftSRX.set(ControlMode.MotionProfile, SetValueMotionProfile.Enable.value);
+			rightSRX.set(ControlMode.MotionProfile, SetValueMotionProfile.Enable.value);
 		}
 		
 		private void loadNewProfile(BionicSRX controller, TrajectoryPoint[] points) {
@@ -146,13 +152,18 @@ public class BionicDrive extends Subsystem{
 		
 		@Override
 		protected boolean isFinished() {
-			// TODO: getMotionProfileStatus() isLast
-			return false;
+			MotionProfileStatus leftSRXStatus = new MotionProfileStatus();
+			MotionProfileStatus rightSRXStatus = new MotionProfileStatus();
+			
+			leftSRX.getMotionProfileStatus(leftSRXStatus);
+			rightSRX.getMotionProfileStatus(rightSRXStatus);
+			
+			return (leftSRXStatus.isLast && rightSRXStatus.isLast);
 		}
 		
 		@Override
 		protected void end() {
-			controlMode = DriveMode.PercentVBus;
+			controlMode = DriveMode.PercentOutput;
 		}
 	}
 
