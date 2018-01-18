@@ -89,9 +89,9 @@ public class BionicSRX extends WPI_TalonSRX {
 	public void processMotionProfileBuffer() {
 		if(isTopLevelBufferEmpty()) {
 			processMotionProfileBuffer.stop();	
+		} else {	
+			super.processMotionProfileBuffer();
 		}
-
-		super.processMotionProfileBuffer();
 	}
 	
 	public MotionProfileStatus getMotionProfileStatus() {
