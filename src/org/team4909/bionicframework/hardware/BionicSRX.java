@@ -6,6 +6,7 @@ import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.Notifier;
 
@@ -28,7 +29,7 @@ public class BionicSRX extends WPI_TalonSRX {
 	}
 	
 	private void addFollower(int slave) {
-		(new BionicSRX(slave)).follow(this);
+		(new WPI_VictorSPX(slave)).follow(this);
 	}
 
 	/* Command-based */
