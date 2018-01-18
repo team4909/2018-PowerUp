@@ -1,8 +1,8 @@
 package org.team4909.bionicframework.hardware;
 
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.InstantCommand;
+
+import org.team4909.bionicframework.utils.Commandable;
 
 public class Arduino {
 	 public static enum State {
@@ -21,24 +21,20 @@ public class Arduino {
 		i2c = new I2C(I2C.Port.kOnboard, address);
 	}
 	
-	public void sendSignal(State state) {
-		byte[] toSend = { (byte) state.signal };
-		i2c.transaction(toSend, 1, null, 0);
-	}
-	
-	public Command send(State state) {
+	public Commandable send(State state) {
 		return new SendCommand(state);
 	}
 	
-	private class SendCommand extends InstantCommand {
+	private class SendCommand extends Commandable {
 		State state;
 		
 		public SendCommand(State state){
 			this.state = state;
 		}
 		
-		protected void initialize(){
-			sendSignal(state);
+		public void initialize(){
+			byte[] toSend = { (byte) state.signal };
+			i2c.transaction(toSend, 1, null, 0);
 		}
 	}
 }

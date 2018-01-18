@@ -1,19 +1,19 @@
 package org.team4909.bionicframework.hardware;
 
 import edu.wpi.first.wpilibj.Spark;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.InstantCommand;
+
+import org.team4909.bionicframework.utils.Commandable;
 
 public class BionicSpark extends Spark {
 	public BionicSpark(int channel) {
 		super(channel);
 	}
 
-	public Command setPercentOutput(double setpoint) {
+	public Commandable setPercentOutput(double setpoint) {
 		return new Set(setpoint);
 	}
 	
-	private class Set extends InstantCommand {
+	private class Set extends Commandable {
 		private double setpoint;
 		
 		public Set(double setpoint) {

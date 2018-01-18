@@ -3,8 +3,8 @@ package org.team4909.bionicframework.hardware;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.InstantCommand;
+
+import org.team4909.bionicframework.utils.Commandable;
 
 public class BionicSolenoid {
 	private Solenoid singleSolenoid;
@@ -18,11 +18,11 @@ public class BionicSolenoid {
 		doubleSolenoid = new DoubleSolenoid(forwardChannel, reverseChannel);
 	}
 
-	public Command setState(DoubleSolenoid.Value value) {
+	public Commandable setState(DoubleSolenoid.Value value) {
 		return new SetSolenoid(value);
 	}
 	
-	private class SetSolenoid extends InstantCommand  {
+	private class SetSolenoid extends Commandable  {
 		DoubleSolenoid.Value setpoint;
 		
 		public SetSolenoid(DoubleSolenoid.Value setpoint) {

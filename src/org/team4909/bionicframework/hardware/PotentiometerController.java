@@ -2,9 +2,9 @@ package org.team4909.bionicframework.hardware;
 
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
+
+import org.team4909.bionicframework.utils.Commandable;
 
 public class PotentiometerController extends PIDSubsystem {
 	private SpeedController motor;
@@ -32,11 +32,11 @@ public class PotentiometerController extends PIDSubsystem {
 		motor.set(output * max);
 	}
 	
-	public Command setPosition(double setpoint) {
+	public Commandable setPosition(double setpoint) {
 		return new SetPosition(setpoint);
 	}
 	
-	private class SetPosition extends InstantCommand {
+	private class SetPosition extends Commandable {
 		private double setpoint;
 		
 		public SetPosition(double setpoint) {

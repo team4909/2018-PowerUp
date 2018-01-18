@@ -34,11 +34,11 @@ public class Robot extends RoboRio {
 
 	@Override
 	protected void robotEnabled() {
-		arduino.sendSignal(State.enabled);	
+		arduino.send(State.enabled).initialize();
 	}
 
 	@Override
 	protected void robotDisabled() {
-		arduino.sendSignal(State.disabled);
+		arduino.send(State.disabled).initialize();
 	}
 }

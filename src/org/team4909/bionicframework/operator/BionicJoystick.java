@@ -3,7 +3,8 @@ package org.team4909.bionicframework.operator;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.buttons.Trigger;
-import edu.wpi.first.wpilibj.command.Command;
+
+import org.team4909.bionicframework.utils.Commandable;
 
 public class BionicJoystick extends Joystick {
 	public BionicJoystick(int port) {
@@ -17,40 +18,40 @@ public class BionicJoystick extends Joystick {
 			return 0.0;
 	}
 	
-	public void buttonPressed(BionicButton button, Command command){
+	public void buttonPressed(BionicButton button, Commandable commandable){
 		JoystickButton newButton = new JoystickButton(this, button.getNumber());
 		
-		newButton.whenPressed(command);
+		newButton.whenPressed(commandable);
 	}
 	
-	public void buttonPressed(BionicAxis axis, double threshold, Command command)	{
+	public void buttonPressed(BionicAxis axis, double threshold, Commandable commandable)	{
 		BionicJoystickAxisButton newButton = new BionicJoystickAxisButton(this, axis.getNumber(), threshold);
 		
-		newButton.whenActive(command);
+		newButton.whenActive(commandable);
 	}
 	
-	public void buttonHeld(BionicButton button, Command command){
+	public void buttonHeld(BionicButton button, Commandable commandable){
 		JoystickButton newButton = new JoystickButton(this, button.getNumber());
 		
-		newButton.whileHeld(command);
+		newButton.whileHeld(commandable);
 	}
 
-	public void buttonHeld(BionicAxis axis, double threshold, Command command)	{
+	public void buttonHeld(BionicAxis axis, double threshold, Commandable commandable)	{
 		BionicJoystickAxisButton newButton = new BionicJoystickAxisButton(this, axis.getNumber(), threshold);
 		
-		newButton.whileActive(command);
+		newButton.whileActive(commandable);
 	}
 	
-	public void buttonToggled(BionicButton button, Command command){
+	public void buttonToggled(BionicButton button, Commandable commandable){
 		JoystickButton newButton = new JoystickButton(this, button.getNumber());
 		
-		newButton.toggleWhenPressed(command);
+		newButton.toggleWhenPressed(commandable);
 	}
 	
-	public void buttonToggled(BionicAxis axis, double threshold, Command command)	{
+	public void buttonToggled(BionicAxis axis, double threshold, Commandable commandable)	{
 		BionicJoystickAxisButton newButton = new BionicJoystickAxisButton(this, axis.getNumber(), threshold);
 		
-		newButton.toggleWhenActive(command);
+		newButton.toggleWhenActive(commandable);
 	}
 	
 	private class BionicJoystickAxisButton extends Trigger {
