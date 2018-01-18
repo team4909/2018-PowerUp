@@ -83,11 +83,6 @@ public class BionicDrive extends Subsystem{
 		differentialDrive = new DifferentialDrive(leftSRX, rightSRX);
 	}
 	
-	public void addFollowers(BionicSRX leftSRX, BionicSRX rightSRX) {
-		this.leftSRX.addFollower(leftSRX);	
-		this.rightSRX.addFollower(rightSRX);
-	}
-	
 	public double getHeading() {
 		return bionicGyro.getAngle();
 	}

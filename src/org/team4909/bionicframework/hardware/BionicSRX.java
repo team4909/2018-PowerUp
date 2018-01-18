@@ -12,12 +12,16 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 
 public class BionicSRX extends WPI_TalonSRX {
-	public BionicSRX(int deviceNumber) {
+	public BionicSRX(int deviceNumber, int... slaveNumbers) {
 		super(deviceNumber);
+		
+		for(int i = 0; i < slaveNumbers.length; i++) {
+			addFollower(slaveNumbers[i]);
+		}
 	}
 	
-	public void addFollower(BionicSRX slave) {
-		slave.follow(this);
+	private void addFollower(int slave) {
+		(new BionicSRX(slave)).follow(this);
 	}
 
 	/* Commands-based */

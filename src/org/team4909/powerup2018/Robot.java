@@ -24,13 +24,12 @@ public class Robot extends RoboRio {
 		
 		arduino = new Arduino(4);
 		
-		drivetrain = new BionicDrive(new BionicSRX(6), new BionicSRX(5),
+		drivetrain = new BionicDrive(new BionicSRX(6/*,4*/), new BionicSRX(5/*,3*/),
 				driverGamepad, BionicF310.RY, driverGamepad, BionicF310.LX, 
 				FeedbackDevice.QuadEncoder, 0, 0, 0,
 				new BionicPigeon(1), 0,
 				1.7, 2.0, 60.0,
 				24.43, 0.5);
-//		drivetrain.addFollowers(new BionicSRX(4), new BionicSRX(3));
 	}
 
 	@Override
