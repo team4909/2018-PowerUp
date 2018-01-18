@@ -8,17 +8,29 @@ import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
 import jaci.pathfinder.modifiers.TankModifier;
 
+/**
+ * Path generation utility
+ */
 public class PathgenUtil {
 	private Trajectory.Config config;
 	private double drivebaseWidth;
 	private double wheelCircumference;
 	
+	/**
+	 * @param config Pathfinder Generation Configuration, as per Pathfinder documenation
+	 * @param drivebaseWidth Drivebase width between center of wheels
+	 * @param wheelDiameter Wheel diameter from end to end
+	 */
 	public PathgenUtil(Trajectory.Config config, double drivebaseWidth, double wheelDiameter) {
 		this.config = config;
 		this.drivebaseWidth = drivebaseWidth;
 		this.wheelCircumference = Math.PI * wheelDiameter;
 	}
 	
+	/**
+	 * @param points Path consisting of waypoints to follow
+	 * @return Returns SRX Motion Profiling Compliant Trajectories
+	 */
 	public TankTrajectory getTrajectory(Waypoint[] points) {
 		Trajectory trajectory = Pathfinder.generate(points, config);
 		
@@ -27,10 +39,24 @@ public class PathgenUtil {
 		return new TankTrajectory(modifier.getLeftTrajectory(), modifier.getRightTrajectory());
 	}
 	
+	/**
+	 * SRX Motion Profiling Compliant Trajectory Abstraction Layer
+	 */
 	public class TankTrajectory {
+		/**
+		 * Trajectory of Drivetrain Left
+		 */
 		public final TrajectoryPoint[] left;
-		public final TrajectoryPoint[] right;
 		
+		/**
+		 * Trajectory of Drivetrain Right
+		 */
+		public final TrajectoryPoint[] right;
+
+		/**
+		 * @param left Left Trajectory Generated from Pathfinder
+		 * @param right Right Trajectory Generated from Pathfinder
+		 */
 		public TankTrajectory(Trajectory left, Trajectory right) {
 			this.left = convertToSRXTrajectory(left);
 			this.right = convertToSRXTrajectory(right);

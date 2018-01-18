@@ -6,19 +6,29 @@ import edu.wpi.first.wpilibj.command.PIDSubsystem;
 
 import org.team4909.bionicframework.utils.Commandable;
 
+/**
+ * Generic Potentiometer Subsystem
+ */
 public class PotentiometerController extends PIDSubsystem {
 	private SpeedController motor;
 	private AnalogPotentiometer potentiometer;
-	private double max;
+	private double multiplier;
 
+	/**
+	 * @param motor Motor Controller for PID Output
+	 * @param potentiometer AnalogPotentiometer for Sensor Feedback
+	 * @param p Proportional Constant in PID Controller
+	 * @param i Integral Constant in PID Controller
+	 * @param d Derivative Constant in PID Controller
+	 */
 	public PotentiometerController(SpeedController motor, AnalogPotentiometer potentiometer, double p, double i, double d) {
 		super(p, i, d);
 
 		this.motor = motor;
 		this.potentiometer = potentiometer;
-
 		getPIDController().setContinuous(false);
-		
+
+		getPIDController().setAbsoluteTolerance(0);
 		getPIDController().enable();
 	}
 	
@@ -29,9 +39,13 @@ public class PotentiometerController extends PIDSubsystem {
 	}
 
 	protected void usePIDOutput(double output) {
-		motor.set(output * max);
+		motor.set(output * multiplier);
 	}
 	
+	/**
+	 * @param setpoint The desired degree setpoint
+	 * @return Returns a Commandable that can be used by the operator and autonomous CommandGroups
+	 */
 	public Commandable setPosition(double setpoint) {
 		return new SetPosition(setpoint);
 	}
@@ -47,12 +61,11 @@ public class PotentiometerController extends PIDSubsystem {
 			setSetpoint(setpoint);
 		}
 	}
-
-	public void setToleranceDegrees(double tolerance) {
-		getPIDController().setAbsoluteTolerance(tolerance);
-	}
 			
-	public void setMax(double max) {
-		this.max = max;
+	/**
+	 * @param multiplier Sets multiplier for PIDOutput, should be [-1,1]
+	 */
+	public void setMultiplier(double multiplier) {
+		this.multiplier = multiplier;
 	}
 }

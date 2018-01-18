@@ -1,6 +1,12 @@
 package org.team4909.bionicframework.operator;
 
+/**
+ * BionicF310 models the Logitech F310 Gamepad and its buttons for easier mapping for the operator interface.
+ */
 public class BionicF310 extends BionicJoystick {
+	/**
+	 * @param port Port between 0...5 the USB Joystick is configured to use.
+	 */
 	public BionicF310(int port) {
 		super(port);
 	}

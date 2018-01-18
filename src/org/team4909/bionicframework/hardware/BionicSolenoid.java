@@ -6,18 +6,36 @@ import edu.wpi.first.wpilibj.Solenoid;
 
 import org.team4909.bionicframework.utils.Commandable;
 
+/**
+ * Wrapper Class for WPI Single and Double Solenoids implementing BionicFramework Commandables
+ */
 public class BionicSolenoid {
 	private Solenoid singleSolenoid;
 	private DoubleSolenoid doubleSolenoid;
 	
+	/**
+	 * Connect to Single Solenoid via PCM
+	 * 
+	 * @param channel PCM Channel
+	 */
 	public BionicSolenoid(int channel) {
 		singleSolenoid = new Solenoid(channel);
 	}
 	
+	/**
+	 * Connect to Double Solenoid via PCM
+	 * 
+	 * @param forwardChannel Forward PCM Channel
+	 * @param reverseChannel Reverse PCM Channel
+	 */
 	public BionicSolenoid(int forwardChannel, int reverseChannel) {
 		doubleSolenoid = new DoubleSolenoid(forwardChannel, reverseChannel);
 	}
 
+	/**
+	 * @param value State to set Solenoid to
+	 * @return Returns a Commandable that can be used by the operator and autonomous CommandGroups
+	 */
 	public Commandable setState(DoubleSolenoid.Value value) {
 		return new SetSolenoid(value);
 	}

@@ -15,6 +15,9 @@ import org.team4909.bionicframework.operator.BionicF310;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
 
+/**
+ * BionicDrive abstracts away much of the underlying drivetrain functionality
+ */
 public class BionicDrive extends Subsystem{
 	private enum DriveMode {
 		PercentOutput,
@@ -44,6 +47,25 @@ public class BionicDrive extends Subsystem{
 	private PathgenUtil pathgen;
 	
 	/* Hardware Initialization */
+	/**
+	 * @param leftSRX Left Drivetrain SRX
+	 * @param rightSRX Right Drivetrain SRX
+	 * @param speedInputGamepad Speed Input Gamepad/Joystick
+	 * @param speedInputAxis Speed Input Axis
+	 * @param rotationInputGamepad Rotation Input Gamepad/Joystick
+	 * @param rotationInputAxis Rotation Input Axis
+	 * @param encoder Encoder type plugged into SRXs
+	 * @param encoder_p Proportional Constant in Encoder PID Controller
+	 * @param encoder_i Integral Constant in Encoder PID Controller
+	 * @param encoder_d Derivative Constant in Encoder PID Controller
+	 * @param bionicGyro Gyro to Use for Closed-Loop
+	 * @param gyro_p Proportional Constant in Gyro PID Controller
+	 * @param maxVelocity Max Velocity used for Path Generation
+	 * @param maxAccel Max Acceleration used for Path Generation
+	 * @param maxJerk Max Jerk used for Path Generation
+	 * @param drivebaseWidth Drivebase width between center of wheels
+	 * @param wheelDiameter Wheel diameter from end to end
+	 */
 	public BionicDrive(BionicSRX leftSRX, BionicSRX rightSRX,
 			BionicF310 speedInputGamepad, BionicAxis speedInputAxis,
 			BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis,
@@ -83,6 +105,9 @@ public class BionicDrive extends Subsystem{
 		differentialDrive = new DifferentialDrive(leftSRX, rightSRX);
 	}
 	
+	/**
+	 * @return Returns Robot's Current Heading [0, 360)
+	 */
 	public double getHeading() {
 		return bionicGyro.getAngle();
 	}
@@ -91,6 +116,9 @@ public class BionicDrive extends Subsystem{
 	@Override 
 	protected void initDefaultCommand() {}
 	
+	/**
+	 * Called from WPILib Scheduler
+	 */
 	@Override
 	public void periodic() {
 		switch(controlMode) {
@@ -107,6 +135,10 @@ public class BionicDrive extends Subsystem{
 		}
 	}
 		
+	/**
+	 * @param points Path consisting of waypoints to follow
+	 * @return Returns a Command that can be used by the operator and autonomous CommandGroups.
+	 */
 	public Command driveWaypoints(Waypoint[] points) {
 		return new DriveWaypoints(points);
 	}

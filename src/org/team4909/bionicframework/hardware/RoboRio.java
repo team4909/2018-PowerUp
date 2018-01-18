@@ -2,10 +2,23 @@ package org.team4909.bionicframework.hardware;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 
+/**
+ * Generic roboRio Utilities to Abstract the Robot into Distinguishable Parts 
+ */
 public abstract class RoboRio extends TimedRobot {
+	/**
+	 * Called from Robot Periodic to Separate all Dashboard Logging
+	 */
 	protected void dashboardPeriodic() {};
 
+	/**
+	 * Called from Auto/Teleop Init
+	 */
 	protected void robotEnabled() {};
+	
+	/**
+	 * Called from Disabled Init
+	 */
 	protected void robotDisabled() {};
 	
 	@Override

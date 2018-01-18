@@ -4,8 +4,14 @@ import edu.wpi.first.wpilibj.I2C;
 
 import org.team4909.bionicframework.utils.Commandable;
 
+/**
+ * Arduino Library for I2C Communications to be used for LEDs and sensors
+ */
 public class Arduino {
-	 public static enum State {
+	 /**
+	 * Enum of State Signals to send to an Arduino
+	 */
+	public static enum State {
 		 disabled(7),
 		 enabled(6);
 		 
@@ -17,10 +23,17 @@ public class Arduino {
 	 
 	private I2C i2c;
 	
+	/**
+	 * @param address I2C Address as configured on Arduino
+	 */
 	public Arduino(int address) {
 		i2c = new I2C(I2C.Port.kOnboard, address);
 	}
 	
+	/**
+	 * @param state State signal to be sent to the Arduino
+	 * @return Returns a Commandable that can be used by the operator and autonomous CommandGroups
+	 */
 	public Commandable send(State state) {
 		return new SendCommand(state);
 	}
