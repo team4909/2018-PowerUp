@@ -1,5 +1,6 @@
 package org.team4909.bionicframework.hardware;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 
 import org.team4909.bionicframework.utils.Commandable;
@@ -47,7 +48,11 @@ public class Arduino {
 		
 		public void initialize(){
 			byte[] toSend = { (byte) state.signal };
-			i2c.transaction(toSend, 1, null, 0);
+			try {
+				i2c.transaction(toSend, 1, null, 0);
+			} catch(java.lang.NullPointerException e) {
+				DriverStation.reportError("Could not connect to Arduino", false);
+			}
 		}
 	}
 }

@@ -2,6 +2,8 @@ package org.team4909.bionicframework.motion;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -18,7 +20,7 @@ import jaci.pathfinder.Waypoint;
 /**
  * BionicDrive abstracts away much of the underlying drivetrain functionality
  */
-public class BionicDrive extends Subsystem{
+public class BionicDrive extends Subsystem {
 	private enum DriveMode {
 		PercentOutput,
 		MotionProfile
@@ -73,11 +75,16 @@ public class BionicDrive extends Subsystem{
 			Gyro bionicGyro, double gyro_p,
 			double maxVelocity, double maxAccel, double maxJerk,
 			double drivebaseWidth, double wheelDiameter) {
+		super();
+		
 		this.leftSRX = leftSRX;
 		this.rightSRX = rightSRX;
 		
 		this.leftSRX.configSelectedFeedbackSensor(encoder);
 		this.rightSRX.configSelectedFeedbackSensor(encoder);
+
+		this.leftSRX.setSensorPhase(true);
+        this.rightSRX.setSensorPhase(true);
 		
 		// Use F of 1023 for percentVBus Feedforward (as found by @oblarg)
 		this.leftSRX.configPIDF(encoder_p, encoder_i, encoder_d, 1023);
@@ -131,7 +138,7 @@ public class BionicDrive extends Subsystem{
 			double speed = speedInputGamepad.getThresholdAxis(speedInputAxis, 0.15) * speedScaleFactor;
 			double rotation = rotationInputGamepad.getThresholdAxis(rotationInputAxis, 0.15) * rotationScaleFactor;
 			
-			differentialDrive.curvatureDrive(speed, rotation, false);
+			differentialDrive.arcadeDrive(speed, rotation, false);
 		}
 	}
 		
@@ -147,25 +154,48 @@ public class BionicDrive extends Subsystem{
 		private final TankTrajectory trajectory; 
 		
 		public DriveWaypoints(Waypoint[] points) {
-			trajectory = pathgen.getTrajectory(points);
-			
+            DriverStation.reportWarning("Generating Path", false);
+            trajectory = pathgen.getTrajectory(points);
+
 			setInterruptible(false);
-		}
-		
-		protected void initialize() {
-			controlMode = DriveMode.MotionProfile;
-			
-			leftSRX.initMotionProfile(trajectory.left);
-			rightSRX.initMotionProfile(trajectory.right);
-		}
-		
+//		}
+//
+//		@Override
+//		protected void initialize(){
+            DriverStation.reportWarning("Initializing Path Follower", false);
+            leftSRX.setInverted(false);
+            rightSRX.setInverted(true);
+
+            leftSRX.setNeutralMode(NeutralMode.Brake);
+            rightSRX.setNeutralMode(NeutralMode.Brake);
+
+            DriverStation.reportWarning("Disabling Drivetrain Motor Safety for MP", false);
+            differentialDrive.setSafetyEnabled(false);
+
+            controlMode = DriveMode.MotionProfile;
+
+            DriverStation.reportWarning("Initializing SRX MP", false);
+            leftSRX.initMotionProfile(trajectory.left);
+            rightSRX.initMotionProfile(trajectory.right);
+        }
+
+        @Override
 		protected boolean isFinished() {
-			return leftSRX.isMotionProfileFinished() && rightSRX.isMotionProfileFinished();
+		    return leftSRX.isMotionProfileFinished() && rightSRX.isMotionProfileFinished();
 		}
 		
 		@Override
 		protected void end() {
-			controlMode = DriveMode.PercentOutput;
+            leftSRX.setInverted(false);
+            rightSRX.setInverted(false);
+
+            leftSRX.setNeutralMode(NeutralMode.Coast);
+            rightSRX.setNeutralMode(NeutralMode.Coast);
+
+            DriverStation.reportWarning("Re-enabling Drivetrain Motor Safety for MP", false);
+            differentialDrive.setSafetyEnabled(true);
+
+		    controlMode = DriveMode.PercentOutput;
 		}
 	}
 

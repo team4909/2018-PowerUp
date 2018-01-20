@@ -99,6 +99,8 @@ public class BionicSRX extends WPI_TalonSRX {
 	 * @param points Path consisting of waypoints to follow
 	 */
 	public void initMotionProfile(TrajectoryPoint[] points) {
+		this.setSelectedSensorPosition(0,pidIdx,timeoutMs);
+
 		this.set(ControlMode.MotionProfile, SetValueMotionProfile.Disable.value);
 		
 		this.clearMotionProfileTrajectories();

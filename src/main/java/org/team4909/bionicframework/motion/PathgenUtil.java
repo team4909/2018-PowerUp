@@ -71,7 +71,7 @@ public class PathgenUtil {
 				
 				// Profile Data
 				point.position = convertFeetToTicks(trajectory.get(i).position);
-				point.velocity = trajectory.get(i).velocity / config.max_velocity;
+				point.velocity = (trajectory.get(i).velocity / config.max_velocity) / 10;
 				
 				// Configuration Data
 				point.timeDur = TrajectoryDuration.Trajectory_Duration_0ms;
@@ -87,7 +87,7 @@ public class PathgenUtil {
 		}
 		
 		private double convertFeetToTicks(double feet) {
-			return 4096 * (feet / wheelCircumference);
+			return 1024 * (feet / wheelCircumference);
 		}
 	}
 }
