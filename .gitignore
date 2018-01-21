@@ -8,3 +8,6 @@ libs/
 .settings/
 .project
 .classpath
+.ipr
+.iws
+.iml
