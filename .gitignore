@@ -2,4 +2,7 @@
 /dist/
 /build/
 *.class
-/.gradle/
+.gradle/
+.idea/*
+
+.classpath
