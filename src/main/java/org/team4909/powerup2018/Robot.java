@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import org.team4909.bionicframework.hardware.Arduino;
 import org.team4909.bionicframework.hardware.BionicPigeon;
 import org.team4909.bionicframework.hardware.BionicSRX;
@@ -33,36 +34,33 @@ public class Robot extends RoboRio {
 		arduino = new Arduino(4);
 
 		drivetrain = new BionicDrive(new BionicSRX(6/*,4*/), new BionicSRX(5/*,3*/),
-				driverGamepad, BionicF310.RY, driverGamepad, BionicF310.LX, 
+				driverGamepad, BionicF310.LY, driverGamepad, BionicF310.RX,
 				FeedbackDevice.QuadEncoder, 0.6, 0, 0,
 				new BionicPigeon(1), 0,
 				1.0, 2.0, 60.0,
 				24.43, 0.5);
 
-
-	}
-
-	@Override
-    public void autonomousInit(){
         autoCommand = drivetrain.driveWaypoints(new Waypoint[]{
                 new Waypoint(0,0,0),
                 new Waypoint(5,0,0)
         });
-        
+    }
+
+	@Override
+    public void autonomousInit(){
+	    super.autonomousInit();
+
         autoCommand.start();
     }
 
     @Override
     public void teleopInit(){
+	    super.teleopInit();
+
         if(autoCommand != null){
             autoCommand.cancel();
         }
     }
-
-	@Override
-	public void robotPeriodic() {
-	    drivetrain.periodic();
-	}
 	
 	@Override
 	protected void robotEnabled() {

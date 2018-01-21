@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/BionicFramework.iml" filepath="$PROJECT_DIR$/BionicFramework.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/BionicFramework.iml" filepath="$PROJECT_DIR$/.idea/modules/BionicFramework.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/BionicFramework_main.iml" filepath="$PROJECT_DIR$/.idea/modules/BionicFramework_main.iml" group="BionicFramework" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/BionicFramework_test.iml" filepath="$PROJECT_DIR$/.idea/modules/BionicFramework_test.iml" group="BionicFramework" />
     </modules>
   </component>
 </project>

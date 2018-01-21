@@ -79,7 +79,10 @@ public class BionicDrive extends Subsystem {
 		
 		this.leftSRX = leftSRX;
 		this.rightSRX = rightSRX;
-		
+
+		this.leftSRX.enableVoltageCompensation(true);
+		this.rightSRX.enableVoltageCompensation(true);
+
 		this.leftSRX.configSelectedFeedbackSensor(encoder);
 		this.rightSRX.configSelectedFeedbackSensor(encoder);
 
@@ -158,43 +161,35 @@ public class BionicDrive extends Subsystem {
             trajectory = pathgen.getTrajectory(points);
 
 			setInterruptible(false);
-//		}
-//
-//		@Override
-//		protected void initialize(){
-            DriverStation.reportWarning("Initializing Path Follower", false);
-            leftSRX.setInverted(false);
-            rightSRX.setInverted(true);
+		}
+
+		@Override
+		protected void initialize(){
+            rightSRX.setInverted(!rightSRX.getInverted());
 
             leftSRX.setNeutralMode(NeutralMode.Brake);
             rightSRX.setNeutralMode(NeutralMode.Brake);
 
-            DriverStation.reportWarning("Disabling Drivetrain Motor Safety for MP", false);
             differentialDrive.setSafetyEnabled(false);
-
             controlMode = DriveMode.MotionProfile;
 
-            DriverStation.reportWarning("Initializing SRX MP", false);
             leftSRX.initMotionProfile(trajectory.left);
             rightSRX.initMotionProfile(trajectory.right);
         }
 
         @Override
 		protected boolean isFinished() {
-		    return leftSRX.isMotionProfileFinished() && rightSRX.isMotionProfileFinished();
+			return leftSRX.isMotionProfileFinished() && rightSRX.isMotionProfileFinished();
 		}
 		
 		@Override
 		protected void end() {
-            leftSRX.setInverted(false);
-            rightSRX.setInverted(false);
+			rightSRX.setInverted(!rightSRX.getInverted());
 
             leftSRX.setNeutralMode(NeutralMode.Coast);
             rightSRX.setNeutralMode(NeutralMode.Coast);
 
-            DriverStation.reportWarning("Re-enabling Drivetrain Motor Safety for MP", false);
             differentialDrive.setSafetyEnabled(true);
-
 		    controlMode = DriveMode.PercentOutput;
 		}
 	}

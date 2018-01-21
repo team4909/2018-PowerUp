@@ -1,6 +1,7 @@
 package org.team4909.bionicframework.hardware;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.command.Scheduler;
 
 /**
  * Generic roboRio Utilities to Abstract the Robot into Distinguishable Parts 
@@ -20,9 +21,11 @@ public abstract class RoboRio extends TimedRobot {
 	 * Called from Disabled Init
 	 */
 	protected void robotDisabled() {};
-	
+
 	@Override
 	public void robotPeriodic() {
+		Scheduler.getInstance().run();
+
 		dashboardPeriodic();
 	}
 
