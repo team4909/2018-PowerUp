@@ -157,6 +157,7 @@ public class BionicDrive extends Subsystem {
 
     private class DriveWaypoints extends Command {
         private final TankTrajectory trajectory;
+        private boolean defaultSRXInvertState = false;
 
         public DriveWaypoints(Waypoint[] points) {
             DriverStation.reportWarning("Generating Path", false);
@@ -167,7 +168,8 @@ public class BionicDrive extends Subsystem {
 
         @Override
         protected void initialize() {
-            rightSRX.setInverted(!rightSRX.getInverted());
+            defaultSRXInvertState = rightSRX.getInverted();
+            rightSRX.setInverted(!defaultSRXInvertState);
 
             leftSRX.setNeutralMode(NeutralMode.Brake);
             rightSRX.setNeutralMode(NeutralMode.Brake);
@@ -186,7 +188,7 @@ public class BionicDrive extends Subsystem {
 
         @Override
         protected void end() {
-            rightSRX.setInverted(!rightSRX.getInverted());
+            rightSRX.setInverted(defaultSRXInvertState);
 
             leftSRX.setNeutralMode(NeutralMode.Coast);
             rightSRX.setNeutralMode(NeutralMode.Coast);
