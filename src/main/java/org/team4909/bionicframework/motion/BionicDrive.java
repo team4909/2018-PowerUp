@@ -38,10 +38,8 @@ public class BionicDrive extends Subsystem {
     /* OI */
     private final BionicF310 speedInputGamepad;
     private final BionicAxis speedInputAxis;
-    private final double speedScaleFactor = 1.0;
     private final BionicF310 rotationInputGamepad;
     private final BionicAxis rotationInputAxis;
-    private final double rotationScaleFactor = 1.0;
 
     /* Sensors */
     private Gyro bionicGyro;
@@ -137,8 +135,8 @@ public class BionicDrive extends Subsystem {
                 break;
             case PercentOutput:
             default:
-                double speed = speedInputGamepad.getThresholdAxis(speedInputAxis, 0.15) * speedScaleFactor;
-                double rotation = rotationInputGamepad.getThresholdAxis(rotationInputAxis, 0.15) * rotationScaleFactor;
+                double speed = speedInputGamepad.getThresholdAxis(speedInputAxis, 0.15);
+                double rotation = rotationInputGamepad.getThresholdAxis(rotationInputAxis, 0.15);
 
                 differentialDrive.arcadeDrive(speed, rotation, false);
         }
@@ -167,10 +165,7 @@ public class BionicDrive extends Subsystem {
             defaultSRXInvertState = rightSRX.getInverted();
             rightSRX.setInverted(!defaultSRXInvertState);
 
-            leftSRX.setNeutralMode(NeutralMode.Brake);
-            rightSRX.setNeutralMode(NeutralMode.Brake);
-
-            differentialDrive.setSafetyEnabled(false);
+            disableTelopControl();
             controlMode = DriveMode.MotionProfile;
 
             leftSRX.initMotionProfile(trajectory.left);
@@ -186,12 +181,22 @@ public class BionicDrive extends Subsystem {
         protected void end() {
             rightSRX.setInverted(defaultSRXInvertState);
 
-            leftSRX.setNeutralMode(NeutralMode.Coast);
-            rightSRX.setNeutralMode(NeutralMode.Coast);
-
-            differentialDrive.setSafetyEnabled(true);
+            enableTelopControl();
             controlMode = DriveMode.PercentOutput;
         }
     }
 
+    private void disableTelopControl(){
+        leftSRX.setNeutralMode(NeutralMode.Brake);
+        rightSRX.setNeutralMode(NeutralMode.Brake);
+
+        differentialDrive.setSafetyEnabled(false);
+    }
+
+    private void enableTelopControl(){
+        leftSRX.setNeutralMode(NeutralMode.Coast);
+        rightSRX.setNeutralMode(NeutralMode.Coast);
+
+        differentialDrive.setSafetyEnabled(true);
+    }
 }
