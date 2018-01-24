@@ -2,12 +2,9 @@ package org.team4909.powerup2018;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Scheduler;
 import org.team4909.bionicframework.hardware.Arduino;
-import org.team4909.bionicframework.hardware.BionicPigeon;
+import org.team4909.bionicframework.hardware.BionicNavX;
 import org.team4909.bionicframework.hardware.BionicSRX;
 import org.team4909.bionicframework.hardware.RoboRio;
 import org.team4909.bionicframework.hardware.Arduino.State;
@@ -36,8 +33,8 @@ public class Robot extends RoboRio {
 		drivetrain = new BionicDrive(new BionicSRX(6/*,4*/), new BionicSRX(5/*,3*/),
 				driverGamepad, BionicF310.LY, driverGamepad, BionicF310.RX,
 				FeedbackDevice.QuadEncoder, 0.6, 0, 0,
-				new BionicPigeon(1), 0,
-				1.0, 2.0, 60.0,
+				new BionicNavX(),
+                1.0, 2.0, 60.0,
 				24.43, 0.5);
 
         autoCommand = drivetrain.driveWaypoints(new Waypoint[]{
@@ -46,7 +43,7 @@ public class Robot extends RoboRio {
         });
     }
 
-	@Override
+    @Override
     public void autonomousInit(){
 	    super.autonomousInit();
 

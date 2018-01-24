@@ -1,5 +1,6 @@
 package org.team4909.bionicframework.hardware;
 
+import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 

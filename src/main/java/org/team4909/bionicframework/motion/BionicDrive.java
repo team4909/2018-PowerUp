@@ -45,7 +45,6 @@ public class BionicDrive extends Subsystem {
 
     /* Sensors */
     private Gyro bionicGyro;
-    //	private double gyro_p;
     private PathgenUtil pathgen;
 
     /* Hardware Initialization */
@@ -62,7 +61,6 @@ public class BionicDrive extends Subsystem {
      * @param encoder_i            Integral Constant in Encoder PID Controller
      * @param encoder_d            Derivative Constant in Encoder PID Controller
      * @param bionicGyro           Gyro to Use for Closed-Loop
-     * @param gyro_p               Proportional Constant in Gyro PID Controller
      * @param maxVelocity          Max Velocity used for Path Generation
      * @param maxAccel             Max Acceleration used for Path Generation
      * @param maxJerk              Max Jerk used for Path Generation
@@ -73,7 +71,7 @@ public class BionicDrive extends Subsystem {
                        BionicF310 speedInputGamepad, BionicAxis speedInputAxis,
                        BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis,
                        FeedbackDevice encoder, double encoder_p, double encoder_i, double encoder_d,
-                       Gyro bionicGyro, double gyro_p,
+                       Gyro bionicGyro,
                        double maxVelocity, double maxAccel, double maxJerk,
                        double drivebaseWidth, double wheelDiameter) {
         super();
@@ -98,7 +96,6 @@ public class BionicDrive extends Subsystem {
         this.rightSRX.changeMotionControlFramePeriod(profileInterval);
 
         this.bionicGyro = bionicGyro;
-//		this.gyro_p = gyro_p;
 
         this.pathgen = new PathgenUtil(new Trajectory.Config(
                 Trajectory.FitMethod.HERMITE_CUBIC,
@@ -160,7 +157,6 @@ public class BionicDrive extends Subsystem {
         private boolean defaultSRXInvertState = false;
 
         public DriveWaypoints(Waypoint[] points) {
-            DriverStation.reportWarning("Generating Path", false);
             trajectory = pathgen.getTrajectory(points);
 
             setInterruptible(false);
