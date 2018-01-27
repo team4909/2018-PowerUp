@@ -31,7 +31,12 @@ public class BionicJoystick extends Joystick {
 		else
 			return 0.0;
 	}
-	
+
+	public double getSensitiveAxis(BionicAxis axis, double deadzone, double sensitivity){
+		double axisValue = getThresholdAxis(axis, deadzone);
+
+		return (1 - sensitivity) * axisValue + sensitivity * Math.pow(axisValue, 3);
+	}
 	/**
 	 * @param button Button to Create Handler For
 	 * @param commandable Returns a Commandable that can be used by the operator and autonomous CommandGroups
