@@ -28,7 +28,7 @@ public class Robot extends RoboRio {
 
     @Override
     public void robotInit() {
-        driverGamepad = new BionicF310(0);
+        driverGamepad = new BionicF310(0, 0.15, 0.8);
 
         arduino = new Arduino(4);
 

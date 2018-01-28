@@ -24,7 +24,6 @@ public class BionicDrive extends Subsystem {
     /* Hardware */
     private final BionicSRX leftSRX;
     private final BionicSRX rightSRX;
-    private final DifferentialDrive differentialDrive;
 
     /* OI */
     private final BionicF310 speedInputGamepad;
@@ -35,8 +34,6 @@ public class BionicDrive extends Subsystem {
     /* Sensors */
     private Gyro bionicGyro;
     private MotionProfileUtil pathgen;
-
-    /* Hardware Initialization */
 
     /**
      * @param leftSRX              Left Drivetrain SRX
@@ -74,8 +71,6 @@ public class BionicDrive extends Subsystem {
 
         this.speedInputGamepad = speedInputGamepad;
         this.speedInputAxis = speedInputAxis;
-
-        differentialDrive = new DifferentialDrive(leftSRX, rightSRX);
     }
 
     /**
@@ -104,18 +99,38 @@ public class BionicDrive extends Subsystem {
 
             leftSRX.configOpenloopRamp(pathgen.motionProfileConfig.secondsFromNeutralToFull);
             rightSRX.configOpenloopRamp(pathgen.motionProfileConfig.secondsFromNeutralToFull);
-
-            rightSRX.setInverted(false);
-
-            differentialDrive.setSafetyEnabled(true);
         }
 
         @Override
         protected void execute() {
-            double speed = speedInputGamepad.getThresholdAxis(speedInputAxis, 0.15);
-            double rotation = rotationInputGamepad.getThresholdAxis(rotationInputAxis, 0.15);
+            double speed = speedInputGamepad.getSensitiveAxis(speedInputAxis);
+            double rotation = rotationInputGamepad.getSensitiveAxis(rotationInputAxis);
 
-            differentialDrive.arcadeDrive(speed, rotation, false);
+            double leftMotorOutput;
+            double rightMotorOutput;
+
+            double maxInput = Math.copySign(Math.max(Math.abs(speed), Math.abs(rotation)), speed);
+
+            if (speed >= 0.0 && rotation >= 0.0) {
+                leftMotorOutput = maxInput;
+                rightMotorOutput = speed - rotation;
+            } else if (speed >= 0.0 && rotation < 0.0) {
+                leftMotorOutput = speed + rotation;
+                rightMotorOutput = maxInput;
+            } else if (speed < 0.0 && rotation >= 0.0) {
+                leftMotorOutput = speed + rotation;
+                rightMotorOutput = maxInput;
+            } else { // speed < 0.0 &&  rotation < 0.0
+                leftMotorOutput = maxInput;
+                rightMotorOutput = speed - rotation;
+            }
+
+            leftSRX.set(ControlMode.PercentOutput, limit(leftMotorOutput));
+            rightSRX.set(ControlMode.PercentOutput, limit(rightMotorOutput));
+        }
+
+        private double limit(double value) {
+            return Math.copySign(Math.abs(value) > 1.0 ? 1.0 : value, value);
         }
 
         @Override
@@ -128,117 +143,51 @@ public class BionicDrive extends Subsystem {
         return new DriveHalfVoltage(this);
     }
 
-    private class DriveHalfVoltage extends AutoDriveCommand {
+    private class DriveHalfVoltage extends Command {
         public DriveHalfVoltage(BionicDrive subsystem) {
-            super(subsystem);
-        }
-
-        @Override
-        protected void execute() {
-            leftSRX.set(0.5);
-            rightSRX.set(0.5);
-
-            System.out.println("L(ticks/s): " + leftSRX.getSelectedSensorVelocity(0) + ", R(ticks/s): "+ rightSRX.getSelectedSensorVelocity(0));
-        }
-    }
-
-    @Override
-    public void periodic() {
-        super.periodic();
-
-        System.out.println(leftSRX.getSelectedSensorPosition(0) + "," + rightSRX.getSelectedSensorPosition(0));
-    }
-
-    public Command driveDistance() {
-        return new DriveDistance(this);
-    }
-
-    private class DriveDistance extends AutoDriveCommand {
-        public DriveDistance(BionicDrive subsystem) {
-            super(subsystem);
+           requires(subsystem);
         }
 
         @Override
         protected void initialize() {
-            super.initialize();
+            leftSRX.setNeutralMode(NeutralMode.Brake);
+            rightSRX.setNeutralMode(NeutralMode.Brake);
 
-            System.out.println("Starting Pos. PID");
+            leftSRX.configOpenloopRamp(0);
+            rightSRX.configOpenloopRamp(0);
+        }
 
-            leftSRX.set(ControlMode.Position, pathgen.motionProfileConfig.driveTestTicks);
-            rightSRX.set(ControlMode.Position, pathgen.motionProfileConfig.driveTestTicks);
+        @Override
+        protected void execute() {
+            leftSRX.set(ControlMode.PercentOutput, 0.5);
+            rightSRX.set(ControlMode.PercentOutput, 0.5);
+
+            System.out.println("Avg. Half Voltage Velocity (ticks/s): " +
+                    ((leftSRX.getSelectedSensorVelocity(0) + rightSRX.getSelectedSensorVelocity(0)) / 2));
         }
 
         @Override
         protected boolean isFinished() {
-            return (Math.abs(leftSRX.getClosedLoopError(0)) < 100) && (Math.abs(rightSRX.getClosedLoopError(0)) < 100);
-        }
-
-        @Override
-        protected void end() {
-            super.end();
-
-            System.out.println("Finished Pos. PID");
+            return false;
         }
     }
 
-    /**
-     * @param points Path consisting of waypoints to follow
-     * @return Returns a Command that can be used by the operator and autonomous CommandGroups.
-     */
+    public Command driveDistance(Waypoint[] points) {
+        return new DriveTrajectory(this, pathgen.getTrajectory(points));
+    }
+
     public Command driveWaypoints(Waypoint[] points) {
-        return new DriveWaypoints(this, points);
+        return new DriveTrajectory(this, pathgen.getTrajectory(points));
     }
 
-    private class DriveWaypoints extends AutoDriveCommand {
+    private class DriveTrajectory extends Command {
         private final MotionProfileTrajectory trajectory;
 
-        public DriveWaypoints(BionicDrive subsystem, Waypoint[] points) {
-            super(subsystem);
-
-            System.out.println("Generating Trajectory...");
-            trajectory = pathgen.getTrajectory(points);
-        }
-
-        @Override
-        protected void initialize() {
-            super.initialize();
-
-            System.out.println("Initializing Trajectory...");
-            leftSRX.initMotionProfile(trajectory.profileInterval, trajectory.left);
-            rightSRX.initMotionProfile(trajectory.profileInterval, trajectory.right);
-        }
-
-        @Override
-        protected void execute() {
-            System.out.println("Executing Trajectory...");
-
-            leftSRX.runMotionProfile();
-            rightSRX.runMotionProfile();
-        }
-
-        @Override
-        protected boolean isFinished() {
-            return leftSRX.isMotionProfileFinished() && rightSRX.isMotionProfileFinished();
-        }
-
-        @Override
-        protected void end() {
-            super.end();
-
-            System.out.println("Executed Trajectory.");
-
-            leftSRX.resetProfileSlot();
-            rightSRX.resetProfileSlot();
-        }
-    }
-
-    private abstract class AutoDriveCommand extends Command {
-        private boolean defaultSRXInvertState = false;
-
-        public AutoDriveCommand(BionicDrive subsystem) {
+        public DriveTrajectory(BionicDrive subsystem, MotionProfileTrajectory trajectory) {
             requires(subsystem);
-
             setInterruptible(false);
+
+            this.trajectory = trajectory;
         }
 
         @Override
@@ -252,14 +201,24 @@ public class BionicDrive extends Subsystem {
             leftSRX.zeroEncoderPosition();
             rightSRX.zeroEncoderPosition();
 
-            rightSRX.setInverted(true);
+            leftSRX.initMotionProfile(trajectory.profileInterval, trajectory.left);
+            rightSRX.initMotionProfile(trajectory.profileInterval, trajectory.right);
+        }
 
-            differentialDrive.setSafetyEnabled(false);
+        @Override
+        protected void execute() {
+            leftSRX.runMotionProfile();
+            rightSRX.runMotionProfile();
         }
 
         @Override
         protected boolean isFinished() {
-            return false;
+            return leftSRX.isMotionProfileFinished() && rightSRX.isMotionProfileFinished();
+        }
+
+        @Override
+        protected void end() {
+            super.end();
         }
     }
 }
