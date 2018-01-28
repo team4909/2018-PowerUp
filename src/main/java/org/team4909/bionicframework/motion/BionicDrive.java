@@ -1,16 +1,16 @@
 package org.team4909.bionicframework.motion;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 
 import org.team4909.bionicframework.hardware.BionicSRX;
-import org.team4909.bionicframework.motion.PathgenUtil.TankTrajectory;
+import org.team4909.bionicframework.motion.MotionProfileUtil.MotionProfileTrajectory;
 import org.team4909.bionicframework.operator.BionicAxis;
 import org.team4909.bionicframework.operator.BionicF310;
 
@@ -21,15 +21,6 @@ import jaci.pathfinder.Waypoint;
  * BionicDrive abstracts away much of the underlying drivetrain functionality
  */
 public class BionicDrive extends Subsystem {
-    private enum DriveMode {
-        PercentOutput,
-        MotionProfile
-    };
-
-    /* Internal State */
-    private DriveMode controlMode = DriveMode.PercentOutput;
-    private int profileInterval = 20;
-
     /* Hardware */
     private final BionicSRX leftSRX;
     private final BionicSRX rightSRX;
@@ -43,7 +34,7 @@ public class BionicDrive extends Subsystem {
 
     /* Sensors */
     private Gyro bionicGyro;
-    private PathgenUtil pathgen;
+    private MotionProfileUtil pathgen;
 
     /* Hardware Initialization */
 
@@ -54,53 +45,29 @@ public class BionicDrive extends Subsystem {
      * @param speedInputAxis       Speed Input Axis
      * @param rotationInputGamepad Rotation Input Gamepad/Joystick
      * @param rotationInputAxis    Rotation Input Axis
-     * @param encoder              Encoder type plugged into SRXs
-     * @param encoder_p            Proportional Constant in Encoder PID Controller
-     * @param encoder_i            Integral Constant in Encoder PID Controller
-     * @param encoder_d            Derivative Constant in Encoder PID Controller
+     * @param encoder              Encoder plugged into SRXs
      * @param bionicGyro           Gyro to Use for Closed-Loop
-     * @param maxVelocity          Max Velocity used for Path Generation
-     * @param maxAccel             Max Acceleration used for Path Generation
-     * @param maxJerk              Max Jerk used for Path Generation
-     * @param drivebaseWidth       Drivebase width between center of wheels
-     * @param wheelDiameter        Wheel diameter from end to end
      */
     public BionicDrive(BionicSRX leftSRX, BionicSRX rightSRX,
                        BionicF310 speedInputGamepad, BionicAxis speedInputAxis,
                        BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis,
-                       FeedbackDevice encoder, double encoder_p, double encoder_i, double encoder_d,
-                       Gyro bionicGyro,
-                       double maxVelocity, double maxAccel, double maxJerk,
-                       double drivebaseWidth, double wheelDiameter) {
+                       BionicSRXEncoder encoderConfig,
+                       MotionProfileConfig motionProfileConfig,
+                       Gyro bionicGyro) {
         super();
 
         this.leftSRX = leftSRX;
         this.rightSRX = rightSRX;
 
-        this.leftSRX.enableVoltageCompensation(true);
-        this.rightSRX.enableVoltageCompensation(true);
+        this.leftSRX.configEncoder(encoderConfig);
+        this.rightSRX.configEncoder(encoderConfig);
 
-        this.leftSRX.configSelectedFeedbackSensor(encoder);
-        this.rightSRX.configSelectedFeedbackSensor(encoder);
-
-        this.leftSRX.setSensorPhase(true);
+        this.rightSRX.setInverted(true);
         this.rightSRX.setSensorPhase(true);
-
-        // Use F of 1023 for percentVBus Feedforward (as found by @oblarg)
-        this.leftSRX.configPIDF(encoder_p, encoder_i, encoder_d, 1023);
-        this.rightSRX.configPIDF(encoder_p, encoder_i, encoder_d, 1023);
-
-        this.leftSRX.changeMotionControlFramePeriod(profileInterval);
-        this.rightSRX.changeMotionControlFramePeriod(profileInterval);
 
         this.bionicGyro = bionicGyro;
 
-        this.pathgen = new PathgenUtil(new Trajectory.Config(
-                Trajectory.FitMethod.HERMITE_CUBIC,
-                Trajectory.Config.SAMPLES_HIGH,
-                (double) profileInterval / 1000,
-                maxVelocity, maxAccel, maxJerk),
-                drivebaseWidth, wheelDiameter);
+        this.pathgen = new MotionProfileUtil(motionProfileConfig);
 
         this.rotationInputGamepad = rotationInputGamepad;
         this.rotationInputAxis = rotationInputAxis;
@@ -118,27 +85,99 @@ public class BionicDrive extends Subsystem {
         return bionicGyro.getAngle();
     }
 
-    /* Handle Control Modes */
     @Override
     protected void initDefaultCommand() {
+        setDefaultCommand(new DriveOI(this));
     }
 
-    /**
-     * Called from WPILib Scheduler
-     */
+    private class DriveOI extends Command {
+        public DriveOI(BionicDrive subsystem) {
+            requires(subsystem);
+        }
+
+        @Override
+        protected void initialize() {
+            super.initialize();
+
+            leftSRX.setNeutralMode(NeutralMode.Coast);
+            rightSRX.setNeutralMode(NeutralMode.Coast);
+
+            leftSRX.configOpenloopRamp(pathgen.motionProfileConfig.secondsFromNeutralToFull);
+            rightSRX.configOpenloopRamp(pathgen.motionProfileConfig.secondsFromNeutralToFull);
+
+            rightSRX.setInverted(false);
+
+            differentialDrive.setSafetyEnabled(true);
+        }
+
+        @Override
+        protected void execute() {
+            double speed = speedInputGamepad.getThresholdAxis(speedInputAxis, 0.15);
+            double rotation = rotationInputGamepad.getThresholdAxis(rotationInputAxis, 0.15);
+
+            differentialDrive.arcadeDrive(speed, rotation, false);
+        }
+
+        @Override
+        protected boolean isFinished() {
+            return false;
+        }
+    }
+
+    public Command driveHalfVoltage() {
+        return new DriveHalfVoltage(this);
+    }
+
+    private class DriveHalfVoltage extends AutoDriveCommand {
+        public DriveHalfVoltage(BionicDrive subsystem) {
+            super(subsystem);
+        }
+
+        @Override
+        protected void execute() {
+            leftSRX.set(0.5);
+            rightSRX.set(0.5);
+
+            System.out.println("L(ticks/s): " + leftSRX.getSelectedSensorVelocity(0) + ", R(ticks/s): "+ rightSRX.getSelectedSensorVelocity(0));
+        }
+    }
+
     @Override
     public void periodic() {
-        switch (controlMode) {
-            case MotionProfile:
-                leftSRX.runMotionProfile();
-                rightSRX.runMotionProfile();
-                break;
-            case PercentOutput:
-            default:
-                double speed = speedInputGamepad.getThresholdAxis(speedInputAxis, 0.15);
-                double rotation = rotationInputGamepad.getThresholdAxis(rotationInputAxis, 0.15);
+        super.periodic();
 
-                differentialDrive.arcadeDrive(speed, rotation, false);
+        System.out.println(leftSRX.getSelectedSensorPosition(0) + "," + rightSRX.getSelectedSensorPosition(0));
+    }
+
+    public Command driveDistance() {
+        return new DriveDistance(this);
+    }
+
+    private class DriveDistance extends AutoDriveCommand {
+        public DriveDistance(BionicDrive subsystem) {
+            super(subsystem);
+        }
+
+        @Override
+        protected void initialize() {
+            super.initialize();
+
+            System.out.println("Starting Pos. PID");
+
+            leftSRX.set(ControlMode.Position, pathgen.motionProfileConfig.driveTestTicks);
+            rightSRX.set(ControlMode.Position, pathgen.motionProfileConfig.driveTestTicks);
+        }
+
+        @Override
+        protected boolean isFinished() {
+            return (Math.abs(leftSRX.getClosedLoopError(0)) < 100) && (Math.abs(rightSRX.getClosedLoopError(0)) < 100);
+        }
+
+        @Override
+        protected void end() {
+            super.end();
+
+            System.out.println("Finished Pos. PID");
         }
     }
 
@@ -147,29 +186,34 @@ public class BionicDrive extends Subsystem {
      * @return Returns a Command that can be used by the operator and autonomous CommandGroups.
      */
     public Command driveWaypoints(Waypoint[] points) {
-        return new DriveWaypoints(points);
+        return new DriveWaypoints(this, points);
     }
 
-    private class DriveWaypoints extends Command {
-        private final TankTrajectory trajectory;
-        private boolean defaultSRXInvertState = false;
+    private class DriveWaypoints extends AutoDriveCommand {
+        private final MotionProfileTrajectory trajectory;
 
-        public DriveWaypoints(Waypoint[] points) {
+        public DriveWaypoints(BionicDrive subsystem, Waypoint[] points) {
+            super(subsystem);
+
+            System.out.println("Generating Trajectory...");
             trajectory = pathgen.getTrajectory(points);
-
-            setInterruptible(false);
         }
 
         @Override
         protected void initialize() {
-            defaultSRXInvertState = rightSRX.getInverted();
-            rightSRX.setInverted(!defaultSRXInvertState);
+            super.initialize();
 
-            disableTelopControl();
-            controlMode = DriveMode.MotionProfile;
+            System.out.println("Initializing Trajectory...");
+            leftSRX.initMotionProfile(trajectory.profileInterval, trajectory.left);
+            rightSRX.initMotionProfile(trajectory.profileInterval, trajectory.right);
+        }
 
-            leftSRX.initMotionProfile(trajectory.left);
-            rightSRX.initMotionProfile(trajectory.right);
+        @Override
+        protected void execute() {
+            System.out.println("Executing Trajectory...");
+
+            leftSRX.runMotionProfile();
+            rightSRX.runMotionProfile();
         }
 
         @Override
@@ -179,24 +223,43 @@ public class BionicDrive extends Subsystem {
 
         @Override
         protected void end() {
-            rightSRX.setInverted(defaultSRXInvertState);
+            super.end();
 
-            enableTelopControl();
-            controlMode = DriveMode.PercentOutput;
+            System.out.println("Executed Trajectory.");
+
+            leftSRX.resetProfileSlot();
+            rightSRX.resetProfileSlot();
         }
     }
 
-    private void disableTelopControl(){
-        leftSRX.setNeutralMode(NeutralMode.Brake);
-        rightSRX.setNeutralMode(NeutralMode.Brake);
+    private abstract class AutoDriveCommand extends Command {
+        private boolean defaultSRXInvertState = false;
 
-        differentialDrive.setSafetyEnabled(false);
-    }
+        public AutoDriveCommand(BionicDrive subsystem) {
+            requires(subsystem);
 
-    private void enableTelopControl(){
-        leftSRX.setNeutralMode(NeutralMode.Coast);
-        rightSRX.setNeutralMode(NeutralMode.Coast);
+            setInterruptible(false);
+        }
 
-        differentialDrive.setSafetyEnabled(true);
+        @Override
+        protected void initialize() {
+            leftSRX.setNeutralMode(NeutralMode.Brake);
+            rightSRX.setNeutralMode(NeutralMode.Brake);
+
+            leftSRX.configOpenloopRamp(0);
+            rightSRX.configOpenloopRamp(0);
+
+            leftSRX.zeroEncoderPosition();
+            rightSRX.zeroEncoderPosition();
+
+            rightSRX.setInverted(true);
+
+            differentialDrive.setSafetyEnabled(false);
+        }
+
+        @Override
+        protected boolean isFinished() {
+            return false;
+        }
     }
 }

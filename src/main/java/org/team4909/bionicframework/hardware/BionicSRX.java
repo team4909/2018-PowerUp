@@ -4,12 +4,12 @@ import com.ctre.phoenix.motion.MotionProfileStatus;
 import com.ctre.phoenix.motion.SetValueMotionProfile;
 import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.Notifier;
 
+import org.team4909.bionicframework.motion.BionicSRXEncoder;
 import org.team4909.bionicframework.utils.Commandable;
 
 /**
@@ -22,6 +22,8 @@ public class BionicSRX extends WPI_TalonSRX {
 	 */
 	public BionicSRX(int deviceNumber, int... slaveNumbers) {
 		super(deviceNumber);
+
+		this.enableVoltageCompensation(true);
 		
 		for(int i = 0; i < slaveNumbers.length; i++) {
 			addFollower(slaveNumbers[i]);
@@ -67,45 +69,61 @@ public class BionicSRX extends WPI_TalonSRX {
 	
 	/* Sensor Feedback */
 	private final int pidIdx = 0;
+	private final int mpPidIdx = 1;
 	private final int timeoutMs = 0;
 	
 	/**
-	 * @param feedbackDevice The feedback sensor device to use for closed-loop as found in CTRE documentation
+	 * @param encoder The encoder to use for closed-loop as found in CTRE documentation
 	 */
-	public void configSelectedFeedbackSensor(FeedbackDevice feedbackDevice) {
-		this.configSelectedFeedbackSensor(feedbackDevice, pidIdx, timeoutMs);
+	public void configEncoder(BionicSRXEncoder encoder) {
+		this.configSelectedFeedbackSensor(encoder.feedbackDevice, mpPidIdx, timeoutMs);
+
+		this.setSensorPhase(encoder.inverted);
+		this.zeroEncoderPosition();
+
+        this.config_kP(pidIdx, encoder.p, timeoutMs);
+        this.config_kI(pidIdx, encoder.i, timeoutMs);
+        this.config_kD(pidIdx, encoder.d, timeoutMs);
+        this.config_kF(pidIdx, 0, timeoutMs);
+
+        this.config_kP(mpPidIdx, encoder.p, timeoutMs);
+        this.config_kI(mpPidIdx, encoder.i, timeoutMs);
+        this.config_kD(mpPidIdx, encoder.d, timeoutMs);
+        this.config_kF(mpPidIdx, encoder.f, timeoutMs);
 	}
-	
-	/**
-	 * @param p Proportional Constant in PID Controller
-	 * @param i Integral Constant in PID Controller
-	 * @param d Derivative Constant in PID Controller
-	 * @param f Feedforward in PID Controller
-	 */
-	public void configPIDF(double p, double i, double d, double f) {
-		this.config_kP(pidIdx, p, timeoutMs);
-		this.config_kI(pidIdx, i, timeoutMs);
-		this.config_kD(pidIdx, d, timeoutMs);
-		this.config_kF(pidIdx, f, timeoutMs);
-	}
-	
+
+	public void zeroEncoderPosition(){
+        this.setSelectedSensorPosition(0,0,timeoutMs);
+        this.setSelectedSensorPosition(0,0 ,timeoutMs);
+    }
+
 	/* Motion Profiling */
 	private final int minBufferPoints = 20;
 	private final double bufferInterval = 0.005;
 	
 	private Notifier processMotionProfileBuffer = new Notifier(this::processMotionProfileBuffer);
-	
+
+	public void configOpenloopRamp(double secondsFromNeutralToFull) {
+		super.configOpenloopRamp(secondsFromNeutralToFull, timeoutMs);
+	}
+
 	/**
 	 * @param points Path consisting of waypoints to follow
 	 */
-	public void initMotionProfile(TrajectoryPoint[] points) {
-		this.setSelectedSensorPosition(0,pidIdx,timeoutMs);
+	public void initMotionProfile(int profileIntervalMs, TrajectoryPoint[] points) {
+        this.changeMotionControlFramePeriod(profileIntervalMs);
+
+        this.selectProfileSlot(mpPidIdx);
 
 		this.set(ControlMode.MotionProfile, SetValueMotionProfile.Disable.value);
 		
 		this.clearMotionProfileTrajectories();
-	
+
+		System.out.println("Position, Velocity");
+
 		for(int i = 0; i < points.length; i++) {
+			System.out.println(points[i].position + ", " + points[i].velocity);
+
 			this.pushMotionProfileTrajectory(points[i]);
 		}
 		
@@ -133,8 +151,16 @@ public class BionicSRX extends WPI_TalonSRX {
 		
 		return srxStatus;
 	}
-	
-	/**
+
+    public void selectProfileSlot(int slotIdx) {
+        super.selectProfileSlot(slotIdx, 0);
+    }
+
+    public void resetProfileSlot() {
+        super.selectProfileSlot(pidIdx, 0);
+    }
+
+    /**
 	 * @return Returns whether the streamed motion profile has been completed or not
 	 */
 	public boolean isMotionProfileFinished() {

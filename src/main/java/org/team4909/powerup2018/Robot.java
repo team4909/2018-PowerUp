@@ -9,6 +9,8 @@ import org.team4909.bionicframework.hardware.BionicSRX;
 import org.team4909.bionicframework.hardware.RoboRio;
 import org.team4909.bionicframework.hardware.Arduino.State;
 import org.team4909.bionicframework.motion.BionicDrive;
+import org.team4909.bionicframework.motion.BionicSRXEncoder;
+import org.team4909.bionicframework.motion.MotionProfileConfig;
 import org.team4909.bionicframework.operator.BionicF310;
 
 import jaci.pathfinder.Waypoint;
@@ -32,15 +34,20 @@ public class Robot extends RoboRio {
 
         drivetrain = new BionicDrive(new BionicSRX(6/*,4*/), new BionicSRX(5/*,3*/),
                 driverGamepad, BionicF310.LY, driverGamepad, BionicF310.RX,
-                FeedbackDevice.QuadEncoder, 0.6, 0, 0,
-                new BionicNavX(),
-                1.0, 2.0, 60.0,
-                24.43, 0.5);
+                new BionicSRXEncoder(FeedbackDevice.QuadEncoder, true, 0.6,0,0),
+                new MotionProfileConfig(
+                        10,0.5,
+                        0.8,475,
+                        5700,2,
+                        2),
+                new BionicNavX());
 
-        autoCommand = drivetrain.driveWaypoints(new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint(5, 0, 0)
-        });
+        autoCommand = drivetrain.driveDistance();
+
+//        autoCommand = drivetrain.driveWaypoints(new Waypoint[]{
+//                new Waypoint(0, 0, 0),
+//                new Waypoint(5, 0, 0)
+//        });
     }
 
     @Override
