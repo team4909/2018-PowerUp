@@ -23,6 +23,7 @@ public class BionicSRX extends WPI_TalonSRX {
     public BionicSRX(int deviceNumber, int... slaveNumbers) {
         super(deviceNumber);
 
+        this.configVoltageCompSaturation(12, timeoutMs);
         this.enableVoltageCompensation(true);
 
         for (int i = 0; i < slaveNumbers.length; i++) {
@@ -106,16 +107,12 @@ public class BionicSRX extends WPI_TalonSRX {
      */
     public void initMotionProfile(int profileIntervalMs, TrajectoryPoint[] points) {
         this.changeMotionControlFramePeriod(profileIntervalMs);
-
         this.set(ControlMode.MotionProfile, SetValueMotionProfile.Disable.value);
 
+        this.zeroEncoderPosition();
         this.clearMotionProfileTrajectories();
 
-        System.out.println("Position, Velocity");
-
         for (int i = 0; i < points.length; i++) {
-            System.out.println(points[i].position + ", " + points[i].velocity);
-
             this.pushMotionProfileTrajectory(points[i]);
         }
 

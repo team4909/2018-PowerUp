@@ -1,37 +1,32 @@
 package org.team4909.bionicframework.motion;
 
-import javax.swing.plaf.synth.SynthTextAreaUI;
-
 public class MotionProfileConfig {
-    public final int profileIntervalMs;
-    public final double profileIntervalS;
-
-    public final double driveTestTicks;
+    public final double driveRotationTestFeet;
+    public final double maxVelocityTicks;
     public final double ticksToFeet;
-    public final double chassisWidth;
-
-    public final double cruiseVelocityFeet;
 
     public final double secondsFromNeutralToFull;
-    public final double avgAccelerationFeet;
 
+    public final int profileIntervalMs;
+    public final double chassisWidthFeet;
+    public final double cruiseVelocityFeet;
+    public final double avgAccelerationFeet;
     public final double maxJerkFeet;
 
-    public MotionProfileConfig(int profileIntervalMs, double secondsFromNeutralToFull, double cruisePercent, double halfVoltageVelocityTestTicks, int driveTestTicks, double driveDistanceTestFeet, double driveRotationTestRad) {
+    public MotionProfileConfig(int profileIntervalMs, double cruisePercent, double wheelDiameterFeet,
+                               double maxVelocityTicks, double secondsFromNeutralToFull,
+                               double driveRotationTestFeet, double driveRotationTestRad) {
         // Motion Profile Processing Interval
         this.profileIntervalMs = profileIntervalMs;
-        this.profileIntervalS = (double) profileIntervalMs / 1000;
+        this.maxVelocityTicks = maxVelocityTicks;
 
         // Conversion Factors
-        this.driveTestTicks = driveTestTicks;
-        this.ticksToFeet = driveDistanceTestFeet / driveTestTicks;
-        this.chassisWidth = (2 * driveDistanceTestFeet) / driveRotationTestRad;
-
-        // Max Velocity
-        double maxVelocityTicks = (2 * halfVoltageVelocityTestTicks);
-        double maxVelocityFeet = (10 * maxVelocityTicks) * ticksToFeet;
+        this.driveRotationTestFeet = driveRotationTestFeet;
+        this.ticksToFeet = (Math.PI * wheelDiameterFeet) / (4 * 360); // e4t spec, with 4x subsampling
+        this.chassisWidthFeet = (2 * driveRotationTestFeet) / driveRotationTestRad;
 
         // Cruise Velocity
+        double maxVelocityFeet = maxVelocityTicks * ticksToFeet;
         this.cruiseVelocityFeet = cruisePercent * maxVelocityFeet;
 
         // Max Acceleration
@@ -39,15 +34,10 @@ public class MotionProfileConfig {
         this.avgAccelerationFeet = maxVelocityFeet / secondsFromNeutralToFull;
 
         // Max Jerk
-        this.maxJerkFeet = 10;
+        this.maxJerkFeet = 60;
+    }
 
-        System.out.println("Profile Interval: " + profileIntervalMs + "ms");
-        System.out.println("Drive Test Ticks: " + driveTestTicks + " ticks");
-        System.out.println("Feet / Ticks: " + ticksToFeet);
-        System.out.println("Effective Chassis Width: " + chassisWidth + "ft");
-        System.out.println("Cruise Velocity: " + cruiseVelocityFeet + "ft/s");
-        System.out.println("Seconds from Neutral to Full: " + secondsFromNeutralToFull + "s");
-        System.out.println("Avg. Acceleration: " + avgAccelerationFeet + "ft/s^2");
-        System.out.println("Max Jerk: " + maxJerkFeet + "ft/s^3");
+    public double getProfileIntervalS(){
+        return (double) profileIntervalMs / 1000;
     }
 }

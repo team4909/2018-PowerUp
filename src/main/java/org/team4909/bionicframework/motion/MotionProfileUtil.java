@@ -21,7 +21,7 @@ public class MotionProfileUtil {
     public MotionProfileUtil(MotionProfileConfig motionProfileConfig) {
         this.motionProfileConfig = motionProfileConfig;
         this.pathfinderConfig = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_FAST,
-                motionProfileConfig.profileIntervalS, motionProfileConfig.cruiseVelocityFeet,
+                motionProfileConfig.getProfileIntervalS(), motionProfileConfig.cruiseVelocityFeet,
                 motionProfileConfig.avgAccelerationFeet, motionProfileConfig.maxJerkFeet);
     }
 
@@ -32,9 +32,16 @@ public class MotionProfileUtil {
     public MotionProfileTrajectory getTrajectory(Waypoint[] points) {
         Trajectory trajectory = Pathfinder.generate(points, pathfinderConfig);
 
-        TankModifier modifier = new TankModifier(trajectory).modify(motionProfileConfig.chassisWidth);
+        TankModifier modifier = new TankModifier(trajectory).modify(motionProfileConfig.chassisWidthFeet);
 
         return new MotionProfileTrajectory(modifier.getLeftTrajectory(), modifier.getRightTrajectory());
+    }
+
+    public MotionProfileTrajectory getTrajectory(Waypoint[] pointsLeft, Waypoint[] pointsRight) {
+        Trajectory trajectoryLeft = Pathfinder.generate(pointsLeft, pathfinderConfig);
+        Trajectory trajectoryRight = Pathfinder.generate(pointsRight, pathfinderConfig);
+
+        return new MotionProfileTrajectory(trajectoryLeft, trajectoryRight);
     }
 
     /**
@@ -72,7 +79,7 @@ public class MotionProfileUtil {
                 TrajectoryPoint point = new TrajectoryPoint();
 
                 // Profile Data
-                point.position = trajectory.get(i).position / motionProfileConfig.ticksToFeet;
+                point.position = trajectory.get(i).x / motionProfileConfig.ticksToFeet;
                 point.velocity = (trajectory.get(i).velocity / motionProfileConfig.cruiseVelocityFeet) / 10;
 
                 // Configuration Data

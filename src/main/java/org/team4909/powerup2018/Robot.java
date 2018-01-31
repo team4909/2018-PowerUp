@@ -36,18 +36,12 @@ public class Robot extends RoboRio {
                 driverGamepad, BionicF310.LY, driverGamepad, BionicF310.RX,
                 new BionicSRXEncoder(FeedbackDevice.QuadEncoder, true, 0.6,0,0),
                 new MotionProfileConfig(
-                        10,0.5,
-                        0.8,475,
-                        5700,2,
-                        2),
+                        10,0.8,0.5,
+                        12915,1.2,
+                        5,2),
                 new BionicNavX());
 
-        autoCommand = drivetrain.driveDistance();
-
-//        autoCommand = drivetrain.driveWaypoints(new Waypoint[]{
-//                new Waypoint(0, 0, 0),
-//                new Waypoint(5, 0, 0)
-//        });
+        autoCommand = drivetrain.driveRotationTest();
     }
 
     @Override
