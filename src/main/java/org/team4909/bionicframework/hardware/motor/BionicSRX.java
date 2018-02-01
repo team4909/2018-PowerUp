@@ -3,6 +3,7 @@ package org.team4909.bionicframework.hardware.motor;
 import com.ctre.phoenix.motion.MotionProfileStatus;
 import com.ctre.phoenix.motion.SetValueMotionProfile;
 import com.ctre.phoenix.motion.TrajectoryPoint;
+import com.ctre.phoenix.motion.TrajectoryPoint.TrajectoryDuration;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
@@ -100,10 +101,10 @@ public class BionicSRX extends WPI_TalonSRX {
 
             // Profile Data
             point.position = trajectory.get(i).x / conversionFactor;
-            point.velocity = (trajectory.get(i).velocity / cruiseVelocity) / 10;
+            point.velocity = trajectory.get(i).velocity / cruiseVelocity;
 
             // Configuration Data
-            point.timeDur = TrajectoryPoint.TrajectoryDuration.Trajectory_Duration_0ms;
+            point.timeDur = TrajectoryDuration.Trajectory_Duration_0ms;
             point.profileSlotSelect0 = 0;
             point.zeroPos = (i == 0);
             point.isLastPoint = (i == length - 1);
