@@ -5,14 +5,14 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import org.team4909.bionicframework.hardware.motor.commandables.PercentOutputCommandable;
 import org.team4909.bionicframework.interfaces.Commandable;
 
-public class BionicMotorGroup extends SpeedControllerGroup {
+public class MotorGroup extends SpeedControllerGroup {
     /**
      * Create a new SpeedControllerGroup with the provided SpeedControllers.
      *
      * @param speedController
      * @param speedControllers The SpeedControllers to add
      */
-    public BionicMotorGroup(SpeedController speedController, SpeedController... speedControllers) {
+    public MotorGroup(SpeedController speedController, SpeedController... speedControllers) {
         super(speedController, speedControllers);
     }
 

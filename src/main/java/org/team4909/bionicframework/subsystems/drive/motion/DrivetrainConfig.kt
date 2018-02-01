@@ -1,8 +1,8 @@
-package org.team4909.bionicframework.subsystems.drive
+package org.team4909.bionicframework.subsystems.drive.motion
 
-class MotionProfileConfig(val profileIntervalMs: Int, cruisePercent: Double, wheelDiameterFeet: Double,
-                          maxVelocityTicks: Double, val secondsFromNeutralToFull: Double,
-                          val driveRotationTestFeet: Double, driveRotationTestRad: Double) {
+data class DrivetrainConfig(val profileIntervalMs: Int, val cruisePercent: Double, val wheelDiameterFeet: Double,
+                       val maxVelocityTicks: Double, val secondsFromNeutralToFull: Double,
+                       val driveRotationTestFeet: Double, val driveRotationTestRad: Double) {
     val ticksToFeet: Double
     val chassisWidthFeet: Double
     val cruiseVelocityFeet: Double

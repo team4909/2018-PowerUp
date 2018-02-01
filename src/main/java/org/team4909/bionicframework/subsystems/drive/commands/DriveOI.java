@@ -4,11 +4,32 @@ package org.team4909.bionicframework.subsystems.drive.commands;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.wpilibj.command.Command;
+import org.team4909.bionicframework.hardware.motor.BionicSRX;
+import org.team4909.bionicframework.operator.BionicF310;
+import org.team4909.bionicframework.operator.generic.BionicAxis;
 import org.team4909.bionicframework.subsystems.drive.BionicDrive;
 
-private class DriveOI extends Command {
-    public DriveOI(BionicDrive subsystem) {
+public class DriveOI extends Command {
+    private final BionicSRX leftSRX;
+    private final BionicSRX rightSRX;
+
+    private final BionicF310 speedInputGamepad;
+    private final BionicAxis speedInputAxis;
+    private final BionicF310 rotationInputGamepad;
+    private final BionicAxis rotationInputAxis;
+
+    public DriveOI(BionicDrive subsystem, BionicSRX leftSRX, BionicSRX rightSRX,
+                   BionicF310 speedInputGamepad, BionicAxis speedInputAxis,
+                   BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis) {
         requires(subsystem);
+
+        this.leftSRX = leftSRX;
+        this.rightSRX = rightSRX;
+
+        this.speedInputGamepad = speedInputGamepad;
+        this.speedInputAxis = speedInputAxis;
+        this.rotationInputGamepad = rotationInputGamepad;
+        this.rotationInputAxis = rotationInputAxis;
     }
 
     @Override

@@ -8,18 +8,19 @@ import org.team4909.bionicframework.hardware.core.Arduino.State;
 import org.team4909.bionicframework.hardware.core.RoboRio;
 import org.team4909.bionicframework.hardware.gyro.BionicNavX;
 import org.team4909.bionicframework.hardware.motor.BionicSRX;
-import org.team4909.bionicframework.hardware.motor.BionicMotorGroup;
+import org.team4909.bionicframework.hardware.motor.BionicSpark;
+import org.team4909.bionicframework.hardware.motor.MotorGroup;
 import org.team4909.bionicframework.hardware.motor.BionicVictorSP;
 import org.team4909.bionicframework.subsystems.drive.BionicDrive;
-import org.team4909.bionicframework.hardware.sensors.BionicSRXEncoder;
-import org.team4909.bionicframework.subsystems.drive.MotionProfileConfig;
+import org.team4909.bionicframework.hardware.sensors.SRXEncoder;
+import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainConfig;
 import org.team4909.bionicframework.operator.BionicF310;
 
 public class Robot extends RoboRio {
     /* Subsystem Initialization */
     private static Arduino arduino;
     private static BionicDrive drivetrain;
-    private static BionicMotorGroup intake;
+    private static MotorGroup intake;
     private static BionicSRX elevator;
 
     /* OI Initialization */
@@ -34,29 +35,29 @@ public class Robot extends RoboRio {
 
         arduino = new Arduino(4);
 
-        drivetrain = new BionicDrive(new BionicSRX(2,1), new BionicSRX(4,4),
+        drivetrain = new BionicDrive(
+                new BionicSRX(2,1), new BionicSRX(4,4),
                 driverGamepad, BionicF310.LY, driverGamepad, BionicF310.RX,
-                new BionicSRXEncoder(FeedbackDevice.QuadEncoder, true, 0.6,0,0),
-                new MotionProfileConfig(
-                        10,0.8,0.5,
+                new SRXEncoder(FeedbackDevice.QuadEncoder, true, 0.6,0,0),
+                new DrivetrainConfig(
+                        10,0.7,0.5,
                         12915,1.2,
                         5,2),
-                new BionicNavX());
-
-        intake = new BionicMotorGroup(
-                new BionicVictorSP(0),
-                new BionicVictorSP(1)
+                new BionicNavX()
         );
 
-        elevator = new BionicSRX(3);
-
+        intake = new MotorGroup(
+                new BionicSpark(0),
+                new BionicSpark(1)
+        );
         driverGamepad.buttonHeld(BionicF310.LB, intake.setPercentOutput(-1.0));
         driverGamepad.buttonHeld(BionicF310.RB, intake.setPercentOutput(1.0));
 
+        elevator = new BionicSRX(3);
         driverGamepad.buttonHeld(BionicF310.LT, 0.15, elevator.setPercentOutput(-1.0));
         driverGamepad.buttonHeld(BionicF310.RT, 0.15, elevator.setPercentOutput(1.0));
 
-        autoCommand = drivetrain.driveRotationTest();
+//        autoCommand = drivetrain.driveRotationTest();
     }
 
     @Override

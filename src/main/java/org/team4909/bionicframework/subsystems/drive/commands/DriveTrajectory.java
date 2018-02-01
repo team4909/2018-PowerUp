@@ -2,17 +2,27 @@ package org.team4909.bionicframework.subsystems.drive.commands;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.wpilibj.command.Command;
+import org.team4909.bionicframework.hardware.motor.BionicSRX;
 import org.team4909.bionicframework.subsystems.drive.BionicDrive;
-import org.team4909.bionicframework.subsystems.drive.MotionProfileUtil;
+import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainProfileUtil;
+import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainTrajectory;
 
 public class DriveTrajectory extends Command {
-    private final MotionProfileUtil.MotionProfileTrajectory trajectory;
+    private final DrivetrainTrajectory trajectory;
 
-    public DriveTrajectory(BionicDrive subsystem, MotionProfileUtil.MotionProfileTrajectory trajectory) {
-        requires(subsystem);
+    private final BionicDrive bionicDrive;
+    private final BionicSRX leftSRX;
+    private final BionicSRX rightSRX;
+
+    public DriveTrajectory(BionicDrive bionicDrive, BionicSRX leftSRX, BionicSRX rightSRX, DrivetrainTrajectory trajectory) {
+        requires(bionicDrive);
         setInterruptible(false);
 
         this.trajectory = trajectory;
+
+        this.bionicDrive = bionicDrive;
+        this.leftSRX = leftSRX;
+        this.rightSRX = rightSRX;
     }
 
     @Override
@@ -37,6 +47,6 @@ public class DriveTrajectory extends Command {
 
     @Override
     protected void end() {
-        System.out.println("Final Heading: " + getHeading() + "rad");
+        System.out.println("Final Heading: " + bionicDrive.getHeading() + "rad");
     }
 }

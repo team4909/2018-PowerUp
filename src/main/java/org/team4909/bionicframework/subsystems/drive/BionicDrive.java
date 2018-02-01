@@ -1,16 +1,14 @@
 package org.team4909.bionicframework.subsystems.drive;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 
+import jaci.pathfinder.Pathfinder;
 import org.team4909.bionicframework.hardware.motor.BionicSRX;
-import org.team4909.bionicframework.hardware.sensors.BionicSRXEncoder;
-import org.team4909.bionicframework.subsystems.drive.MotionProfileUtil.MotionProfileTrajectory;
+import org.team4909.bionicframework.hardware.sensors.SRXEncoder;
+import org.team4909.bionicframework.subsystems.drive.commands.DriveTrajectory;
+import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainProfileUtil;
 import org.team4909.bionicframework.operator.generic.BionicAxis;
 import org.team4909.bionicframework.operator.BionicF310;
 
@@ -18,6 +16,8 @@ import jaci.pathfinder.Waypoint;
 import org.team4909.bionicframework.subsystems.drive.commands.DriveOI;
 import org.team4909.bionicframework.subsystems.drive.commands.FindMaxVelocity;
 import org.team4909.bionicframework.subsystems.drive.commands.FindRampTime;
+import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainConfig;
+import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainTrajectory;
 
 /**
  * BionicDrive abstracts away much of the underlying drivetrain functionality
@@ -34,8 +34,8 @@ public class BionicDrive extends Subsystem {
     private final BionicAxis rotationInputAxis;
 
     /* Sensors */
-    private Gyro bionicGyro;
-    private MotionProfileUtil pathgen;
+    private final Gyro bionicGyro;
+    public final DrivetrainProfileUtil pathgen;
 
     /**
      * @param leftSRX              Left Drivetrain SRX
@@ -50,8 +50,8 @@ public class BionicDrive extends Subsystem {
     public BionicDrive(BionicSRX leftSRX, BionicSRX rightSRX,
                        BionicF310 speedInputGamepad, BionicAxis speedInputAxis,
                        BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis,
-                       BionicSRXEncoder encoderConfig,
-                       MotionProfileConfig motionProfileConfig,
+                       SRXEncoder encoderConfig,
+                       DrivetrainConfig drivetrainConfig,
                        Gyro bionicGyro) {
         super();
 
@@ -65,9 +65,9 @@ public class BionicDrive extends Subsystem {
         this.rightSRX.setInverted(true);
         this.rightSRX.setSensorPhase(true);
 
-        this.pathgen = new MotionProfileUtil(motionProfileConfig);
-        this.leftSRX.configOpenloopRamp(pathgen.motionProfileConfig.getSecondsFromNeutralToFull());
-        this.rightSRX.configOpenloopRamp(pathgen.motionProfileConfig.getSecondsFromNeutralToFull());
+        this.pathgen = new DrivetrainProfileUtil(drivetrainConfig);
+        this.leftSRX.configOpenloopRamp(pathgen.drivetrainConfig.getSecondsFromNeutralToFull());
+        this.rightSRX.configOpenloopRamp(pathgen.drivetrainConfig.getSecondsFromNeutralToFull());
 
         this.rotationInputGamepad = rotationInputGamepad;
         this.rotationInputAxis = rotationInputAxis;
@@ -80,37 +80,34 @@ public class BionicDrive extends Subsystem {
      * @return Returns Robot's Current Heading [0, 2pi)
      */
     public double getHeading() {
-        return bionicGyro.getAngle() * (Math.PI / 180);
+        return Pathfinder.d2r(bionicGyro.getAngle());
     }
 
     @Override
     protected void initDefaultCommand() {
-        setDefaultCommand(new DriveOI(this));
+        setDefaultCommand(new DriveOI(this, leftSRX, rightSRX, speedInputGamepad, speedInputAxis, rotationInputGamepad, rotationInputAxis));
     }
 
     public Command findMaxVelocity() {
-        return new FindMaxVelocity(this);
+        return new FindMaxVelocity(this, leftSRX, rightSRX);
     }
 
     public Command findRampTime() {
-        return new FindRampTime(this);
+        return new FindRampTime(this, leftSRX, rightSRX);
     }
 
-    public Command driveRotationTest() {
-        return driveDistance(pathgen.motionProfileConfig.getDriveRotationTestFeet(), -pathgen.motionProfileConfig.getDriveRotationTestFeet());
-    }
+//    public Command driveRotationTest() {
+//        return driveTrajectory(pathgen.getRotationalTrajectory(
+//                pathgen.drivetrainConfig.getDriveRotationTestFeet(),
+//                -pathgen.drivetrainConfig.getDriveRotationTestFeet()
+//        );
+//    }
 
-    private Command driveDistance(double leftDistance, double rightDistance) {
-        return new DriveTrajectory(this, pathgen.getTrajectory(new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint(leftDistance, 0, 0)
-        }, new Waypoint[]{
-                new Waypoint(0, 0, 0),
-                new Waypoint(rightDistance, 0, 0)
-        }));
+    private Command driveTrajectory(DrivetrainTrajectory trajectory) {
+        return new DriveTrajectory(this, leftSRX, rightSRX, trajectory);
     }
 
     public Command driveWaypoints(Waypoint[] points) {
-        return new DriveTrajectory(this, pathgen.getTrajectory(points));
+        return driveTrajectory(pathgen.getTrajectory(points));
     }
 }
