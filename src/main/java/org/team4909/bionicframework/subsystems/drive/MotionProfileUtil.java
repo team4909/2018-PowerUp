@@ -20,9 +20,10 @@ public class MotionProfileUtil {
      */
     public MotionProfileUtil(MotionProfileConfig motionProfileConfig) {
         this.motionProfileConfig = motionProfileConfig;
-        this.pathfinderConfig = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_FAST,
-                motionProfileConfig.getProfileIntervalS(), motionProfileConfig.cruiseVelocityFeet,
-                motionProfileConfig.avgAccelerationFeet, motionProfileConfig.maxJerkFeet);
+
+        pathfinderConfig = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_FAST,
+                motionProfileConfig.getProfileIntervalS(), motionProfileConfig.getCruiseVelocityFeet(),
+                motionProfileConfig.getAvgAccelerationFeet(), motionProfileConfig.getMaxJerkFeet());
     }
 
     /**
@@ -32,7 +33,7 @@ public class MotionProfileUtil {
     public MotionProfileTrajectory getTrajectory(Waypoint[] points) {
         Trajectory trajectory = Pathfinder.generate(points, pathfinderConfig);
 
-        TankModifier modifier = new TankModifier(trajectory).modify(motionProfileConfig.chassisWidthFeet);
+        TankModifier modifier = new TankModifier(trajectory).modify(motionProfileConfig.getChassisWidthFeet());
 
         return new MotionProfileTrajectory(modifier.getLeftTrajectory(), modifier.getRightTrajectory());
     }
@@ -65,7 +66,7 @@ public class MotionProfileUtil {
          * @param right Right Trajectory Generated from Pathfinder
          */
         public MotionProfileTrajectory(Trajectory left, Trajectory right) {
-            this.profileInterval = motionProfileConfig.profileIntervalMs;
+            this.profileInterval = motionProfileConfig.getProfileIntervalMs();
 
             this.left = convertToSRXTrajectory(left);
             this.right = convertToSRXTrajectory(right);
@@ -79,8 +80,8 @@ public class MotionProfileUtil {
                 TrajectoryPoint point = new TrajectoryPoint();
 
                 // Profile Data
-                point.position = trajectory.get(i).x / motionProfileConfig.ticksToFeet;
-                point.velocity = (trajectory.get(i).velocity / motionProfileConfig.cruiseVelocityFeet) / 10;
+                point.position = trajectory.get(i).x / motionProfileConfig.getTicksToFeet();
+                point.velocity = (trajectory.get(i).velocity / motionProfileConfig.getCruiseVelocityFeet()) / 10;
 
                 // Configuration Data
                 point.timeDur = TrajectoryDuration.Trajectory_Duration_0ms;

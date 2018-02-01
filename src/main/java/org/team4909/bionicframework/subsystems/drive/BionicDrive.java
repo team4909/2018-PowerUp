@@ -15,6 +15,9 @@ import org.team4909.bionicframework.operator.generic.BionicAxis;
 import org.team4909.bionicframework.operator.BionicF310;
 
 import jaci.pathfinder.Waypoint;
+import org.team4909.bionicframework.subsystems.drive.commands.DriveOI;
+import org.team4909.bionicframework.subsystems.drive.commands.FindMaxVelocity;
+import org.team4909.bionicframework.subsystems.drive.commands.FindRampTime;
 
 /**
  * BionicDrive abstracts away much of the underlying drivetrain functionality
@@ -63,8 +66,8 @@ public class BionicDrive extends Subsystem {
         this.rightSRX.setSensorPhase(true);
 
         this.pathgen = new MotionProfileUtil(motionProfileConfig);
-        this.leftSRX.configOpenloopRamp(pathgen.motionProfileConfig.secondsFromNeutralToFull);
-        this.rightSRX.configOpenloopRamp(pathgen.motionProfileConfig.secondsFromNeutralToFull);
+        this.leftSRX.configOpenloopRamp(pathgen.motionProfileConfig.getSecondsFromNeutralToFull());
+        this.rightSRX.configOpenloopRamp(pathgen.motionProfileConfig.getSecondsFromNeutralToFull());
 
         this.rotationInputGamepad = rotationInputGamepad;
         this.rotationInputAxis = rotationInputAxis;
@@ -94,7 +97,7 @@ public class BionicDrive extends Subsystem {
     }
 
     public Command driveRotationTest() {
-        return driveDistance(pathgen.motionProfileConfig.driveRotationTestFeet, -pathgen.motionProfileConfig.driveRotationTestFeet);
+        return driveDistance(pathgen.motionProfileConfig.getDriveRotationTestFeet(), -pathgen.motionProfileConfig.getDriveRotationTestFeet());
     }
 
     private Command driveDistance(double leftDistance, double rightDistance) {
@@ -109,167 +112,5 @@ public class BionicDrive extends Subsystem {
 
     public Command driveWaypoints(Waypoint[] points) {
         return new DriveTrajectory(this, pathgen.getTrajectory(points));
-    }
-
-    private class DriveOI extends Command {
-        public DriveOI(BionicDrive subsystem) {
-            requires(subsystem);
-        }
-
-        @Override
-        protected void initialize() {
-            super.initialize();
-
-            leftSRX.setNeutralMode(NeutralMode.Coast);
-            rightSRX.setNeutralMode(NeutralMode.Coast);
-        }
-
-        @Override
-        protected void execute() {
-            double speed = speedInputGamepad.getSensitiveAxis(speedInputAxis);
-            double rotation = rotationInputGamepad.getSensitiveAxis(rotationInputAxis);
-
-            double leftMotorOutput;
-            double rightMotorOutput;
-
-            double maxInput = Math.copySign(Math.max(Math.abs(speed), Math.abs(rotation)), speed);
-
-            if (speed >= 0.0 && rotation >= 0.0) {
-                leftMotorOutput = maxInput;
-                rightMotorOutput = speed - rotation;
-            } else if (speed >= 0.0 && rotation < 0.0) {
-                leftMotorOutput = speed + rotation;
-                rightMotorOutput = maxInput;
-            } else if (speed < 0.0 && rotation >= 0.0) {
-                leftMotorOutput = speed + rotation;
-                rightMotorOutput = maxInput;
-            } else { // speed < 0.0 &&  rotation < 0.0
-                leftMotorOutput = maxInput;
-                rightMotorOutput = speed - rotation;
-            }
-
-            leftSRX.set(ControlMode.PercentOutput, limit(leftMotorOutput));
-            rightSRX.set(ControlMode.PercentOutput, limit(rightMotorOutput));
-        }
-
-        private double limit(double value) {
-            return Math.copySign(Math.abs(value) > 1.0 ? 1.0 : value, value);
-        }
-
-        @Override
-        protected boolean isFinished() {
-            return false;
-        }
-    }
-
-    private class FindMaxVelocity extends Command {
-        double startTime;
-        double runningAverage;
-
-        public FindMaxVelocity(BionicDrive subsystem) {
-            requires(subsystem);
-        }
-
-        @Override
-        protected void initialize() {
-            startTime = Timer.getFPGATimestamp();
-        }
-
-        @Override
-        protected void execute() {
-            leftSRX.set(ControlMode.PercentOutput, 0.5);
-            rightSRX.set(ControlMode.PercentOutput, 0.5);
-
-            leftSRX.enableVoltageCompensation(true);
-            rightSRX.enableVoltageCompensation(true);
-
-            double timeSinceStart = Timer.getFPGATimestamp() - startTime;
-            double currentVelocityTicks = (leftSRX.getSelectedSensorVelocity(0) + rightSRX.getSelectedSensorVelocity(0)) * 10;
-
-            if(timeSinceStart > 10) {
-                if (runningAverage != 0) {
-                    runningAverage = (runningAverage + currentVelocityTicks) / 2;
-                } else {
-                    runningAverage = currentVelocityTicks;
-                }
-            }
-        }
-
-        @Override
-        protected boolean isFinished() {
-            return (Timer.getFPGATimestamp() - startTime) > 30;
-        }
-
-        @Override
-        protected void end() {
-            System.out.println("Max Velocity (ticks/s): " + runningAverage);
-        }
-    }
-
-    private class FindRampTime extends Command {
-        double startTime;
-
-        public FindRampTime(BionicDrive subsystem) {
-            requires(subsystem);
-        }
-
-        @Override
-        protected void initialize() {
-            startTime = Timer.getFPGATimestamp();
-        }
-
-        @Override
-        protected void execute() {
-            leftSRX.set(ControlMode.PercentOutput, 0.5);
-            rightSRX.set(ControlMode.PercentOutput, 0.5);
-        }
-
-        @Override
-        protected boolean isFinished() {
-            double currentVelocityTicks = (leftSRX.getSelectedSensorVelocity(0) + rightSRX.getSelectedSensorVelocity(0)) * 10;
-
-            return currentVelocityTicks > pathgen.motionProfileConfig.maxVelocityTicks;
-        }
-
-        @Override
-        protected void end() {
-            System.out.println("Seconds from Neutral: " + (Timer.getFPGATimestamp() - startTime));
-        }
-    }
-
-    private class DriveTrajectory extends Command {
-        private final MotionProfileTrajectory trajectory;
-
-        public DriveTrajectory(BionicDrive subsystem, MotionProfileTrajectory trajectory) {
-            requires(subsystem);
-            setInterruptible(false);
-
-            this.trajectory = trajectory;
-        }
-
-        @Override
-        protected void initialize() {
-            leftSRX.setNeutralMode(NeutralMode.Brake);
-            rightSRX.setNeutralMode(NeutralMode.Brake);
-
-            leftSRX.initMotionProfile(trajectory.profileInterval, trajectory.left);
-            rightSRX.initMotionProfile(trajectory.profileInterval, trajectory.right);
-        }
-
-        @Override
-        protected void execute() {
-            leftSRX.runMotionProfile();
-            rightSRX.runMotionProfile();
-        }
-
-        @Override
-        protected boolean isFinished() {
-            return leftSRX.isMotionProfileFinished() && rightSRX.isMotionProfileFinished();
-        }
-
-        @Override
-        protected void end() {
-            System.out.println("Final Heading: " + getHeading() + "rad");
-        }
     }
 }
