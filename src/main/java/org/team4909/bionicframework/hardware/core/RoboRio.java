@@ -1,4 +1,4 @@
-package org.team4909.bionicframework.hardware;
+package org.team4909.bionicframework.hardware.core;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.TimedRobot;

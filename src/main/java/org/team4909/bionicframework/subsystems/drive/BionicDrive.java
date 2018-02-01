@@ -1,21 +1,19 @@
-package org.team4909.bionicframework.motion;
+package org.team4909.bionicframework.subsystems.drive;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 
-import org.team4909.bionicframework.hardware.BionicSRX;
-import org.team4909.bionicframework.motion.MotionProfileUtil.MotionProfileTrajectory;
-import org.team4909.bionicframework.operator.BionicAxis;
+import org.team4909.bionicframework.hardware.motor.BionicSRX;
+import org.team4909.bionicframework.hardware.sensors.BionicSRXEncoder;
+import org.team4909.bionicframework.subsystems.drive.MotionProfileUtil.MotionProfileTrajectory;
+import org.team4909.bionicframework.operator.generic.BionicAxis;
 import org.team4909.bionicframework.operator.BionicF310;
 
-import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
 
 /**

@@ -1,4 +1,4 @@
-package org.team4909.bionicframework.motion;
+package org.team4909.bionicframework.hardware.sensors;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 

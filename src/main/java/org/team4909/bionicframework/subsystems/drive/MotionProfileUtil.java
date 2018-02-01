@@ -1,4 +1,4 @@
-package org.team4909.bionicframework.motion;
+package org.team4909.bionicframework.subsystems.drive;
 
 import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.ctre.phoenix.motion.TrajectoryPoint.TrajectoryDuration;

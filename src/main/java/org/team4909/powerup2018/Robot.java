@@ -3,22 +3,24 @@ package org.team4909.powerup2018;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 import edu.wpi.first.wpilibj.command.Command;
-import org.team4909.bionicframework.hardware.Arduino;
-import org.team4909.bionicframework.hardware.BionicNavX;
-import org.team4909.bionicframework.hardware.BionicSRX;
-import org.team4909.bionicframework.hardware.RoboRio;
-import org.team4909.bionicframework.hardware.Arduino.State;
-import org.team4909.bionicframework.motion.BionicDrive;
-import org.team4909.bionicframework.motion.BionicSRXEncoder;
-import org.team4909.bionicframework.motion.MotionProfileConfig;
+import org.team4909.bionicframework.hardware.core.Arduino;
+import org.team4909.bionicframework.hardware.core.Arduino.State;
+import org.team4909.bionicframework.hardware.core.RoboRio;
+import org.team4909.bionicframework.hardware.gyro.BionicNavX;
+import org.team4909.bionicframework.hardware.motor.BionicSRX;
+import org.team4909.bionicframework.hardware.motor.BionicMotorGroup;
+import org.team4909.bionicframework.hardware.motor.BionicVictorSP;
+import org.team4909.bionicframework.subsystems.drive.BionicDrive;
+import org.team4909.bionicframework.hardware.sensors.BionicSRXEncoder;
+import org.team4909.bionicframework.subsystems.drive.MotionProfileConfig;
 import org.team4909.bionicframework.operator.BionicF310;
-
-import jaci.pathfinder.Waypoint;
 
 public class Robot extends RoboRio {
     /* Subsystem Initialization */
     private static Arduino arduino;
     private static BionicDrive drivetrain;
+    private static BionicMotorGroup intake;
+    private static BionicSRX elevator;
 
     /* OI Initialization */
     private static BionicF310 driverGamepad;
@@ -32,7 +34,7 @@ public class Robot extends RoboRio {
 
         arduino = new Arduino(4);
 
-        drivetrain = new BionicDrive(new BionicSRX(6/*,4*/), new BionicSRX(5/*,3*/),
+        drivetrain = new BionicDrive(new BionicSRX(2,1), new BionicSRX(4,4),
                 driverGamepad, BionicF310.LY, driverGamepad, BionicF310.RX,
                 new BionicSRXEncoder(FeedbackDevice.QuadEncoder, true, 0.6,0,0),
                 new MotionProfileConfig(
@@ -40,6 +42,19 @@ public class Robot extends RoboRio {
                         12915,1.2,
                         5,2),
                 new BionicNavX());
+
+        intake = new BionicMotorGroup(
+                new BionicVictorSP(0),
+                new BionicVictorSP(1)
+        );
+
+        elevator = new BionicSRX(3);
+
+        driverGamepad.buttonHeld(BionicF310.LB, intake.setPercentOutput(-1.0));
+        driverGamepad.buttonHeld(BionicF310.RB, intake.setPercentOutput(1.0));
+
+        driverGamepad.buttonHeld(BionicF310.LT, 0.15, elevator.setPercentOutput(-1.0));
+        driverGamepad.buttonHeld(BionicF310.RT, 0.15, elevator.setPercentOutput(1.0));
 
         autoCommand = drivetrain.driveRotationTest();
     }

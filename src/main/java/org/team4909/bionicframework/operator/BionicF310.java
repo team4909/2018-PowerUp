@@ -1,5 +1,9 @@
 package org.team4909.bionicframework.operator;
 
+import org.team4909.bionicframework.operator.generic.BionicAxis;
+import org.team4909.bionicframework.operator.generic.BionicButton;
+import org.team4909.bionicframework.operator.generic.BionicJoystick;
+
 /**
  * BionicF310 models the Logitech F310 Gamepad and its buttons for easier mapping for the operator interface.
  */

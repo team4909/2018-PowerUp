@@ -1,10 +1,10 @@
-package org.team4909.bionicframework.hardware;
+package org.team4909.bionicframework.subsystems.angular;
 
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
 
-import org.team4909.bionicframework.utils.Commandable;
+import org.team4909.bionicframework.interfaces.Commandable;
 
 /**
  * Generic Potentiometer Subsystem

@@ -1,10 +1,10 @@
-package org.team4909.bionicframework.hardware;
+package org.team4909.bionicframework.hardware.pneumatics;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.Solenoid;
 
-import org.team4909.bionicframework.utils.Commandable;
+import org.team4909.bionicframework.interfaces.Commandable;
 
 /**
  * Wrapper Class for WPI Single and Double Solenoids implementing BionicFramework Commandables

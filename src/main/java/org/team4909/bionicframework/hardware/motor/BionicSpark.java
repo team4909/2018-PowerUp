@@ -1,8 +1,9 @@
-package org.team4909.bionicframework.hardware;
+package org.team4909.bionicframework.hardware.motor;
 
 import edu.wpi.first.wpilibj.Spark;
 
-import org.team4909.bionicframework.utils.Commandable;
+import org.team4909.bionicframework.hardware.motor.commandables.PercentOutputCommandable;
+import org.team4909.bionicframework.interfaces.Commandable;
 
 /**
  * Wrapper Class for WPI Sparks implementing BionicFramework Commandables
@@ -13,6 +14,8 @@ public class BionicSpark extends Spark {
 	 */
 	public BionicSpark(int channel) {
 		super(channel);
+
+		this.setSafetyEnabled(true);
 	}
 
 	/**
@@ -20,18 +23,6 @@ public class BionicSpark extends Spark {
 	 * @return Returns a Commandable that can be used by the operator and autonomous CommandGroups
 	 */
 	public Commandable setPercentOutput(double setpoint) {
-		return new Set(setpoint);
-	}
-	
-	private class Set extends Commandable {
-		private double setpoint;
-		
-		public Set(double setpoint) {
-			this.setpoint = setpoint;
-		}
-		
-		public void initialize() {
-			set(setpoint);
-		}
+		return new PercentOutputCommandable(setpoint,this);
 	}
 }

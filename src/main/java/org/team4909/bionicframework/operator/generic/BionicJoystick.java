@@ -1,10 +1,10 @@
-package org.team4909.bionicframework.operator;
+package org.team4909.bionicframework.operator.generic;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.buttons.Trigger;
 
-import org.team4909.bionicframework.utils.Commandable;
+import org.team4909.bionicframework.interfaces.Commandable;
 
 /**
  * BionicJoystick abstracts away much of the prior operator interface complexity

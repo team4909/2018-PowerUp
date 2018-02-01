@@ -1,4 +1,4 @@
-package org.team4909.bionicframework.hardware;
+package org.team4909.bionicframework.hardware.gyro;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SerialPort;

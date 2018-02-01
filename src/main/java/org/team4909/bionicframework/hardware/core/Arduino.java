@@ -1,9 +1,9 @@
-package org.team4909.bionicframework.hardware;
+package org.team4909.bionicframework.hardware.core;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 
-import org.team4909.bionicframework.utils.Commandable;
+import org.team4909.bionicframework.interfaces.Commandable;
 
 /**
  * Arduino Library for I2C Communications to be used for LEDs and sensors

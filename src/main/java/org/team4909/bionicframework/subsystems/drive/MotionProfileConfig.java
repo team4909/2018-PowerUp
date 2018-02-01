@@ -1,4 +1,4 @@
-package org.team4909.bionicframework.motion;
+package org.team4909.bionicframework.subsystems.drive;
 
 public class MotionProfileConfig {
     public final double driveRotationTestFeet;

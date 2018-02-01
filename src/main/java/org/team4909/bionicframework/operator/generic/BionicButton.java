@@ -1,4 +1,4 @@
-package org.team4909.bionicframework.operator;
+package org.team4909.bionicframework.operator.generic;
 
 /**
  * Helper Class for Joystick Buttons to be Used with BionicJoystick

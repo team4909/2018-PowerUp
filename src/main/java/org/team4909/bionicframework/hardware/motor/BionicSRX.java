@@ -1,4 +1,4 @@
-package org.team4909.bionicframework.hardware;
+package org.team4909.bionicframework.hardware.motor;
 
 import com.ctre.phoenix.motion.MotionProfileStatus;
 import com.ctre.phoenix.motion.SetValueMotionProfile;
@@ -9,8 +9,10 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.Notifier;
 
-import org.team4909.bionicframework.motion.BionicSRXEncoder;
-import org.team4909.bionicframework.utils.Commandable;
+import org.team4909.bionicframework.hardware.motor.commandables.PercentOutputCommandable;
+import org.team4909.bionicframework.hardware.motor.commandables.SmartOutputCommandable;
+import org.team4909.bionicframework.hardware.sensors.BionicSRXEncoder;
+import org.team4909.bionicframework.interfaces.Commandable;
 
 /**
  * Wrapper Class for CTRE WPI_TalonSRX implementing BionicFramework Commandables and Other Simplifications/Abstractions
@@ -25,6 +27,7 @@ public class BionicSRX extends WPI_TalonSRX {
 
         this.configVoltageCompSaturation(12, timeoutMs);
         this.enableVoltageCompensation(true);
+        this.setSafetyEnabled(true);
 
         for (int i = 0; i < slaveNumbers.length; i++) {
             addFollower(slaveNumbers[i]);
@@ -42,7 +45,7 @@ public class BionicSRX extends WPI_TalonSRX {
      * @return Returns a Commandable that can be used by the operator and autonomous CommandGroups
      */
     public Commandable setPercentOutput(double setpoint) {
-        return new SetMode(ControlMode.PercentOutput, setpoint);
+        return new PercentOutputCommandable(setpoint,this);
     }
 
     /**
@@ -51,21 +54,7 @@ public class BionicSRX extends WPI_TalonSRX {
      * @return Returns a Commandable that can be used by the operator and autonomous CommandGroups
      */
     public Commandable setMode(ControlMode mode, double setpoint) {
-        return new SetMode(mode, setpoint);
-    }
-
-    private class SetMode extends Commandable {
-        private ControlMode mode;
-        private double setpoint;
-
-        public SetMode(ControlMode mode, double setpoint) {
-            this.mode = mode;
-            this.setpoint = setpoint;
-        }
-
-        public void initialize() {
-            setMode(mode, setpoint);
-        }
+        return new SmartOutputCommandable(mode, setpoint, this);
     }
 
     /* Sensor Feedback */
@@ -89,7 +78,6 @@ public class BionicSRX extends WPI_TalonSRX {
 
     public void zeroEncoderPosition() {
         this.setSelectedSensorPosition(0, 0, timeoutMs);
-        this.setSelectedSensorPosition(0, 0, timeoutMs);
     }
 
     /* Motion Profiling */
@@ -109,7 +97,6 @@ public class BionicSRX extends WPI_TalonSRX {
         this.changeMotionControlFramePeriod(profileIntervalMs);
         this.set(ControlMode.MotionProfile, SetValueMotionProfile.Disable.value);
 
-        this.zeroEncoderPosition();
         this.clearMotionProfileTrajectories();
 
         for (int i = 0; i < points.length; i++) {
@@ -150,7 +137,7 @@ public class BionicSRX extends WPI_TalonSRX {
     }
 
     /**
-     * @return Returns whether the streamed motion profile has been completed or not
+     * @return Returns whether the streamed subsystems profile has been completed or not
      */
     public boolean isMotionProfileFinished() {
         return (this.getMotionProfileStatus()).isLast;

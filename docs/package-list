@@ -1,4 +1,4 @@
 org.team4909.bionicframework.hardware
-org.team4909.bionicframework.motion
+org.team4909.bionicframework.subsystems
 org.team4909.bionicframework.operator
 org.team4909.bionicframework.utils
