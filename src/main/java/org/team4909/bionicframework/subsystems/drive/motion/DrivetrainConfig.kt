@@ -1,5 +1,9 @@
 package org.team4909.bionicframework.subsystems.drive.motion
 
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JSON
+
+@Serializable
 data class DrivetrainConfig(val profileIntervalMs: Int, val cruisePercent: Double, val wheelDiameterFeet: Double,
                        val maxVelocityTicks: Double, val secondsFromNeutralToFull: Double,
                        val driveRotationTestFeet: Double, val driveRotationTestRad: Double) {
@@ -23,5 +27,9 @@ data class DrivetrainConfig(val profileIntervalMs: Int, val cruisePercent: Doubl
 
         // Max Jerk
         this.maxJerkFeet = 60.0
+    }
+
+    fun toJSON(): String {
+        return JSON.stringify(this);
     }
 }
