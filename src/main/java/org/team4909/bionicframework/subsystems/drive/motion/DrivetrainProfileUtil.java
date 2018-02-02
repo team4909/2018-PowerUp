@@ -1,8 +1,5 @@
 package org.team4909.bionicframework.subsystems.drive.motion;
 
-import com.ctre.phoenix.motion.TrajectoryPoint;
-import com.ctre.phoenix.motion.TrajectoryPoint.TrajectoryDuration;
-
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Trajectory.Config;
@@ -11,9 +8,6 @@ import jaci.pathfinder.Waypoint;
 import jaci.pathfinder.modifiers.TankModifier;
 
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 /**
  * Path generation utility
  */
