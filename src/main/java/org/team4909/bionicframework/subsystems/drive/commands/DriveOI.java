@@ -21,6 +21,7 @@ public class DriveOI extends Command {
     private final BionicAxis rotationInputAxis;
     private final double rotationMultiplier;
     private final double maxSpeedDelta;
+    private final double maxVelocityTicks;
 
     private double lastSpeed;
 
@@ -28,6 +29,7 @@ public class DriveOI extends Command {
                    BionicF310 speedInputGamepad, BionicAxis speedInputAxis, double speedMultiplier,
                    BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis, double rotationMultiplier) {
         requires(subsystem);
+        this.maxVelocityTicks = subsystem.pathgen.drivetrainConfig.getMaxVelocityTicks();
         this.maxSpeedDelta = (1/50) / subsystem.pathgen.drivetrainConfig.getSecondsFromNeutralToFull();
 
         this.leftSRX = leftSRX;
@@ -85,8 +87,8 @@ public class DriveOI extends Command {
         System.out.println("L, R: " + leftMotorOutput + "," + rightMotorOutput);
         System.out.println("L, R: " + leftSRX.getSelectedSensorVelocity(0) + "," + rightSRX.getSelectedSensorVelocity(0));
 
-        leftSRX.set(ControlMode.PercentOutput, limit(leftMotorOutput));
-        rightSRX.set(ControlMode.PercentOutput, limit(rightMotorOutput));
+        leftSRX.set(ControlMode.Velocity, maxVelocityTicks * limit(leftMotorOutput));
+        rightSRX.set(ControlMode.Velocity, maxVelocityTicks * limit(rightMotorOutput));
     }
 
     private double limit(double value) {
