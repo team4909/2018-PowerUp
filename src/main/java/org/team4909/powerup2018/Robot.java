@@ -85,8 +85,8 @@ public class Robot extends RoboRio {
                 new BionicVictorSP(2),
                 new BionicVictorSP(3)
         );
-        driverGamepad.buttonHeld(BionicF310.RT, winch.setPercentOutput(1.0));
-        driverGamepad.buttonHeld(BionicF310.LT, winch.setPercentOutput(-0.5));
+        driverGamepad.buttonHeld(BionicF310.RT, 0.15, winch.setPercentOutput(1.0));
+        driverGamepad.buttonHeld(BionicF310.LT, 0.15, winch.setPercentOutput(-0.5));
 
         hookDeploy = new MotorGroup(
                 new BionicSpark(4)
