@@ -21,15 +21,15 @@ public class DriveOI extends Command {
     private final BionicAxis rotationInputAxis;
     private final double rotationMultiplier;
     private final BionicDrive subsystem;
-    private final double secondsFromNeutralToFull;
+    private double secondsFromNeutralToFull;
 
     private double lastSpeed;
 
     public DriveOI(BionicDrive subsystem, BionicSRX leftSRX, BionicSRX rightSRX,
                    BionicF310 speedInputGamepad, BionicAxis speedInputAxis, double speedMultiplier,
-                   BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis, double rotationMultiplier, double secondsFromNeutralToFull ) {
+                   BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis, double rotationMultiplier) {
         this.subsystem = subsystem;
-        this.secondsFromNeutralToFull = secondsFromNeutralToFull;
+        this.secondsFromNeutralToFull=secondsFromNeutralToFull;
         requires(subsystem);
 
         this.leftSRX = leftSRX;
