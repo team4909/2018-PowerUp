@@ -59,8 +59,8 @@ public class BionicDrive extends Subsystem {
         this.bionicGyro = bionicGyro;
 
         this.pathgen = new DrivetrainProfileUtil(drivetrainConfig);
-        this.leftSRX.configOpenloopRamp(pathgen.drivetrainConfig.getSecondsFromNeutralToFull());
-        this.rightSRX.configOpenloopRamp(pathgen.drivetrainConfig.getSecondsFromNeutralToFull());
+        this.leftSRX.configOpenloopRamp(0);
+        this.rightSRX.configOpenloopRamp(0);
 
         this.shifter = shifter;
 

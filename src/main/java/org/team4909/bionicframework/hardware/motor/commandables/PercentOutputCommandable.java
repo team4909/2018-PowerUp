@@ -14,16 +14,13 @@ public class PercentOutputCommandable extends Commandable {
 
     @Override
     public void initialize() {
-        execute();
-    }
-
-    @Override
-    public void execute() {
         speedController.set(setpoint);
     }
 
     @Override
-    protected void end() {
+    public synchronized void cancel() {
         speedController.set(0);
+
+        super.cancel();
     }
 }

@@ -30,7 +30,7 @@ public class BionicSRX extends WPI_TalonSRX implements BionicMotor {
                      int... slaveNumbers){
         super(deviceNumber);
 
-        this.configVoltageCompSaturation(12, timeoutMs);
+        this.configVoltageCompSaturation(11.5, timeoutMs);
         this.enableVoltageCompensation(true);
 
         this.setInverted(invertGearbox);

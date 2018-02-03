@@ -13,8 +13,8 @@ import org.team4909.bionicframework.interfaces.Commandable;
  * controller's classes.
  */
 public class BionicJoystick extends Joystick {
-	private double deadzone;
-	private double sensitivity;
+	public final double deadzone;
+	public final double sensitivity;
 
 	/**
 	 * @param port Port between 0...5 the USB Joystick is configured to use.
@@ -30,7 +30,7 @@ public class BionicJoystick extends Joystick {
 	 * @param axis Axis to Measure
 	 * @return Returns axis value [-1,1]
 	 */
-	public double getThresholdAxis(BionicAxis axis){
+	private double getThresholdAxis(BionicAxis axis){
 		if(Math.abs(this.getRawAxis(axis.getNumber())) > Math.abs(deadzone))
 			return this.getRawAxis(axis.getNumber());
 		else

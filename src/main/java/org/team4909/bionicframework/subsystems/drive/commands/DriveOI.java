@@ -20,17 +20,15 @@ public class DriveOI extends Command {
     private final BionicF310 rotationInputGamepad;
     private final BionicAxis rotationInputAxis;
     private final double rotationMultiplier;
-    private final BionicDrive subsystem;
-    private double secondsFromNeutralToFull;
+    private final double maxSpeedDelta;
 
     private double lastSpeed;
 
     public DriveOI(BionicDrive subsystem, BionicSRX leftSRX, BionicSRX rightSRX,
                    BionicF310 speedInputGamepad, BionicAxis speedInputAxis, double speedMultiplier,
                    BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis, double rotationMultiplier) {
-        this.subsystem = subsystem;
-        this.secondsFromNeutralToFull=secondsFromNeutralToFull;
         requires(subsystem);
+        this.maxSpeedDelta = (1/50) / subsystem.pathgen.drivetrainConfig.getSecondsFromNeutralToFull();
 
         this.leftSRX = leftSRX;
         this.rightSRX = rightSRX;
@@ -55,30 +53,37 @@ public class DriveOI extends Command {
     @Override
     protected void execute() {
         double speed = speedInputGamepad.getSensitiveAxis(speedInputAxis) * speedMultiplier;
-        if(speed - lastSpeed > 1/50/secondsFromNeutralToFull)
-            speed = lastSpeed + 1/50/secondsFromNeutralToFull;
+//        if(Math.abs(speed - lastSpeed) > maxSpeedDelta)
+//            speed = lastSpeed + Math.copySign(maxSpeedDelta, speed);
         lastSpeed = speed;
 
         double rotation = rotationInputGamepad.getSensitiveAxis(rotationInputAxis) * rotationMultiplier;
 
+        System.out.println("S, R: " + speed + "," + rotation);
+
         double leftMotorOutput;
         double rightMotorOutput;
 
-        double maxInput = Math.copySign(Math.max(Math.abs(speed), Math.abs(rotation)), speed);
-
-        if (speed >= 0.0 && rotation >= 0.0) {
-            leftMotorOutput = maxInput;
-            rightMotorOutput = speed - rotation;
-        } else if (speed >= 0.0 && rotation < 0.0) {
-            leftMotorOutput = speed + rotation;
-            rightMotorOutput = maxInput;
-        } else if (speed < 0.0 && rotation >= 0.0) {
-            leftMotorOutput = speed + rotation;
-            rightMotorOutput = maxInput;
-        } else { // speed < 0.0 &&  rotation < 0.0
-            leftMotorOutput = maxInput;
-            rightMotorOutput = speed - rotation;
+        if (speed > 0.0) {
+            if (rotation > 0.0) {
+                leftMotorOutput = speed - rotation;
+                rightMotorOutput = Math.max(speed, rotation);
+            } else {
+                leftMotorOutput = Math.max(speed, -rotation);
+                rightMotorOutput = speed + rotation;
+            }
+        } else {
+            if (rotation > 0.0) {
+                leftMotorOutput = -Math.max(-speed, rotation);
+                rightMotorOutput = speed + rotation;
+            } else {
+                leftMotorOutput = speed - rotation;
+                rightMotorOutput = -Math.max(-speed, -rotation);
+            }
         }
+
+        System.out.println("L, R: " + leftMotorOutput + "," + rightMotorOutput);
+        System.out.println("L, R: " + leftSRX.getSelectedSensorVelocity(0) + "," + rightSRX.getSelectedSensorVelocity(0));
 
         leftSRX.set(ControlMode.PercentOutput, limit(leftMotorOutput));
         rightSRX.set(ControlMode.PercentOutput, limit(rightMotorOutput));

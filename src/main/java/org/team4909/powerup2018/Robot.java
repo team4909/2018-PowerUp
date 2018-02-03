@@ -2,22 +2,20 @@ package org.team4909.powerup2018;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
-import com.sun.xml.internal.ws.server.DraconianValidationErrorHandler;
 import edu.wpi.first.wpilibj.command.Command;
 import org.team4909.bionicframework.hardware.core.Arduino;
-import org.team4909.bionicframework.hardware.core.Arduino.State;
 import org.team4909.bionicframework.hardware.core.RoboRio;
 import org.team4909.bionicframework.hardware.gyro.BionicNavX;
 import org.team4909.bionicframework.hardware.motor.BionicSRX;
 import org.team4909.bionicframework.hardware.motor.BionicSpark;
-import org.team4909.bionicframework.hardware.motor.MotorGroup;
 import org.team4909.bionicframework.hardware.motor.BionicVictorSP;
+import org.team4909.bionicframework.hardware.motor.MotorGroup;
 import org.team4909.bionicframework.hardware.pneumatics.BionicSingleSolenoid;
 import org.team4909.bionicframework.operator.generic.BionicAxis;
 import org.team4909.bionicframework.subsystems.drive.BionicDrive;
-import org.team4909.bionicframework.hardware.sensors.SRXEncoder;
 import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainConfig;
 import org.team4909.bionicframework.operator.BionicF310;
+import org.team4909.bionicframework.subsystems.elevator.BionicElevator;
 
 public class Robot extends RoboRio {
     /* Drivetrain Config */
@@ -29,14 +27,14 @@ public class Robot extends RoboRio {
     private static DrivetrainConfig competetitionBotConfig = new DrivetrainConfig(
             10,0.7,
             0.5, 360 / 3,
-            12915,1.2,
+            12915,10,
             5,2);
 
     /* Subsystem Initialization */
     private static Arduino arduino;
     private static BionicDrive drivetrain;
     private static MotorGroup intake;
-    private static BionicSRX elevator;
+    private static BionicElevator elevator;
     private static MotorGroup winch;
     private static MotorGroup hookDeploy;
 
@@ -66,7 +64,7 @@ public class Robot extends RoboRio {
                         4
                 ),
                 driverGamepad, BionicF310.LY, 1.0,
-                driverGamepad, BionicF310.RX, -1.0,
+                driverGamepad, BionicF310.RX, .5,
                 competetitionBotConfig,
                 new BionicNavX(),
                 new BionicSingleSolenoid(0)
@@ -92,12 +90,18 @@ public class Robot extends RoboRio {
                 new BionicSpark(4)
         );
 
-        elevator = new BionicSRX(3, true);
+        elevator = new BionicElevator(
+                new BionicSRX(
+                        3, false,
+                        FeedbackDevice.CTRE_MagEncoder_Relative, false,
+                        1.0,0,0,0
+                ),
+                manipulatorGamepad, BionicF310.LY
+        );
     }
 
     @Override
     public void teleopPeriodic() {
-        elevator.set(manipulatorGamepad, BionicF310.LY);
         hookDeploy.set(manipulatorGamepad, BionicF310.RY);
     }
 
