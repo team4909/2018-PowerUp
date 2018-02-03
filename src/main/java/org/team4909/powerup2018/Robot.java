@@ -36,6 +36,8 @@ public class Robot extends RoboRio {
     private static BionicDrive drivetrain;
     private static MotorGroup intake;
     private static BionicSRX elevator;
+    private static MotorGroup winch;
+    private static MotorGroup hookDeploy;
 
     /* OI Initialization */
     private static BionicF310 driverGamepad;
@@ -77,6 +79,15 @@ public class Robot extends RoboRio {
         );
         driverGamepad.buttonHeld(BionicF310.LB, intake.setPercentOutput(1.0));
         driverGamepad.buttonHeld(BionicF310.RB, intake.setPercentOutput(-1.0));
+
+        winch = new MotorGroup(
+                new BionicVictorSP(2),
+                new BionicVictorSP(3)
+        );
+
+        hookDeploy = new MotorGroup(
+                new BionicSpark(4)
+        );
 
         elevator = new BionicSRX(3, true);
     }
