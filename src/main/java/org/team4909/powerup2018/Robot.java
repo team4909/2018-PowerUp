@@ -98,8 +98,6 @@ public class Robot extends RoboRio {
                 ),
                 manipulatorGamepad, BionicF310.LY
         );
-
-        autoCommand = drivetrain.findMaxVelocity();
     }
 
     @Override
