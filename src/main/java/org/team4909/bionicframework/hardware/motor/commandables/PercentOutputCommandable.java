@@ -12,7 +12,18 @@ public class PercentOutputCommandable extends Commandable {
         this.speedController = speedController;
     }
 
+    @Override
     public void initialize() {
+        execute();
+    }
+
+    @Override
+    public void execute() {
         speedController.set(setpoint);
+    }
+
+    @Override
+    protected void end() {
+        speedController.set(0);
     }
 }

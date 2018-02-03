@@ -15,12 +15,15 @@ public class DriveOI extends Command {
 
     private final BionicF310 speedInputGamepad;
     private final BionicAxis speedInputAxis;
+    private final double speedMultiplier;
+
     private final BionicF310 rotationInputGamepad;
     private final BionicAxis rotationInputAxis;
+    private final double rotationMultiplier;
 
     public DriveOI(BionicDrive subsystem, BionicSRX leftSRX, BionicSRX rightSRX,
-                   BionicF310 speedInputGamepad, BionicAxis speedInputAxis,
-                   BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis) {
+                   BionicF310 speedInputGamepad, BionicAxis speedInputAxis, double speedMultiplier,
+                   BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis, double rotationMultiplier) {
         requires(subsystem);
 
         this.leftSRX = leftSRX;
@@ -28,8 +31,11 @@ public class DriveOI extends Command {
 
         this.speedInputGamepad = speedInputGamepad;
         this.speedInputAxis = speedInputAxis;
+        this.speedMultiplier = speedMultiplier;
+
         this.rotationInputGamepad = rotationInputGamepad;
         this.rotationInputAxis = rotationInputAxis;
+        this.rotationMultiplier = rotationMultiplier;
     }
 
     @Override
@@ -42,8 +48,8 @@ public class DriveOI extends Command {
 
     @Override
     protected void execute() {
-        double speed = speedInputGamepad.getSensitiveAxis(speedInputAxis);
-        double rotation = rotationInputGamepad.getSensitiveAxis(rotationInputAxis);
+        double speed = speedInputGamepad.getSensitiveAxis(speedInputAxis) * speedMultiplier;
+        double rotation = rotationInputGamepad.getSensitiveAxis(rotationInputAxis) * rotationMultiplier;
 
         double leftMotorOutput;
         double rightMotorOutput;
@@ -75,5 +81,10 @@ public class DriveOI extends Command {
     @Override
     protected boolean isFinished() {
         return false;
+    }
+
+    @Override
+    protected void end() {
+        super.end();
     }
 }

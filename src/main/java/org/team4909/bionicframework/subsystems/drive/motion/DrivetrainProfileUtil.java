@@ -34,8 +34,8 @@ public class DrivetrainProfileUtil {
         Trajectory leftTrajectory;
         Trajectory rightTrajectory;
 
-        File leftFile = new File(profile_dir + profileHash + "-left.traj");
-        File rightFile = new File(profile_dir + profileHash + "-right.traj");
+        File leftFile = new File(profile_dir, profileHash + "-left.traj");
+        File rightFile = new File(profile_dir, profileHash + "-right.traj");
 
         if(leftFile.isFile() && rightFile.isFile()) {
             leftTrajectory = Pathfinder.readFromFile(leftFile);

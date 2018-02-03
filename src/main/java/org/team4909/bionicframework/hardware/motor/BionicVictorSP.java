@@ -3,18 +3,29 @@ package org.team4909.bionicframework.hardware.motor;
 import edu.wpi.first.wpilibj.VictorSP;
 import org.team4909.bionicframework.hardware.motor.commandables.PercentOutputCommandable;
 import org.team4909.bionicframework.interfaces.Commandable;
+import org.team4909.bionicframework.operator.generic.BionicAxis;
+import org.team4909.bionicframework.operator.generic.BionicJoystick;
 
 /**
  * Wrapper Class for WPI Sparks implementing BionicFramework Commandables
  */
-public class BionicVictorSP extends VictorSP {
+public class BionicVictorSP extends VictorSP implements BionicMotor {
     /**
      * @param channel PWM Channel
      */
     public BionicVictorSP(int channel) {
         super(channel);
+    }
 
-        this.setSafetyEnabled(true);
+    public BionicVictorSP(int channel, boolean inverted){
+        this(channel);
+
+        setInverted(inverted);
+    }
+
+    @Override
+    public void set(BionicJoystick joystick, BionicAxis axis) {
+        set(joystick.getSensitiveAxis(axis));
     }
 
     /**

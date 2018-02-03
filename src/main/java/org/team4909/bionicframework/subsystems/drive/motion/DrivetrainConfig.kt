@@ -4,9 +4,10 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JSON
 
 @Serializable
-data class DrivetrainConfig(val profileIntervalMs: Int, val cruisePercent: Double, val wheelDiameterFeet: Double,
-                       val maxVelocityTicks: Double, val secondsFromNeutralToFull: Double,
-                       val driveRotationTestFeet: Double, val driveRotationTestRad: Double) {
+data class DrivetrainConfig(val profileIntervalMs: Int, val cruisePercent: Double,
+                            val wheelDiameterFeet: Double, val ticksPerRev: Int,
+                            val maxVelocityTicks: Double, val secondsFromNeutralToFull: Double,
+                            val driveRotationTestFeet: Double, val driveRotationTestRad: Double) {
     val ticksToFeet: Double
     val chassisWidthFeet: Double
     val cruiseVelocityFeet: Double
@@ -17,7 +18,7 @@ data class DrivetrainConfig(val profileIntervalMs: Int, val cruisePercent: Doubl
         get() = profileIntervalMs.toDouble() / 1000
 
     init {
-        this.ticksToFeet = Math.PI * wheelDiameterFeet / (4 * 360) // e4t spec, with 4x subsampling
+        this.ticksToFeet = Math.PI * wheelDiameterFeet / (4 * ticksPerRev) // with 4x subsampling
         this.chassisWidthFeet = 2 * driveRotationTestFeet / driveRotationTestRad
 
         // Cruise Velocity

@@ -5,6 +5,7 @@ import com.ctre.phoenix.motion.SetValueMotionProfile;
 import com.ctre.phoenix.motion.TrajectoryPoint;
 import com.ctre.phoenix.motion.TrajectoryPoint.TrajectoryDuration;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
@@ -13,34 +14,58 @@ import edu.wpi.first.wpilibj.Notifier;
 import jaci.pathfinder.Trajectory;
 import org.team4909.bionicframework.hardware.motor.commandables.PercentOutputCommandable;
 import org.team4909.bionicframework.hardware.motor.commandables.SmartOutputCommandable;
-import org.team4909.bionicframework.hardware.sensors.SRXEncoder;
 import org.team4909.bionicframework.interfaces.Commandable;
+import org.team4909.bionicframework.operator.generic.BionicAxis;
+import org.team4909.bionicframework.operator.generic.BionicJoystick;
 
 /**
  * Wrapper Class for CTRE WPI_TalonSRX implementing BionicFramework Commandables and Other Simplifications/Abstractions
  */
-public class BionicSRX extends WPI_TalonSRX {
+public class BionicSRX extends WPI_TalonSRX implements BionicMotor {
     /**
      * @param deviceNumber - CAN ID's of SRX Master
      * @param slaveNumbers - CAN ID's of SRX Followers
      */
-    public BionicSRX(int deviceNumber, int... slaveNumbers) {
+    public BionicSRX(int deviceNumber, boolean invertGearbox,
+                     int... slaveNumbers){
         super(deviceNumber);
 
         this.configVoltageCompSaturation(12, timeoutMs);
         this.enableVoltageCompensation(true);
-        this.setSafetyEnabled(true);
+
+        this.setInverted(invertGearbox);
 
         for (int i = 0; i < slaveNumbers.length; i++) {
-            addFollower(slaveNumbers[i]);
+            WPI_VictorSPX follower = new WPI_VictorSPX(slaveNumbers[i]);
+
+            follower.setInverted(invertGearbox);
+            follower.follow(this);
         }
     }
 
-    private void addFollower(int slave) {
-        (new WPI_VictorSPX(slave)).follow(this);
+    public BionicSRX(int deviceNumber, boolean invertGearbox,
+                     FeedbackDevice feedbackDevice, boolean invertSensor,
+                     double p, double i, double d, double f,
+                     int... slaveNumbers) {
+        this(deviceNumber, invertGearbox, slaveNumbers);
+
+        this.configSelectedFeedbackSensor(feedbackDevice, pidIdx, timeoutMs);
+
+        this.setSensorPhase(invertSensor);
+        this.zeroEncoderPosition();
+
+        this.config_kP(pidIdx, p, timeoutMs);
+        this.config_kI(pidIdx, i, timeoutMs);
+        this.config_kD(pidIdx, d, timeoutMs);
+        this.config_kF(pidIdx, f, timeoutMs);
     }
 
     /* Command-based */
+
+    @Override
+    public void set(BionicJoystick joystick, BionicAxis axis) {
+        set(joystick.getSensitiveAxis(axis));
+    }
 
     /**
      * @param setpoint The percent output value between [-1,1] to set
@@ -62,21 +87,6 @@ public class BionicSRX extends WPI_TalonSRX {
     /* Sensor Feedback */
     private final int pidIdx = 0;
     private final int timeoutMs = 0;
-
-    /**
-     * @param encoder The encoder to use for closed-loop as found in CTRE documentation
-     */
-    public void configEncoder(SRXEncoder encoder) {
-        this.configSelectedFeedbackSensor(encoder.feedbackDevice, pidIdx, timeoutMs);
-
-        this.setSensorPhase(encoder.inverted);
-        this.zeroEncoderPosition();
-
-        this.config_kP(pidIdx, encoder.p, timeoutMs);
-        this.config_kI(pidIdx, encoder.i, timeoutMs);
-        this.config_kD(pidIdx, encoder.d, timeoutMs);
-        this.config_kF(pidIdx, encoder.f, timeoutMs);
-    }
 
     public void zeroEncoderPosition() {
         this.setSelectedSensorPosition(0, 0, timeoutMs);

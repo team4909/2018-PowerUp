@@ -4,8 +4,10 @@ import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import org.team4909.bionicframework.hardware.motor.commandables.PercentOutputCommandable;
 import org.team4909.bionicframework.interfaces.Commandable;
+import org.team4909.bionicframework.operator.generic.BionicAxis;
+import org.team4909.bionicframework.operator.generic.BionicJoystick;
 
-public class MotorGroup extends SpeedControllerGroup {
+public class MotorGroup extends SpeedControllerGroup implements BionicMotor {
     /**
      * Create a new SpeedControllerGroup with the provided SpeedControllers.
      *
@@ -14,6 +16,11 @@ public class MotorGroup extends SpeedControllerGroup {
      */
     public MotorGroup(SpeedController speedController, SpeedController... speedControllers) {
         super(speedController, speedControllers);
+    }
+
+    @Override
+    public void set(BionicJoystick joystick, BionicAxis axis) {
+        set(joystick.getSensitiveAxis(axis));
     }
 
     /**
