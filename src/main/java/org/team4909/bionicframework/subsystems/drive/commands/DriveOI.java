@@ -8,6 +8,7 @@ import org.team4909.bionicframework.hardware.motor.BionicSRX;
 import org.team4909.bionicframework.operator.BionicF310;
 import org.team4909.bionicframework.operator.generic.BionicAxis;
 import org.team4909.bionicframework.subsystems.drive.BionicDrive;
+import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainConfig;
 
 public class DriveOI extends Command {
     private final BionicSRX leftSRX;
@@ -20,13 +21,13 @@ public class DriveOI extends Command {
     private final BionicF310 rotationInputGamepad;
     private final BionicAxis rotationInputAxis;
     private final double rotationMultiplier;
-    private final double maxVelocityTicks;
+    private final DrivetrainConfig drivetrainConfig;
 
     public DriveOI(BionicDrive subsystem, BionicSRX leftSRX, BionicSRX rightSRX,
                    BionicF310 speedInputGamepad, BionicAxis speedInputAxis, double speedMultiplier,
                    BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis, double rotationMultiplier) {
         requires(subsystem);
-        this.maxVelocityTicks = subsystem.pathgen.drivetrainConfig.getMaxVelocityTicks();
+        this.drivetrainConfig = subsystem.pathgen.drivetrainConfig;
 
         this.leftSRX = leftSRX;
         this.rightSRX = rightSRX;
@@ -52,6 +53,7 @@ public class DriveOI extends Command {
     protected void execute() {
         double speed = speedInputGamepad.getSensitiveAxis(speedInputAxis) * speedMultiplier;
         double rotation = rotationInputGamepad.getSensitiveAxis(rotationInputAxis) * rotationMultiplier;
+        double maxVelocityTicks = drivetrainConfig.getMaxVelocityTicks();
 
         double leftMotorOutput;
         double rightMotorOutput;
