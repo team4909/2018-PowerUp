@@ -16,8 +16,6 @@ import org.team4909.bionicframework.operator.BionicF310;
 
 import jaci.pathfinder.Waypoint;
 import org.team4909.bionicframework.subsystems.drive.commands.DriveOI;
-import org.team4909.bionicframework.subsystems.drive.commands.FindMaxVelocity;
-import org.team4909.bionicframework.subsystems.drive.commands.FindRampTime;
 import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainConfig;
 import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainTrajectory;
 
@@ -83,14 +81,6 @@ public class BionicDrive extends Subsystem {
 
     public Commandable shiftGear(boolean gear) {
         return shifter.setState(gear);
-    }
-
-    public Command findMaxVelocity() {
-        return new FindMaxVelocity(this, leftSRX, rightSRX);
-    }
-
-    public Command findRampTime() {
-        return new FindRampTime(this, leftSRX, rightSRX);
     }
 
 //    public Command driveRotationTest() {

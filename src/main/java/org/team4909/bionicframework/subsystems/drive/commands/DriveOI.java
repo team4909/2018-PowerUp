@@ -23,8 +23,6 @@ public class DriveOI extends Command {
     private final double maxSpeedDelta;
     private final double maxVelocityTicks;
 
-    private double lastSpeed;
-
     public DriveOI(BionicDrive subsystem, BionicSRX leftSRX, BionicSRX rightSRX,
                    BionicF310 speedInputGamepad, BionicAxis speedInputAxis, double speedMultiplier,
                    BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis, double rotationMultiplier) {
@@ -55,13 +53,7 @@ public class DriveOI extends Command {
     @Override
     protected void execute() {
         double speed = speedInputGamepad.getSensitiveAxis(speedInputAxis) * speedMultiplier;
-//        if(Math.abs(speed - lastSpeed) > maxSpeedDelta)
-//            speed = lastSpeed + Math.copySign(maxSpeedDelta, speed);
-        lastSpeed = speed;
-
         double rotation = rotationInputGamepad.getSensitiveAxis(rotationInputAxis) * rotationMultiplier;
-
-        System.out.println("S, R: " + speed + "," + rotation);
 
         double leftMotorOutput;
         double rightMotorOutput;
@@ -83,9 +75,6 @@ public class DriveOI extends Command {
                 rightMotorOutput = -Math.max(-speed, -rotation);
             }
         }
-
-        System.out.println("L, R: " + leftMotorOutput + "," + rightMotorOutput);
-        System.out.println("L, R: " + leftSRX.getSelectedSensorVelocity(0) + "," + rightSRX.getSelectedSensorVelocity(0));
 
         leftSRX.set(ControlMode.Velocity, maxVelocityTicks * limit(leftMotorOutput));
         rightSRX.set(ControlMode.Velocity, maxVelocityTicks * limit(rightMotorOutput));
