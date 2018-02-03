@@ -13,6 +13,7 @@ import org.team4909.bionicframework.hardware.motor.BionicSpark;
 import org.team4909.bionicframework.hardware.motor.MotorGroup;
 import org.team4909.bionicframework.hardware.motor.BionicVictorSP;
 import org.team4909.bionicframework.hardware.pneumatics.BionicSingleSolenoid;
+import org.team4909.bionicframework.operator.generic.BionicAxis;
 import org.team4909.bionicframework.subsystems.drive.BionicDrive;
 import org.team4909.bionicframework.hardware.sensors.SRXEncoder;
 import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainConfig;
@@ -84,6 +85,8 @@ public class Robot extends RoboRio {
                 new BionicVictorSP(2),
                 new BionicVictorSP(3)
         );
+        driverGamepad.buttonHeld(BionicF310.RT, winch.setPercentOutput(1.0));
+        driverGamepad.buttonHeld(BionicF310.LT, winch.setPercentOutput(-0.5));
 
         hookDeploy = new MotorGroup(
                 new BionicSpark(4)
@@ -95,6 +98,7 @@ public class Robot extends RoboRio {
     @Override
     public void teleopPeriodic() {
         elevator.set(manipulatorGamepad, BionicF310.LY);
+        hookDeploy.set(manipulatorGamepad, BionicF310.RY);
     }
 
     @Override
