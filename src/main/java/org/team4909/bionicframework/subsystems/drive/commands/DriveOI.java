@@ -21,6 +21,8 @@ public class DriveOI extends Command {
     private final BionicAxis rotationInputAxis;
     private final double rotationMultiplier;
 
+    private double lastSpeed;
+
     public DriveOI(BionicDrive subsystem, BionicSRX leftSRX, BionicSRX rightSRX,
                    BionicF310 speedInputGamepad, BionicAxis speedInputAxis, double speedMultiplier,
                    BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis, double rotationMultiplier) {
@@ -49,6 +51,10 @@ public class DriveOI extends Command {
     @Override
     protected void execute() {
         double speed = speedInputGamepad.getSensitiveAxis(speedInputAxis) * speedMultiplier;
+        if(speed - lastSpeed > 0.2)
+            speed = lastSpeed + 0.2;
+        lastSpeed = speed;
+
         double rotation = rotationInputGamepad.getSensitiveAxis(rotationInputAxis) * rotationMultiplier;
 
         double leftMotorOutput;
