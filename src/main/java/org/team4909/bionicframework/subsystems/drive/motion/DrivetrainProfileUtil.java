@@ -7,7 +7,11 @@ import jaci.pathfinder.Trajectory.FitMethod;
 import jaci.pathfinder.Waypoint;
 import jaci.pathfinder.modifiers.TankModifier;
 
+import javax.xml.bind.DatatypeConverter;
 import java.io.File;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 /**
  * Path generation utility
  */
@@ -28,27 +32,39 @@ public class DrivetrainProfileUtil {
     }
 
     public DrivetrainTrajectory getTrajectory(Waypoint[] points) {
-        String profileJSON = new DrivetrainProfileConfig(drivetrainConfig, points).toJSON();
-        String profileHash = profileJSON;
-
         Trajectory leftTrajectory;
         Trajectory rightTrajectory;
 
-        File leftFile = new File(profile_dir, profileHash + "-left.traj");
-        File rightFile = new File(profile_dir, profileHash + "-right.traj");
+        try {
+            String profileJSON = new DrivetrainProfileConfig(drivetrainConfig, points).toJSON();
 
-        if(leftFile.isFile() && rightFile.isFile()) {
-            leftTrajectory = Pathfinder.readFromFile(leftFile);
-            rightTrajectory = Pathfinder.readFromFile(rightFile);
-        } else {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(profileJSON.getBytes());
+            byte[] digest = md.digest();
+            String profileHash = DatatypeConverter.printHexBinary(digest).toUpperCase();
+
+            File leftFile = new File(profile_dir, profileHash + "-left.traj");
+            File rightFile = new File(profile_dir, profileHash + "-right.traj");
+
+            if (leftFile.isFile() && rightFile.isFile()) {
+                leftTrajectory = Pathfinder.readFromFile(leftFile);
+                rightTrajectory = Pathfinder.readFromFile(rightFile);
+            } else {
+                Trajectory trajectory = Pathfinder.generate(points, pathfinderConfig);
+                TankModifier modifier = new TankModifier(trajectory).modify(drivetrainConfig.getChassisWidthFeet());
+
+                leftTrajectory = modifier.getLeftTrajectory();
+                rightTrajectory = modifier.getRightTrajectory();
+
+                Pathfinder.writeToFile(leftFile, leftTrajectory);
+                Pathfinder.writeToFile(rightFile, rightTrajectory);
+            }
+        } catch (NoSuchAlgorithmException e){
             Trajectory trajectory = Pathfinder.generate(points, pathfinderConfig);
             TankModifier modifier = new TankModifier(trajectory).modify(drivetrainConfig.getChassisWidthFeet());
 
             leftTrajectory = modifier.getLeftTrajectory();
             rightTrajectory = modifier.getRightTrajectory();
-
-            Pathfinder.writeToFile(leftFile, leftTrajectory);
-            Pathfinder.writeToFile(rightFile, rightTrajectory);
         }
 
         return new DrivetrainTrajectory(drivetrainConfig, leftTrajectory, rightTrajectory);
