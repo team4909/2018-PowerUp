@@ -6,14 +6,14 @@ import org.team4909.bionicframework.hardware.motor.BionicSRX;
 import org.team4909.bionicframework.operator.generic.BionicAxis;
 import org.team4909.bionicframework.operator.generic.BionicJoystick;
 
-public class BionicElevator extends Subsystem {
+public class ElevatorSubsystem extends Subsystem {
     private final BionicSRX bionicSRX;
     private final BionicJoystick joystick;
     private final BionicAxis axis;
 
     private double holdingPosition;
 
-    public BionicElevator(BionicSRX bionicSRX, BionicJoystick joystick, BionicAxis axis){
+    public ElevatorSubsystem(BionicSRX bionicSRX, BionicJoystick joystick, BionicAxis axis){
         this.bionicSRX = bionicSRX;
         this.joystick = joystick;
         this.axis = axis;

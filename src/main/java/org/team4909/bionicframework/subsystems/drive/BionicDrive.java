@@ -12,7 +12,7 @@ import org.team4909.bionicframework.interfaces.Commandable;
 import org.team4909.bionicframework.subsystems.drive.commands.DriveTrajectory;
 import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainProfileUtil;
 import org.team4909.bionicframework.operator.generic.BionicAxis;
-import org.team4909.bionicframework.operator.BionicF310;
+import org.team4909.bionicframework.operator.controllers.BionicF310;
 
 import jaci.pathfinder.Waypoint;
 import org.team4909.bionicframework.subsystems.drive.commands.DriveOI;

@@ -5,7 +5,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.wpilibj.command.Command;
 import org.team4909.bionicframework.hardware.motor.BionicSRX;
-import org.team4909.bionicframework.operator.BionicF310;
+import org.team4909.bionicframework.operator.controllers.BionicF310;
 import org.team4909.bionicframework.operator.generic.BionicAxis;
 import org.team4909.bionicframework.subsystems.drive.BionicDrive;
 import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainConfig;

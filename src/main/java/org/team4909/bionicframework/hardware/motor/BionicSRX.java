@@ -21,7 +21,7 @@ import org.team4909.bionicframework.operator.generic.BionicJoystick;
 /**
  * Wrapper Class for CTRE WPI_TalonSRX implementing BionicFramework Commandables and Other Simplifications/Abstractions
  */
-public class BionicSRX extends WPI_TalonSRX implements BionicMotor {
+public class BionicSRX extends WPI_TalonSRX {
     /**
      * @param deviceNumber - CAN ID's of SRX Master
      * @param slaveNumbers - CAN ID's of SRX Followers
@@ -30,10 +30,10 @@ public class BionicSRX extends WPI_TalonSRX implements BionicMotor {
                      int... slaveNumbers){
         super(deviceNumber);
 
-        this.configVoltageCompSaturation(11.5, timeoutMs);
-        this.enableVoltageCompensation(true);
+        configVoltageCompSaturation(11.5, timeoutMs);
+        enableVoltageCompensation(true);
 
-        this.setInverted(invertGearbox);
+        setInverted(invertGearbox);
 
         for (int i = 0; i < slaveNumbers.length; i++) {
             WPI_VictorSPX follower = new WPI_VictorSPX(slaveNumbers[i]);
@@ -49,20 +49,18 @@ public class BionicSRX extends WPI_TalonSRX implements BionicMotor {
                      int... slaveNumbers) {
         this(deviceNumber, invertGearbox, slaveNumbers);
 
-        this.configSelectedFeedbackSensor(feedbackDevice, pidIdx, timeoutMs);
+        configSelectedFeedbackSensor(feedbackDevice, pidIdx, timeoutMs);
 
-        this.setSensorPhase(invertSensor);
-        this.zeroEncoderPosition();
+        setSensorPhase(invertSensor);
+        zeroEncoderPosition();
 
-        this.config_kP(pidIdx, p, timeoutMs);
-        this.config_kI(pidIdx, i, timeoutMs);
-        this.config_kD(pidIdx, d, timeoutMs);
-        this.config_kF(pidIdx, f, timeoutMs);
+        config_kP(pidIdx, p, timeoutMs);
+        config_kI(pidIdx, i, timeoutMs);
+        config_kD(pidIdx, d, timeoutMs);
+        config_kF(pidIdx, f, timeoutMs);
     }
 
     /* Command-based */
-
-    @Override
     public void set(BionicJoystick joystick, BionicAxis axis) {
         set(joystick.getSensitiveAxis(axis));
     }
@@ -89,17 +87,17 @@ public class BionicSRX extends WPI_TalonSRX implements BionicMotor {
     private final int timeoutMs = 0;
 
     public void zeroEncoderPosition() {
-        this.setSelectedSensorPosition(0, 0, timeoutMs);
+        setSelectedSensorPosition(0, 0, timeoutMs);
     }
 
     /* Motion Profiling */
     private final int minBufferPoints = 20;
     private final double bufferInterval = 0.005;
 
-    private Notifier processMotionProfileBuffer = new Notifier(this::processMotionProfileBuffer);
+    private final Notifier processMotionProfileBuffer = new Notifier(this::processMotionProfileBuffer);
 
     public void configOpenloopRamp(double secondsFromNeutralToFull) {
-        super.configOpenloopRamp(secondsFromNeutralToFull, timeoutMs);
+        configOpenloopRamp(secondsFromNeutralToFull, timeoutMs);
     }
 
     public static TrajectoryPoint[] convertToSRXTrajectory(Trajectory trajectory, double conversionFactor, double cruiseVelocity) {

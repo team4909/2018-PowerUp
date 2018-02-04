@@ -9,13 +9,12 @@ import org.team4909.bionicframework.hardware.gyro.BionicNavX;
 import org.team4909.bionicframework.hardware.motor.BionicSRX;
 import org.team4909.bionicframework.hardware.motor.BionicSpark;
 import org.team4909.bionicframework.hardware.motor.BionicVictorSP;
-import org.team4909.bionicframework.hardware.motor.MotorGroup;
+import org.team4909.bionicframework.hardware.motor.MotorSubsystem;
 import org.team4909.bionicframework.hardware.pneumatics.BionicSingleSolenoid;
-import org.team4909.bionicframework.operator.generic.BionicAxis;
 import org.team4909.bionicframework.subsystems.drive.BionicDrive;
 import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainConfig;
-import org.team4909.bionicframework.operator.BionicF310;
-import org.team4909.bionicframework.subsystems.elevator.BionicElevator;
+import org.team4909.bionicframework.operator.controllers.BionicF310;
+import org.team4909.bionicframework.subsystems.elevator.ElevatorSubsystem;
 
 public class Robot extends RoboRio {
     /* Drivetrain Config */
@@ -33,10 +32,10 @@ public class Robot extends RoboRio {
     /* Subsystem Initialization */
     private static Arduino arduino;
     private static BionicDrive drivetrain;
-    private static MotorGroup intake;
-    private static BionicElevator elevator;
-    private static MotorGroup winch;
-    private static MotorGroup hookDeploy;
+    private static MotorSubsystem intake;
+    private static ElevatorSubsystem elevator;
+    private static MotorSubsystem winch;
+    private static MotorSubsystem hookDeploy;
 
     /* OI Initialization */
     private static BionicF310 driverGamepad;
@@ -72,25 +71,25 @@ public class Robot extends RoboRio {
         driverGamepad.buttonPressed(BionicF310.A, drivetrain.shiftGear(false));
         driverGamepad.buttonPressed(BionicF310.B, drivetrain.shiftGear(true));
 
-        intake = new MotorGroup(
+        intake = new MotorSubsystem(
                 new BionicSpark(0, true),
                 new BionicSpark(1, false)
         );
         driverGamepad.buttonHeld(BionicF310.LB, intake.setPercentOutput(1.0));
         driverGamepad.buttonHeld(BionicF310.RB, intake.setPercentOutput(-1.0));
 
-        winch = new MotorGroup(
-                new BionicVictorSP(2),
-                new BionicVictorSP(3)
+        winch = new MotorSubsystem(
+                new BionicVictorSP(2, true),
+                new BionicVictorSP(3, false)
         );
         driverGamepad.buttonHeld(BionicF310.RT, 0.15, winch.setPercentOutput(1.0));
         driverGamepad.buttonHeld(BionicF310.LT, 0.15, winch.setPercentOutput(-0.5));
 
-        hookDeploy = new MotorGroup(
-                new BionicSpark(4)
+        hookDeploy = new MotorSubsystem(
+                new BionicSpark(4,false)
         );
 
-        elevator = new BionicElevator(
+        elevator = new ElevatorSubsystem(
                 new BionicSRX(
                         3, false,
                         FeedbackDevice.CTRE_MagEncoder_Relative, false,
@@ -109,7 +108,9 @@ public class Robot extends RoboRio {
     public void autonomousInit() {
         super.autonomousInit();
 
-        autoCommand.start();
+        if (autoCommand != null) {
+            autoCommand.start();
+        }
     }
 
     @Override

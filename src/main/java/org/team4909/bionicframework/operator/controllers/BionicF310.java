@@ -1,4 +1,4 @@
-package org.team4909.bionicframework.operator;
+package org.team4909.bionicframework.operator.controllers;
 
 import org.team4909.bionicframework.operator.generic.BionicAxis;
 import org.team4909.bionicframework.operator.generic.BionicButton;
