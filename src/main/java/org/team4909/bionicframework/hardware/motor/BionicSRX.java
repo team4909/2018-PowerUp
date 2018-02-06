@@ -184,4 +184,16 @@ public class BionicSRX extends WPI_TalonSRX {
     private boolean isBottomLevelBufferReady() {
         return isTopLevelBufferEmpty() || (this.getMotionProfileStatus()).btmBufferCnt >= minBufferPoints;
     }
+
+    public void zeroIfFwdLimitClosed(){
+        if(this.getSensorCollection().isFwdLimitSwitchClosed()){
+            this.setSelectedSensorPosition(0, pidIdx, timeoutMs);
+        }
+    }
+
+    public void zeroIfRevLimitClosed(){
+        if(this.getSensorCollection().isRevLimitSwitchClosed()){
+            this.setSelectedSensorPosition(0, pidIdx, timeoutMs);
+        }
+    }
 }

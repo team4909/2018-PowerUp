@@ -95,7 +95,8 @@ public class Robot extends RoboRio {
                         FeedbackDevice.CTRE_MagEncoder_Relative, false,
                         1.0,0,0,0
                 ),
-                manipulatorGamepad, BionicF310.LY
+                manipulatorGamepad, BionicF310.LY,
+                30000
         );
     }
 
