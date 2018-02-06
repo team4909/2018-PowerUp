@@ -1,5 +1,6 @@
 package org.team4909.bionicframework.hardware.motor;
 
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motion.MotionProfileStatus;
 import com.ctre.phoenix.motion.SetValueMotionProfile;
 import com.ctre.phoenix.motion.TrajectoryPoint;
@@ -45,7 +46,7 @@ public class BionicSRX extends WPI_TalonSRX {
 
     public BionicSRX(int deviceNumber, boolean invertGearbox,
                      FeedbackDevice feedbackDevice, boolean invertSensor,
-                     double p, double i, double d, double f,
+                     double p, double i, double d,
                      int... slaveNumbers) {
         this(deviceNumber, invertGearbox, slaveNumbers);
 
@@ -57,7 +58,11 @@ public class BionicSRX extends WPI_TalonSRX {
         config_kP(pidIdx, p, timeoutMs);
         config_kI(pidIdx, i, timeoutMs);
         config_kD(pidIdx, d, timeoutMs);
-        config_kF(pidIdx, f, timeoutMs);
+        config_kF(pidIdx, 0, timeoutMs);
+    }
+
+    public void config_kF(double value) {
+        super.config_kF(pidIdx, value, timeoutMs);
     }
 
     /* Command-based */
@@ -96,11 +101,7 @@ public class BionicSRX extends WPI_TalonSRX {
 
     private final Notifier processMotionProfileBuffer = new Notifier(this::processMotionProfileBuffer);
 
-    public void configOpenloopRamp(double secondsFromNeutralToFull) {
-        configOpenloopRamp(secondsFromNeutralToFull, timeoutMs);
-    }
-
-    public static TrajectoryPoint[] convertToSRXTrajectory(Trajectory trajectory, double conversionFactor, double cruiseVelocity) {
+    public static TrajectoryPoint[] convertToSRXTrajectory(Trajectory trajectory, double conversionFactor) {
         int length = trajectory.length();
         TrajectoryPoint[] parsedSRXTrajectory = new TrajectoryPoint[length];
 
@@ -108,8 +109,9 @@ public class BionicSRX extends WPI_TalonSRX {
             TrajectoryPoint point = new TrajectoryPoint();
 
             // Profile Data
+            // Position is in Ticks, Velo is in ft/s
             point.position = trajectory.get(i).x / conversionFactor;
-            point.velocity = trajectory.get(i).velocity / cruiseVelocity;
+            point.velocity = trajectory.get(i).velocity;
 
             // Configuration Data
             point.timeDur = TrajectoryDuration.Trajectory_Duration_0ms;

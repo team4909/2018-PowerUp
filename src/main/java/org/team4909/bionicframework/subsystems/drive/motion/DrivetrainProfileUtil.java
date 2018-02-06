@@ -27,8 +27,8 @@ public class DrivetrainProfileUtil {
         this.drivetrainConfig = drivetrainConfig;
 
         pathfinderConfig = new Config(FitMethod.HERMITE_CUBIC, Config.SAMPLES_FAST,
-                drivetrainConfig.getProfileIntervalS(), drivetrainConfig.getCruiseVelocityFeet(),
-                drivetrainConfig.getAvgAccelerationFeet(), drivetrainConfig.getMaxJerkFeet());
+                drivetrainConfig.getProfileIntervalS(), drivetrainConfig.getMaxVelocity(),
+                drivetrainConfig.getMaxAcceleration(), drivetrainConfig.getMaxJerk());
     }
 
     public DrivetrainTrajectory getTrajectory(Waypoint[] points) {

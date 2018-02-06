@@ -4,15 +4,12 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JSON
 
 @Serializable
-data class DrivetrainConfig(val profileIntervalMs: Int, val cruisePercent: Double,
+data class DrivetrainConfig(val profileIntervalMs: Int,
                             val wheelDiameterFeet: Double, val ticksPerRev: Int,
-                            val maxVelocityTicks: Double, val secondsFromNeutralToFull: Double,
+                            val maxVelocity: Double, val maxAcceleration: Double, val maxJerk: Double,
                             val driveRotationTestFeet: Double, val driveRotationTestRad: Double) {
     val ticksToFeet: Double
     val chassisWidthFeet: Double
-    val cruiseVelocityFeet: Double
-    val avgAccelerationFeet: Double
-    val maxJerkFeet: Double
 
     val profileIntervalS: Double
         get() = profileIntervalMs.toDouble() / 1000
@@ -20,14 +17,6 @@ data class DrivetrainConfig(val profileIntervalMs: Int, val cruisePercent: Doubl
     init {
         this.ticksToFeet = Math.PI * wheelDiameterFeet / (4 * ticksPerRev) // with 4x subsampling
         this.chassisWidthFeet = 2 * driveRotationTestFeet / driveRotationTestRad
-
-        // Cruise Velocity
-        val maxVelocityFeet = maxVelocityTicks * ticksToFeet
-        this.cruiseVelocityFeet = cruisePercent * maxVelocityFeet
-        this.avgAccelerationFeet = maxVelocityFeet / secondsFromNeutralToFull
-
-        // Max Jerk
-        this.maxJerkFeet = 60.0
     }
 
     fun toJSON(): String {
