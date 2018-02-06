@@ -81,15 +81,12 @@ public class BionicDrive extends Subsystem {
         return shifter.setState(gear);
     }
 
-//    public Command driveRotationTest() {
-//        return driveTrajectory(pathgen.getRotationalTrajectory(
-//                pathgen.drivetrainConfig.getDriveRotationTestFeet(),
-//                -pathgen.drivetrainConfig.getDriveRotationTestFeet()
-//        );
-//    }
-
     private Command driveTrajectory(DrivetrainTrajectory trajectory) {
         return new DriveTrajectory(this, leftSRX, rightSRX, trajectory);
+    }
+
+    public Command driveRotationTest() {
+        return driveTrajectory(pathgen.getRotationTestTrajectory());
     }
 
     public Command driveWaypoints(Waypoint[] points) {

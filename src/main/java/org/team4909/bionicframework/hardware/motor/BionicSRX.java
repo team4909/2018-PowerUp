@@ -101,17 +101,24 @@ public class BionicSRX extends WPI_TalonSRX {
 
     private final Notifier processMotionProfileBuffer = new Notifier(this::processMotionProfileBuffer);
 
-    public static TrajectoryPoint[] convertToSRXTrajectory(Trajectory trajectory, double conversionFactor) {
+    public void configOpenloopRamp(double secondsFromNeutralToFull) {
+        configOpenloopRamp(secondsFromNeutralToFull, timeoutMs);
+    }
+
+    public static TrajectoryPoint[] convertToSRXTrajectory(Trajectory trajectory, double conversionFactor){
+        return convertToSRXTrajectory(trajectory, conversionFactor, false);
+    }
+
+    public static TrajectoryPoint[] convertToSRXTrajectory(Trajectory trajectory, double conversionFactor, boolean invert) {
         int length = trajectory.length();
         TrajectoryPoint[] parsedSRXTrajectory = new TrajectoryPoint[length];
 
         for (int i = 0; i < length; i++) {
             TrajectoryPoint point = new TrajectoryPoint();
 
-            // Profile Data
-            // Position is in Ticks, Velo is in ft/s
-            point.position = trajectory.get(i).x / conversionFactor;
-            point.velocity = trajectory.get(i).velocity;
+            // Profile Data: Position is in Ticks, Velo is in ft/s
+            point.position = (invert ? -1 : 1) * (trajectory.get(i).x / conversionFactor);
+            point.velocity = (invert ? -1 : 1) * trajectory.get(i).velocity;
 
             // Configuration Data
             point.timeDur = TrajectoryDuration.Trajectory_Duration_0ms;
