@@ -76,8 +76,14 @@ public class DriveOI extends Command {
             }
         }
 
-        leftSRX.set(ControlMode.Velocity, maxVelocityTicks * limit(leftMotorOutput));
-        rightSRX.set(ControlMode.Velocity, maxVelocityTicks * limit(rightMotorOutput));
+        leftMotorOutput = limit(leftMotorOutput);
+        rightMotorOutput = limit(rightMotorOutput);
+
+        leftSRX.set(leftMotorOutput);
+        rightSRX.set(rightMotorOutput);
+
+//        leftSRX.set(ControlMode.Velocity, maxVelocityTicks * limit(leftMotorOutput));
+//        rightSRX.set(ControlMode.Velocity, maxVelocityTicks * limit(rightMotorOutput));
     }
 
     private double limit(double value) {
