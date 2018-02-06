@@ -1,5 +1,6 @@
 package org.team4909.bionicframework.hardware.motor;
 
+import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motion.MotionProfileStatus;
 import com.ctre.phoenix.motion.SetValueMotionProfile;
 import com.ctre.phoenix.motion.TrajectoryPoint;
@@ -185,15 +186,19 @@ public class BionicSRX extends WPI_TalonSRX {
         return isTopLevelBufferEmpty() || (this.getMotionProfileStatus()).btmBufferCnt >= minBufferPoints;
     }
 
-    public void zeroIfFwdLimitClosed(){
-        if(this.getSensorCollection().isFwdLimitSwitchClosed()){
-            this.setSelectedSensorPosition(0, pidIdx, timeoutMs);
-        }
+    public void enableSoftLimit(int startPosition, int endPosition){
+        configForwardSoftLimitEnable(true, timeoutMs);
+        configForwardSoftLimitThreshold(startPosition, timeoutMs);
+
+        configReverseSoftLimitEnable(true, timeoutMs);
+        configReverseSoftLimitThreshold(endPosition, timeoutMs);
     }
 
-    public void zeroIfRevLimitClosed(){
-        if(this.getSensorCollection().isRevLimitSwitchClosed()){
-            this.setSelectedSensorPosition(0, pidIdx, timeoutMs);
-        }
+    public void enableZeroOnFwdLimit(){
+        configSetParameter(ParamEnum.eClearPositionOnLimitF, 1, 0, 0, timeoutMs);
+    }
+
+    public void enableZeroOnRevLimit(){
+        configSetParameter(ParamEnum.eClearPositionOnLimitR, 1, 0, 0, timeoutMs);
     }
 }
