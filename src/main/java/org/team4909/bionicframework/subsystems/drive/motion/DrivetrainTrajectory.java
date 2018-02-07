@@ -27,8 +27,8 @@ public class DrivetrainTrajectory {
     public DrivetrainTrajectory(DrivetrainConfig config, Trajectory rotation) {
         profileInterval = config.getProfileIntervalMs();
 
-        left = BionicSRX.convertToSRXTrajectory(rotation, config.getTicksToFeet(), config.getCruiseVelocityFeet(), true);
-        right = BionicSRX.convertToSRXTrajectory(rotation, config.getTicksToFeet(), config.getCruiseVelocityFeet(), false);
+        left = BionicSRX.convertToSRXTrajectory(rotation, config.getTicksToFeet(), true);
+        right = BionicSRX.convertToSRXTrajectory(rotation, config.getTicksToFeet(),  false);
     }
 
 }
