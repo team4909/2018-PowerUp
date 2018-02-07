@@ -15,14 +15,14 @@ public class ElevatorSubsystem extends Subsystem {
 
     private double holdingPosition;
 
-    public ElevatorSubsystem(BionicSRX bionicSRX, BionicJoystick joystick, BionicAxis axis, int maxPosition){
+    public ElevatorSubsystem(BionicSRX bionicSRX, BionicJoystick joystick, BionicAxis axis, int forwardLimit, int reverseLimit){
         this.bionicSRX = bionicSRX;
         this.joystick = joystick;
         this.axis = axis;
 
         bionicSRX.setNeutralMode(NeutralMode.Brake);
 
-        //bionicSRX.enableSoftLimit(maxPosition, 0);
+//        bionicSRX.enableSoftLimits(forwardLimit, reverseLimit);
         bionicSRX.enableZeroOnRevLimit();
     }
 

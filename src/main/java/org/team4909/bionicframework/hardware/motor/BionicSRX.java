@@ -194,12 +194,12 @@ public class BionicSRX extends WPI_TalonSRX {
         return isTopLevelBufferEmpty() || (this.getMotionProfileStatus()).btmBufferCnt >= minBufferPoints;
     }
 
-    public void enableSoftLimit(int startPosition, int endPosition){
+    public void enableSoftLimits(int forwardLimit, int reverseLimit){
         configForwardSoftLimitEnable(true, timeoutMs);
-        configForwardSoftLimitThreshold(startPosition, timeoutMs);
+        configForwardSoftLimitThreshold(forwardLimit, timeoutMs);
 
         configReverseSoftLimitEnable(true, timeoutMs);
-        configReverseSoftLimitThreshold(endPosition, timeoutMs);
+        configReverseSoftLimitThreshold(reverseLimit, timeoutMs);
     }
 
     public void enableZeroOnFwdLimit(){
