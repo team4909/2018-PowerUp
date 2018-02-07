@@ -13,6 +13,8 @@ public class ElevatorSubsystem extends Subsystem {
     private final BionicJoystick joystick;
     private final BionicAxis axis;
 
+    private double holdingPosition;
+
     public ElevatorSubsystem(BionicSRX bionicSRX, BionicJoystick joystick, BionicAxis axis, int maxPosition){
         this.bionicSRX = bionicSRX;
         this.joystick = joystick;
@@ -20,7 +22,7 @@ public class ElevatorSubsystem extends Subsystem {
 
         bionicSRX.setNeutralMode(NeutralMode.Brake);
 
-        bionicSRX.enableSoftLimit(0, maxPosition);
+        //bionicSRX.enableSoftLimit(maxPosition, 0);
         bionicSRX.enableZeroOnRevLimit();
     }
 
@@ -28,15 +30,14 @@ public class ElevatorSubsystem extends Subsystem {
     public void periodic() {
         double moveSpeed = joystick.getSensitiveAxis(axis);
 
-        if(moveSpeed != 0 ) {
-            bionicSRX.set(
-                    ControlMode.PercentOutput,
-                    moveSpeed
-            );
+        if(moveSpeed != 0) {
+            bionicSRX.set(moveSpeed);
+
+            holdingPosition = bionicSRX.getSelectedSensorPosition(0);
         } else {
             bionicSRX.set(
                     ControlMode.Position,
-                    bionicSRX.getSelectedSensorPosition(0)
+                    holdingPosition
             );
         }
     }

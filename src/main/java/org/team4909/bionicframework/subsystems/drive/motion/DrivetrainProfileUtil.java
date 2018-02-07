@@ -27,8 +27,8 @@ public class DrivetrainProfileUtil {
         this.drivetrainConfig = drivetrainConfig;
 
         pathfinderConfig = new Config(FitMethod.HERMITE_CUBIC, Config.SAMPLES_FAST,
-                drivetrainConfig.getProfileIntervalS(), drivetrainConfig.getCruiseVelocityFeet(),
-                drivetrainConfig.getAvgAccelerationFeet(), drivetrainConfig.getMaxJerkFeet());
+                drivetrainConfig.getProfileIntervalS(), drivetrainConfig.getMaxVelocity(),
+                drivetrainConfig.getMaxAcceleration(), drivetrainConfig.getMaxJerk());
     }
 
     public DrivetrainTrajectory getTrajectory(Waypoint[] points) {
@@ -70,14 +70,13 @@ public class DrivetrainProfileUtil {
         return new DrivetrainTrajectory(drivetrainConfig, leftTrajectory, rightTrajectory);
     }
 
-//    public DrivetrainTrajectory getRotationalTrajectory(double distance) {
-//        Trajectory trajectoryLeft = Pathfinder.generate(new Waypoint[]{
-//                new Waypoint(0,0,0,),
-//                new Waypoint(distance,0,0)
-//        }, pathfinderConfig);
-//        Trajectory trajectoryRight = Pathfinder.generate(pointsRight, pathfinderConfig);
-//
-//        return new DrivetrainTrajectory(trajectoryLeft, trajectoryRight);
-//    }
+    public DrivetrainTrajectory getRotationTestTrajectory() {
+        Trajectory rotationTrajectory = Pathfinder.generate(new Waypoint[]{
+                new Waypoint(0,0,0),
+                new Waypoint(drivetrainConfig.getDriveRotationTestFeet(),0,0)
+        }, pathfinderConfig);
+
+        return new DrivetrainTrajectory(drivetrainConfig, rotationTrajectory);
+    }
 
 }
