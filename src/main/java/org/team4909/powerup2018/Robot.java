@@ -88,7 +88,7 @@ public class Robot extends RoboRio {
                         1.0,0,0
                 ),
                 manipulatorGamepad, BionicF310.LY,
-                30000
+                30000,0
         );
     }
 
