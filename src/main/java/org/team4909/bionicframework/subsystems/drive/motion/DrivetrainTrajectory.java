@@ -18,10 +18,17 @@ public class DrivetrainTrajectory {
      * @param right Right Trajectory Generated from Pathfinder
      */
     public DrivetrainTrajectory(DrivetrainConfig config, Trajectory left, Trajectory right) {
-        this.profileInterval = config.getProfileIntervalMs();
+        profileInterval = config.getProfileIntervalMs();
 
-        this.left = BionicSRX.convertToSRXTrajectory(left, config.getTicksToFeet(), config.getCruiseVelocityFeet());
-        this.right = BionicSRX.convertToSRXTrajectory(right, config.getTicksToFeet(), config.getCruiseVelocityFeet());
+        this.left = BionicSRX.convertToSRXTrajectory(left, config.getTicksToFeet());
+        this.right = BionicSRX.convertToSRXTrajectory(right, config.getTicksToFeet());
+    }
+
+    public DrivetrainTrajectory(DrivetrainConfig config, Trajectory rotation) {
+        profileInterval = config.getProfileIntervalMs();
+
+        left = BionicSRX.convertToSRXTrajectory(rotation, config.getTicksToFeet(), config.getCruiseVelocityFeet(), true);
+        right = BionicSRX.convertToSRXTrajectory(rotation, config.getTicksToFeet(), config.getCruiseVelocityFeet(), false);
     }
 
 }
