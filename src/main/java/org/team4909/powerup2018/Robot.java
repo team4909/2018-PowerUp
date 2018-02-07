@@ -62,12 +62,14 @@ public class Robot extends RoboRio {
                         0.6,0,0,1023,
                         4
                 ),
+                //Flip Front/Back(driverGamepad(LT))
                 driverGamepad, BionicF310.LY, 1.0,
                 driverGamepad, BionicF310.RX, .5,
                 competetitionBotConfig,
                 new BionicNavX(),
                 new BionicSingleSolenoid(0)
         );
+        //Shift Gear(driverGamepad(RT))
         driverGamepad.buttonPressed(BionicF310.A, drivetrain.shiftGear(false));
         driverGamepad.buttonPressed(BionicF310.B, drivetrain.shiftGear(true));
 
@@ -75,18 +77,20 @@ public class Robot extends RoboRio {
                 new BionicSpark(0, true),
                 new BionicSpark(1, false)
         );
-        driverGamepad.buttonHeld(BionicF310.LB, intake.setPercentOutput(1.0));
-        driverGamepad.buttonHeld(BionicF310.RB, intake.setPercentOutput(-1.0));
+        manipulatorGamepad.buttonHeld(BionicF310.LT, 0.15,intake.setPercentOutput(1.0));
+        manipulatorGamepad.buttonHeld(BionicF310.RT, 0.15,intake.setPercentOutput(-1.0));
+        manipulatorGamepad.buttonHeld(BionicF310.B, intake.setPercentOutput(-0.5));
 
         winch = new MotorSubsystem(
                 new BionicVictorSP(2, true),
                 new BionicVictorSP(3, false)
         );
-        driverGamepad.buttonHeld(BionicF310.RT, 0.15, winch.setPercentOutput(1.0));
-        driverGamepad.buttonHeld(BionicF310.LT, 0.15, winch.setPercentOutput(-0.5));
+        manipulatorGamepad.buttonHeld(BionicF310.RT, 0.15, winch.setPercentOutput(1.0));
+        manipulatorGamepad.buttonHeld(BionicF310.LT, 0.15, winch.setPercentOutput(-0.5));
 
         hookDeploy = new MotorSubsystem(
                 new BionicSpark(4,false)
+                //Climber Deploy(manipulatorGamepad(Y), semi-auto)
         );
 
         elevator = new ElevatorSubsystem(
@@ -97,11 +101,12 @@ public class Robot extends RoboRio {
                 ),
                 manipulatorGamepad, BionicF310.LY
         );
+        //Cancel Action (manipulatorGamepad(X))
     }
 
     @Override
     public void teleopPeriodic() {
-        hookDeploy.set(manipulatorGamepad, BionicF310.RY);
+        hookDeploy.set(manipulatorGamepad, BionicF310.LY);
     }
 
     @Override
