@@ -62,16 +62,14 @@ public class Robot extends RoboRio {
                         0.6,0,0,1023,
                         4
                 ),
-                //Flip Front/Back(driverGamepad(LT))
                 driverGamepad, BionicF310.LY, 1.0,
                 driverGamepad, BionicF310.RX, .5,
                 competetitionBotConfig,
                 new BionicNavX(),
                 new BionicSingleSolenoid(0)
         );
-        //Shift Gear(driverGamepad(RT))
-        driverGamepad.buttonPressed(BionicF310.A, drivetrain.shiftGear(false));
-        driverGamepad.buttonPressed(BionicF310.B, drivetrain.shiftGear(true));
+        //Flip Front/Back(driverGamepad(LT))
+        driverGamepad.buttonToggled(BionicF310.RT, 0.15, drivetrain.activateHighGear());
 
         intake = new MotorSubsystem(
                 new BionicSpark(0, true),
@@ -90,8 +88,9 @@ public class Robot extends RoboRio {
 
         hookDeploy = new MotorSubsystem(
                 new BionicSpark(4,false)
-                //Climber Deploy(manipulatorGamepad(Y), semi-auto)
         );
+        // Climber Deploy(manipulatorGamepad(Y), semi-auto)
+        // Cancel Action (manipulatorGamepad(X))
 
         elevator = new ElevatorSubsystem(
                 new BionicSRX(
@@ -101,7 +100,6 @@ public class Robot extends RoboRio {
                 ),
                 manipulatorGamepad, BionicF310.LY
         );
-        //Cancel Action (manipulatorGamepad(X))
     }
 
     @Override

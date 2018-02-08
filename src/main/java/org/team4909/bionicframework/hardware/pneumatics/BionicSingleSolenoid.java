@@ -9,7 +9,7 @@ public class BionicSingleSolenoid extends Solenoid {
         super(channel);
     }
 
-    public Commandable setState(boolean value) {
-        return new SingleSolenoidCommandable(value, this);
+    public Commandable activate() {
+        return new SingleSolenoidCommandable( this);
     }
 }
