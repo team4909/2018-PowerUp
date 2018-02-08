@@ -1,6 +1,5 @@
 package org.team4909.bionicframework.subsystems.elevator;
 
-import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -22,7 +21,7 @@ public class ElevatorSubsystem extends Subsystem {
 
         bionicSRX.setNeutralMode(NeutralMode.Brake);
 
-//        bionicSRX.enableSoftLimits(forwardLimit, reverseLimit);
+        bionicSRX.enableSoftLimits(forwardLimit, reverseLimit);
         bionicSRX.enableZeroOnRevLimit();
     }
 
