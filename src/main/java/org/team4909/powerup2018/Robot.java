@@ -29,9 +29,6 @@ public class Robot extends RoboRio {
     private static BionicF310 driverGamepad;
     private static BionicF310 manipulatorGamepad;
 
-    /* Auto Commands */
-    private static Command autoCommand;
-
     @Override
     public void robotInit() {
         driverGamepad = new BionicF310(0, 0.15, 0.8);
@@ -93,32 +90,12 @@ public class Robot extends RoboRio {
     }
 
     @Override
+    public void robotEnabled() {
+        elevator.holdCurrentPosition();
+    }
+
+    @Override
     public void teleopPeriodic() {
         hookDeploy.set(manipulatorGamepad, BionicF310.RY);
-    }
-
-    @Override
-    public void autonomousInit() {
-        super.autonomousInit();
-
-        if (autoCommand != null) {
-            autoCommand.start();
-        }
-    }
-
-    @Override
-    public void teleopInit() {
-        super.teleopInit();
-
-        if (autoCommand != null) {
-            autoCommand.cancel();
-        }
-    }
-
-    @Override
-    protected void robotDisabled() {
-        if (autoCommand != null) {
-            autoCommand.cancel();
-        }
     }
 }

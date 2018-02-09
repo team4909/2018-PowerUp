@@ -32,13 +32,18 @@ public class ElevatorSubsystem extends Subsystem {
         if(moveSpeed != 0) {
             bionicSRX.set(moveSpeed);
 
-            holdingPosition = bionicSRX.getSelectedSensorPosition(0);
+            holdCurrentPosition();
         } else {
-            bionicSRX.set(
-                    ControlMode.Position,
-                    holdingPosition
-            );
+            bionicSRX.set(ControlMode.Position, holdingPosition);
         }
+    }
+
+    public void holdCurrentPosition(){
+        holdingPosition = bionicSRX.getSelectedSensorPosition(0);
+    }
+
+    public void holdPosition(double position){
+        holdingPosition = position;
     }
 
     @Override
