@@ -45,7 +45,7 @@ public class DriveOI extends Command {
     protected void execute() {
         double speed = speedInputGamepad.getSensitiveAxis(speedInputAxis) * speedMultiplier;
         double rotation = rotationInputGamepad.getSensitiveAxis(rotationInputAxis) * rotationMultiplier;
-        double maxVelocityTicks = drivetrainConfig.getMaxVelocityTicks();
+        double maxVelocity = drivetrainConfig.getMaxVelocity();
 
         double leftMotorOutput;
         double rightMotorOutput;
@@ -71,11 +71,8 @@ public class DriveOI extends Command {
         leftMotorOutput = limit(leftMotorOutput);
         rightMotorOutput = limit(rightMotorOutput);
 
-        leftSRX.set(leftMotorOutput);
-        rightSRX.set(rightMotorOutput);
-
-//        leftSRX.set(ControlMode.Velocity, maxVelocityTicks * limit(leftMotorOutput));
-//        rightSRX.set(ControlMode.Velocity, maxVelocityTicks * limit(rightMotorOutput));
+        leftSRX.set(ControlMode.Velocity, maxVelocity * leftMotorOutput);
+        rightSRX.set(ControlMode.Velocity, maxVelocity * rightMotorOutput);
     }
 
     private double limit(double value) {

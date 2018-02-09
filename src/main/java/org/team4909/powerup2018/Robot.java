@@ -17,18 +17,6 @@ import org.team4909.bionicframework.operator.controllers.BionicF310;
 import org.team4909.bionicframework.subsystems.elevator.ElevatorSubsystem;
 
 public class Robot extends RoboRio {
-    /* Drivetrain Config */
-    private static DrivetrainConfig practiceBotConfig = new DrivetrainConfig(
-            10,0.7,
-            0.5, 360,
-            12915,1.2,
-            5,2);
-    private static DrivetrainConfig competetitionBotConfig = new DrivetrainConfig(
-            10,0.7,
-            0.5, 360 / 3,
-            12915,10,
-            5,2);
-
     /* Subsystem Initialization */
     private static Arduino arduino;
     private static BionicDrive drivetrain;
@@ -53,18 +41,22 @@ public class Robot extends RoboRio {
                 new BionicSRX(
                         2,true,
                         FeedbackDevice.QuadEncoder, true,
-                        0.6,0,0,1023,
+                        0.6,0,0,
                         1
                 ),
                 new BionicSRX(
                         4,false,
-                        FeedbackDevice.QuadEncoder, false,
-                        0.6,0,0,1023,
+                        FeedbackDevice.QuadEncoder, true,
+                        0.6,0,0,
                         4
                 ),
                 driverGamepad, BionicF310.LY, 1.0,
-                driverGamepad, BionicF310.RX, .5,
-                competetitionBotConfig,
+                driverGamepad, BionicF310.RX, 1.0,
+                new DrivetrainConfig(
+                        10, 0.5,120,
+                        10,0,0,
+                        0,0
+                ),
                 new BionicNavX(),
                 new BionicSingleSolenoid(0)
         );
@@ -96,7 +88,7 @@ public class Robot extends RoboRio {
                 new BionicSRX(
                         3, false,
                         FeedbackDevice.CTRE_MagEncoder_Relative, false,
-                        1.0,0,0,0
+                        1.0,0,0
                 ),
                 manipulatorGamepad, BionicF310.LY
         );

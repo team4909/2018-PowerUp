@@ -52,12 +52,11 @@ public class BionicDrive extends Subsystem {
 
         this.leftSRX = leftSRX;
         this.rightSRX = rightSRX;
+        this.leftSRX.config_kF(1023 / drivetrainConfig.getMaxVelocity());
+        this.rightSRX.config_kF(1023 / drivetrainConfig.getMaxVelocity());
 
         this.bionicGyro = bionicGyro;
-
         this.pathgen = new DrivetrainProfileUtil(drivetrainConfig);
-        this.leftSRX.configOpenloopRamp(0);
-        this.rightSRX.configOpenloopRamp(0);
 
         this.shifter = shifter;
 
@@ -82,15 +81,12 @@ public class BionicDrive extends Subsystem {
         return shifter.invert();
     }
 
-//    public Command driveRotationTest() {
-//        return driveTrajectory(pathgen.getRotationalTrajectory(
-//                pathgen.drivetrainConfig.getDriveRotationTestFeet(),
-//                -pathgen.drivetrainConfig.getDriveRotationTestFeet()
-//        );
-//    }
-
     private Command driveTrajectory(DrivetrainTrajectory trajectory) {
         return new DriveTrajectory(this, leftSRX, rightSRX, trajectory);
+    }
+
+    public Command driveRotationTest() {
+        return driveTrajectory(pathgen.getRotationTestTrajectory());
     }
 
     public Command driveWaypoints(Waypoint[] points) {
