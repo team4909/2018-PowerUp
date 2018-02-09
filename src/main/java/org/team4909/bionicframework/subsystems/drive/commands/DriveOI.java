@@ -42,14 +42,6 @@ public class DriveOI extends Command {
     }
 
     @Override
-    protected void initialize() {
-        super.initialize();
-
-        leftSRX.setNeutralMode(NeutralMode.Coast);
-        rightSRX.setNeutralMode(NeutralMode.Coast);
-    }
-
-    @Override
     protected void execute() {
         double speed = speedInputGamepad.getSensitiveAxis(speedInputAxis) * speedMultiplier;
         double rotation = rotationInputGamepad.getSensitiveAxis(rotationInputAxis) * rotationMultiplier;
@@ -90,10 +82,5 @@ public class DriveOI extends Command {
     @Override
     protected boolean isFinished() {
         return false;
-    }
-
-    @Override
-    protected void end() {
-        super.end();
     }
 }

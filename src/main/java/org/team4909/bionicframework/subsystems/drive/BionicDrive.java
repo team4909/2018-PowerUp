@@ -77,8 +77,8 @@ public class BionicDrive extends Subsystem {
         setDefaultCommand(defaultCommand);
     }
 
-    public Commandable shiftGear(boolean gear) {
-        return shifter.setState(gear);
+    public Commandable changeGear() {
+        return shifter.invert();
     }
 
     private Command driveTrajectory(DrivetrainTrajectory trajectory) {
