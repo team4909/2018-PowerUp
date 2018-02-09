@@ -27,9 +27,6 @@ public class DriveTrajectory extends Command {
 
     @Override
     protected void initialize() {
-        leftSRX.setNeutralMode(NeutralMode.Brake);
-        rightSRX.setNeutralMode(NeutralMode.Brake);
-
         leftSRX.initMotionProfile(trajectory.profileInterval, trajectory.left);
         rightSRX.initMotionProfile(trajectory.profileInterval, trajectory.right);
     }
