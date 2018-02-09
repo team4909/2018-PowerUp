@@ -78,8 +78,8 @@ public class BionicDrive extends Subsystem {
         setDefaultCommand(defaultCommand);
     }
 
-    public Commandable activateHighGear() {
-        return shifter.activate();
+    public Commandable changeGear() {
+        return shifter.invert();
     }
 
 //    public Command driveRotationTest() {
