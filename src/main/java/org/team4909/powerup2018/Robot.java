@@ -89,7 +89,6 @@ public class Robot extends RoboRio {
                         1.0,0,0
                 ),
                 manipulatorGamepad, BionicF310.LY,-1,
-
                 30000, 0
         );
         driverGamepad.buttonPressed(BionicF310.X, elevator.holdPosition(15000));
