@@ -57,7 +57,6 @@ public class Robot extends RoboRio {
                 new BionicNavX(),
                 new BionicSingleSolenoid(0)
         );
-        //Flip Front/Back(driverGamepad(LT))
         driverGamepad.buttonPressed(BionicF310.LT, 0.15, drivetrain.invertDirection());
         driverGamepad.buttonPressed(BionicF310.RT, 0.15, drivetrain.changeGear());
 
@@ -95,22 +94,8 @@ public class Robot extends RoboRio {
     }
 
     @Override
-<<<<<<< HEAD
     public void robotEnabled() {
         elevator.holdCurrentPosition();
-=======
-    public void teleopPeriodic() {
-        hookDeploy.set(manipulatorGamepad, BionicF310.LY, 0.5);
-    }
-
-    @Override
-    public void autonomousInit() {
-        super.autonomousInit();
-
-        if (autoCommand != null) {
-            autoCommand.start();
-        }
->>>>>>> master
     }
 
     @Override
