@@ -11,6 +11,7 @@ import org.team4909.bionicframework.subsystems.drive.BionicDrive;
 import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainConfig;
 
 import javax.swing.plaf.basic.BasicSplitPaneUI;
+import javax.swing.plaf.synth.SynthScrollBarUI;
 
 public class DriveOI extends Command {
     private final BionicDrive subsystem;
@@ -53,8 +54,6 @@ public class DriveOI extends Command {
         double rotation = rotationInputGamepad.getSensitiveAxis(rotationInputAxis) * rotationMultiplier;
 
         double maxVelocity = drivetrainConfig.getMaxVelocity();
-//        double maxAccel = drivetrainConfig.getMaxAcceleration();
-//        double t = drivetrainConfig.getProfileIntervalMs();
 
         double leftMotorOutput;
         double rightMotorOutput;
@@ -83,18 +82,28 @@ public class DriveOI extends Command {
         double leftVelocity = maxVelocity * leftMotorOutput;
         double rightVelocity = maxVelocity * rightMotorOutput;
 
+        double leftAccel = Math.abs(leftVelocity - subsystem.getLeftVelocity()) / drivetrainConfig.getProfileIntervalS();
+        double rightAccel = Math.abs(rightVelocity - subsystem.getRightVelocity()) / drivetrainConfig.getProfileIntervalS();
+
+        System.out.println("VELO" + leftVelocity + " " + rightVelocity);
+        System.out.println("ACC" + leftAccel + " " + rightAccel);
+
+        if(leftAccel > drivetrainConfig.getMaxAcceleration()){
+            leftVelocity = subsystem.getLeftVelocity() +
+                    Math.copySign(2, subsystem.getLeftVelocity());
+        }
+
+        if(rightAccel > drivetrainConfig.getMaxAcceleration()){
+            rightVelocity = subsystem.getRightVelocity() +
+                    Math.copySign(2, subsystem.getRightVelocity());
+        }
+
+        System.out.println("VELO" + leftVelocity + " " + rightVelocity);
+
         leftSRX.set(ControlMode.Velocity, leftVelocity);
         rightSRX.set(ControlMode.Velocity, rightVelocity);
     }
-//
-//    public double getLeftVelocity(){
-//        double currentLeftVelocity = (leftSRX.getSelectedSensorVelocity(0) * 10 * drivetrainConfig.getTicksToFeet());
-//        return currentLeftVelocity;
-//    }
-//    public double getRightVelocity(){
-//        double currentRightVelocity = (leftSRX.getSelectedSensorVelocity(0) * 10 * drivetrainConfig.getTicksToFeet());
-//        return currentRightVelocity;
-//    }
+
 
     private double limit(double value) {
         return Math.copySign(Math.abs(value) > 1.0 ? 1.0 : value, value);

@@ -63,8 +63,7 @@ public class BionicDrive extends Subsystem {
 
         this.leftSRX = leftSRX;
         this.rightSRX = rightSRX;
-        this.leftSRX.configOpenloopRamp(maxVelocity / maxAcceleration);
-        this.rightSRX.configOpenloopRamp(maxVelocity / maxAcceleration);
+
         this.leftSRX.config_kF(1023 / drivetrainConfig.getMaxVelocity());
         this.rightSRX.config_kF(1023 / drivetrainConfig.getMaxVelocity());
 
@@ -106,20 +105,28 @@ public class BionicDrive extends Subsystem {
             System.out.println("V (ft/s): " + maxVelocity + " A (ft/s^2):" + maxAcceleration + " J (ft/sec^3):" + maxJerk );
         }
     }
+
     public void resetProfiling(){
          maxVelocity = 0;
          maxAcceleration = 0;
          maxJerk = 0;
          lastVelocity = 0;
          lastAcceleration = 0;
-
     }
 
     public double getVelocity(){
-        double currentLeftVelocity = (leftSRX.getSelectedSensorVelocity(0) * 10 * pathgen.drivetrainConfig.getTicksToFeet());
-        double currentRightVelocity = (rightSRX.getSelectedSensorVelocity(0) * 10 * pathgen.drivetrainConfig.getTicksToFeet());
+        double currentLeftVelocity = getLeftVelocity();
+        double currentRightVelocity = getRightVelocity();
 
         return (currentLeftVelocity + currentRightVelocity)/2;
+    }
+
+    public double getLeftVelocity(){
+        return (leftSRX.getSelectedSensorVelocity(0) * 10 * pathgen.drivetrainConfig.getTicksToFeet());
+    }
+
+    public double getRightVelocity(){
+        return (rightSRX.getSelectedSensorVelocity(0) * 10 * pathgen.drivetrainConfig.getTicksToFeet());
     }
 
     /**
