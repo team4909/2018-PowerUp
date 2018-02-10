@@ -22,8 +22,6 @@ public class ElevatorSubsystem extends Subsystem {
         this.joystick = joystick;
         this.axis = axis;
 
-        bionicSRX.setNeutralMode(NeutralMode.Brake);
-
         //bionicSRX.enableSoftLimits(forwardLimit, reverseLimit);
         //bionicSRX.enableZeroOnRevLimit();
     }
