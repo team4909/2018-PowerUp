@@ -61,6 +61,7 @@ public class Robot extends RoboRio {
                 new BionicSingleSolenoid(0)
         );
         //Flip Front/Back(driverGamepad(LT))
+        driverGamepad.buttonPressed(BionicF310.LT, 0.15, drivetrain.invertDirection());
         driverGamepad.buttonPressed(BionicF310.RT, 0.15, drivetrain.changeGear());
 
         intake = new MotorSubsystem(
