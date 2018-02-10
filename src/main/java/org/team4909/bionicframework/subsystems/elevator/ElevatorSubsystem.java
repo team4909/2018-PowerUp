@@ -2,6 +2,7 @@ package org.team4909.bionicframework.subsystems.elevator;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.team4909.bionicframework.hardware.motor.BionicSRX;
 import org.team4909.bionicframework.interfaces.Commandable;
@@ -23,7 +24,7 @@ public class ElevatorSubsystem extends Subsystem {
 
         bionicSRX.setNeutralMode(NeutralMode.Brake);
 
-        bionicSRX.enableSoftLimits(forwardLimit, reverseLimit);
+        //bionicSRX.enableSoftLimits(forwardLimit, reverseLimit);
         bionicSRX.enableZeroOnRevLimit();
     }
 
@@ -35,17 +36,16 @@ public class ElevatorSubsystem extends Subsystem {
             bionicSRX.set(moveSpeed);
 
             holdCurrentPosition();
+            System.out.println("PID from :" + holdingPosition);
         } else {
+            System.out.println("PID to :" + holdingPosition);
+
             bionicSRX.set(ControlMode.Position, holdingPosition);
         }
     }
 
-    public double getCurrentPosition(){
-        return bionicSRX.getSelectedSensorPosition(0);
-    }
-
     public void holdCurrentPosition(){
-        holdingPosition = getCurrentPosition();
+        holdingPosition = bionicSRX.getSelectedSensorPosition();
     }
 
     public Commandable holdPosition(double position){
