@@ -101,34 +101,47 @@ public class Robot extends RoboRio {
         autoChooser = new SendableChooser();
         autoChooser.addDefault("Do Nothing", null);
         autoChooser.addObject("Break Baseline", drivetrain.driveWaypoints(new Waypoint[]{
-                new Waypoint(1.59, 0,0) ,
-                new Waypoint(9, 0,0)
+                new Waypoint(1.59, 0, 0) ,
+                new Waypoint(9, 0, 0)
         }));
         autoChooser.addObject("Left Start Scale L/R", new CubePlaceAuto(
                 intakeCommand, outtakeCommand,
                 GameFeature.SWITCH_NEAR, drivetrain,
                 new Waypoint[]{
-
+                        new Waypoint(1.59, 23.11, 0),
+                        new Waypoint(16, 22, 0),
+                        new Waypoint(23.41, 19.5, 0)
                 },
                 new Waypoint[]{
+                        new Waypoint(1.59, 3.9, 0),
+                        new Waypoint(15, 3.9, 0),
+                        new Waypoint(23.41, 19.5, 0)
 
                 }));
         autoChooser.addObject("Center Start Switch L/R", new CubePlaceAuto(
                 intakeCommand, outtakeCommand,
                 GameFeature.SCALE, drivetrain,
                 new Waypoint[]{
-
+                        new Waypoint(1.59, 13.1, 0),
+                        new Waypoint(10.41, 18, 0)
                 },
                 new Waypoint[]{
+                        new Waypoint(1.59, 13.1, 0),
+                        new Waypoint(10.41, 9, 0)
 
                 }));
         autoChooser.addObject("Right Start Scale L/R", new CubePlaceAuto(
                 intakeCommand, outtakeCommand,
                 GameFeature.SCALE, drivetrain,
                 new Waypoint[]{
-
+                        new Waypoint(1.59, 23.11, 0),
+                        new Waypoint(15, 23.11, 0),
+                        new Waypoint(23.41, 7.5, 0)
                 },
                 new Waypoint[]{
+                        new Waypoint(1.59, 3.9, 0),
+                        new Waypoint(16, 5, 0),
+                        new Waypoint(23.41, 7.5, 0)
 
                 }));
         autoChooser.addObject("DEBUG ONLY: Do Rotation Test", drivetrain.driveRotationTest());
