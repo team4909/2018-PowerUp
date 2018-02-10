@@ -18,8 +18,12 @@ public class MotorSubsystem extends SpeedControllerGroup {
         super(speedController, speedControllers);
     }
 
+    public void set(BionicJoystick joystick, BionicAxis axis, double multiplier) {
+        set(joystick.getSensitiveAxis(axis) * multiplier);
+    }
+
     public void set(BionicJoystick joystick, BionicAxis axis) {
-        set(joystick.getSensitiveAxis(axis));
+        set(joystick, axis, 1.0);
     }
 
     /**

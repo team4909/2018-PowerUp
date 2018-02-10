@@ -61,6 +61,7 @@ public class Robot extends RoboRio {
                 new BionicSingleSolenoid(0)
         );
         //Flip Front/Back(driverGamepad(LT))
+        driverGamepad.buttonPressed(BionicF310.LT, 0.15, drivetrain.invertDirection());
         driverGamepad.buttonPressed(BionicF310.RT, 0.15, drivetrain.changeGear());
 
         intake = new MotorSubsystem(
@@ -75,8 +76,8 @@ public class Robot extends RoboRio {
                 new BionicVictorSP(2, true),
                 new BionicVictorSP(3, false)
         );
+        driverGamepad.buttonHeld(BionicF310.LB, winch.setPercentOutput(-0.5));
         driverGamepad.buttonHeld(BionicF310.RB, winch.setPercentOutput(1.0));
-        driverGamepad.buttonHeld(BionicF310.LB , winch.setPercentOutput(-0.5));
 
         hookDeploy = new MotorSubsystem(
                 new BionicSpark(4,false)
@@ -96,7 +97,7 @@ public class Robot extends RoboRio {
 
     @Override
     public void teleopPeriodic() {
-        hookDeploy.set(manipulatorGamepad, BionicF310.LY);
+        hookDeploy.set(manipulatorGamepad, BionicF310.LY, 0.5);
     }
 
     @Override
