@@ -49,6 +49,11 @@ public class DriveOI extends Command {
         double maxVelocity = drivetrainConfig.getMaxVelocity();
         double maxAccel = drivetrainConfig.getMaxAcceleration();
         double t = drivetrainConfig.getProfileIntervalMs();
+        private double lastVelocity = 0;
+        private double lastAcceleration = 0;
+        private double currentVelocity = getVelocity();
+        double currentAcceleration = (currentVelocity - lastVelocity) / t;
+        double currentJerk = (currentAcceleration - lastAcceleration) / t;
         double leftMotorOutput;
         double rightMotorOutput;
 
@@ -75,21 +80,23 @@ public class DriveOI extends Command {
 
         double leftVelocity = maxVelocity * leftMotorOutput;
         double rightVelocity = maxVelocity * rightMotorOutput;
-        double limitingAccel = 1;
 
-        if(maxAccel >= limitingAccel){
-           maxAccel = limitingAccel;
-            leftVelocity = leftVelocity + maxAccel * t;
-            rightVelocity = rightVelocity + maxAccel * t;
+        if (currentAcceleration >= maxAccel) {
+          currentAcceleration = maxAccel;
+            leftVelocity = leftVelocity + (currentAcceleration * t);
+            rightVelocity = rightVelocity + (currentAcceleration * t);
         }
-
-
-
-
 
 
         leftSRX.set(ControlMode.Velocity, leftVelocity);
         rightSRX.set(ControlMode.Velocity, rightVelocity);
+    }
+
+    public double getVelocity(){
+        double currentLeftVelocity = (leftSRX.getSelectedSensorVelocity(0) * 10 * drivetrainConfig.getTicksToFeet());
+        double currentRightVelocity = (rightSRX.getSelectedSensorVelocity(0) * 10 * drivetrainConfig.getTicksToFeet());
+
+        return (currentLeftVelocity + currentRightVelocity)/2;
     }
 
     private double limit(double value) {
@@ -100,4 +107,6 @@ public class DriveOI extends Command {
     protected boolean isFinished() {
         return false;
     }
+
+
 }
