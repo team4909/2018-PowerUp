@@ -53,12 +53,13 @@ public class Robot extends RoboRio {
                 driverGamepad, BionicF310.LY, 1.0,
                 driverGamepad, BionicF310.RX, 1.0,
                 new DrivetrainConfig(
-                        10, 0.5,120,
+                        50, 0.5,120,
                         10,0,0,
                         0,0
                 ),
                 new BionicNavX(),
-                new BionicSingleSolenoid(0)
+                new BionicSingleSolenoid(0),
+                false
         );
         //Flip Front/Back(driverGamepad(LT))
         driverGamepad.buttonPressed(BionicF310.LT, 0.15, drivetrain.invertDirection());

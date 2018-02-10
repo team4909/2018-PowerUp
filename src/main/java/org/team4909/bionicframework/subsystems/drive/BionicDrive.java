@@ -81,10 +81,7 @@ public class BionicDrive extends Subsystem {
 
     @Override
     public void periodic() {
-        double currentLeftVelocity =    (leftSRX.getSelectedSensorVelocity(0) * 10 * pathgen.drivetrainConfig.getTicksToFeet();
-        double currentRightVelocity = (rightSRX.getSelectedSensorVelocity(0) * 10 * pathgen.drivetrainConfig.getTicksToFeet();
-
-        double currentVelocity = (currentLeftVelocity + currentRightVelocity)/2;
+        double currentVelocity = getVelocity();
         double currentAcceleration = (currentVelocity - lastVelocity) / t;
         double currentJerk = (currentAcceleration - lastAcceleration) / t;
 
@@ -106,6 +103,21 @@ public class BionicDrive extends Subsystem {
         if(profiling){
             System.out.println("V (ft/s): " + maxVelocity + " A (ft/s^2):" + maxAcceleration + " J (ft/sec^3):" + maxJerk );
         }
+    }
+    public void resetProfiling(){
+         maxVelocity = 0;
+         maxAcceleration = 0;
+         maxJerk = 0;
+         lastVelocity = 0;
+         lastAcceleration = 0;
+
+    }
+
+    public double getVelocity(){
+        double currentLeftVelocity = (leftSRX.getSelectedSensorVelocity(0) * 10 * pathgen.drivetrainConfig.getTicksToFeet());
+        double currentRightVelocity = (rightSRX.getSelectedSensorVelocity(0) * 10 * pathgen.drivetrainConfig.getTicksToFeet());
+
+        return (currentLeftVelocity + currentRightVelocity)/2;
     }
 
     /**
