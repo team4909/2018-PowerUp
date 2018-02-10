@@ -16,11 +16,12 @@ public class DriveOI extends Command {
 
     private final BionicF310 speedInputGamepad;
     private final BionicAxis speedInputAxis;
-    private final double speedMultiplier;
+    public double speedMultiplier;
 
     private final BionicF310 rotationInputGamepad;
     private final BionicAxis rotationInputAxis;
-    private final double rotationMultiplier;
+    public double rotationMultiplier;
+
     private final DrivetrainConfig drivetrainConfig;
 
     public DriveOI(BionicDrive subsystem, BionicSRX leftSRX, BionicSRX rightSRX,
@@ -39,14 +40,6 @@ public class DriveOI extends Command {
         this.rotationInputGamepad = rotationInputGamepad;
         this.rotationInputAxis = rotationInputAxis;
         this.rotationMultiplier = rotationMultiplier;
-    }
-
-    @Override
-    protected void initialize() {
-        super.initialize();
-
-        leftSRX.setNeutralMode(NeutralMode.Coast);
-        rightSRX.setNeutralMode(NeutralMode.Coast);
     }
 
     @Override
@@ -90,10 +83,5 @@ public class DriveOI extends Command {
     @Override
     protected boolean isFinished() {
         return false;
-    }
-
-    @Override
-    protected void end() {
-        super.end();
     }
 }
