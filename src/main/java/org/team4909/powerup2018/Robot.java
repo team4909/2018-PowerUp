@@ -5,12 +5,14 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import edu.wpi.first.wpilibj.command.Command;
 import org.team4909.bionicframework.hardware.core.Arduino;
 import org.team4909.bionicframework.hardware.core.RoboRio;
+import org.team4909.bionicframework.hardware.sensors.distance.LIDAR;
 import org.team4909.bionicframework.hardware.sensors.gyro.BionicNavX;
 import org.team4909.bionicframework.hardware.motor.BionicSRX;
 import org.team4909.bionicframework.hardware.motor.BionicSpark;
 import org.team4909.bionicframework.hardware.motor.BionicVictorSP;
 import org.team4909.bionicframework.hardware.motor.MotorSubsystem;
 import org.team4909.bionicframework.hardware.pneumatics.BionicSingleSolenoid;
+import org.team4909.bionicframework.subsystems.Intake.IntakeSubsystem;
 import org.team4909.bionicframework.subsystems.drive.BionicDrive;
 import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainConfig;
 import org.team4909.bionicframework.operator.controllers.BionicF310;
@@ -20,7 +22,7 @@ public class Robot extends RoboRio {
     /* Subsystem Initialization */
     private static Arduino arduino;
     private static BionicDrive drivetrain;
-    private static MotorSubsystem intake;
+    private static IntakeSubsystem intake;
     private static ElevatorSubsystem elevator;
     private static MotorSubsystem winch;
     private static MotorSubsystem hookDeploy;
@@ -64,10 +66,12 @@ public class Robot extends RoboRio {
         driverGamepad.buttonPressed(BionicF310.LT, 0.15, drivetrain.invertDirection());
         driverGamepad.buttonPressed(BionicF310.RT, 0.15, drivetrain.changeGear());
 
-        intake = new MotorSubsystem(
+        intake = new IntakeSubsystem(
+                new LIDAR(7);
                 new BionicSpark(0, true),
                 new BionicSpark(1, false)
         );
+
         manipulatorGamepad.buttonHeld(BionicF310.LT, 0.15,intake.setPercentOutput(1.0));
         manipulatorGamepad.buttonHeld(BionicF310.RT, 0.15,intake.setPercentOutput(-1.0));
         manipulatorGamepad.buttonHeld(BionicF310.B, intake.setPercentOutput(-0.5));
