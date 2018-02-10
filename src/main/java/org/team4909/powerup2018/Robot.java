@@ -2,6 +2,7 @@ package org.team4909.powerup2018;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.command.Command;
 import org.team4909.bionicframework.hardware.core.Arduino;
 import org.team4909.bionicframework.hardware.core.RoboRio;
@@ -67,7 +68,7 @@ public class Robot extends RoboRio {
         driverGamepad.buttonPressed(BionicF310.RT, 0.15, drivetrain.changeGear());
 
         intake = new IntakeSubsystem(
-                new LIDAR(7);
+                new LIDAR(I2C.Port.kMXP), 2,
                 new BionicSpark(0, true),
                 new BionicSpark(1, false)
         );

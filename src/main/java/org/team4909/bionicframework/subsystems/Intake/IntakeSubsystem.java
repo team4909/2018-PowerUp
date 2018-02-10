@@ -23,7 +23,7 @@ public class IntakeSubsystem extends MotorSubsystem {
     public void set(double speed) {
         double distance = LIDAR.getDistance();
 
-        if ((distance > distanceThreshold) &&
+        if ((distance > distanceThreshold) ||
                 (distance < distanceThreshold && speed < 0)) {
             super.set(speed);
         } else {
