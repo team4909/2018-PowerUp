@@ -33,8 +33,7 @@ public class BionicDrive extends Subsystem {
     /* Sensors */
     private final Gyro bionicGyro;
     public final DrivetrainProfileUtil pathgen;
-
-    private double t = 0.05;
+    public final double t;
 
     private double maxVelocity = 0; //maximum cumulative velocity
     private double maxAcceleration = 0;// maximum cumulative acceleration
@@ -64,11 +63,14 @@ public class BionicDrive extends Subsystem {
 
         this.leftSRX = leftSRX;
         this.rightSRX = rightSRX;
+        this.leftSRX.configOpenloopRamp(maxVelocity / maxAcceleration);
+        this.rightSRX.configOpenloopRamp(maxVelocity / maxAcceleration);
         this.leftSRX.config_kF(1023 / drivetrainConfig.getMaxVelocity());
         this.rightSRX.config_kF(1023 / drivetrainConfig.getMaxVelocity());
 
         this.bionicGyro = bionicGyro;
         this.pathgen = new DrivetrainProfileUtil(drivetrainConfig);
+        this.t = pathgen.drivetrainConfig.getProfileIntervalS();
 
         this.shifter = shifter;
 

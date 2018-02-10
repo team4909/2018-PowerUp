@@ -10,7 +10,11 @@ import org.team4909.bionicframework.operator.generic.BionicAxis;
 import org.team4909.bionicframework.subsystems.drive.BionicDrive;
 import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainConfig;
 
+import javax.swing.plaf.basic.BasicSplitPaneUI;
+
 public class DriveOI extends Command {
+    private final BionicDrive subsystem;
+
     private final BionicSRX leftSRX;
     private final BionicSRX rightSRX;
 
@@ -28,6 +32,7 @@ public class DriveOI extends Command {
                    BionicF310 speedInputGamepad, BionicAxis speedInputAxis, double speedMultiplier,
                    BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis, double rotationMultiplier) {
         requires(subsystem);
+        this.subsystem = subsystem;
         this.drivetrainConfig = subsystem.pathgen.drivetrainConfig;
 
         this.leftSRX = leftSRX;
@@ -46,14 +51,11 @@ public class DriveOI extends Command {
     protected void execute() {
         double speed = speedInputGamepad.getSensitiveAxis(speedInputAxis) * speedMultiplier;
         double rotation = rotationInputGamepad.getSensitiveAxis(rotationInputAxis) * rotationMultiplier;
+
         double maxVelocity = drivetrainConfig.getMaxVelocity();
-        double maxAccel = drivetrainConfig.getMaxAcceleration();
-        double t = drivetrainConfig.getProfileIntervalMs();
-        private double lastVelocity = 0;
-        private double lastAcceleration = 0;
-        private double currentVelocity = getVelocity();
-        double currentAcceleration = (currentVelocity - lastVelocity) / t;
-        double currentJerk = (currentAcceleration - lastAcceleration) / t;
+//        double maxAccel = drivetrainConfig.getMaxAcceleration();
+//        double t = drivetrainConfig.getProfileIntervalMs();
+
         double leftMotorOutput;
         double rightMotorOutput;
 
@@ -81,23 +83,18 @@ public class DriveOI extends Command {
         double leftVelocity = maxVelocity * leftMotorOutput;
         double rightVelocity = maxVelocity * rightMotorOutput;
 
-        if (currentAcceleration >= maxAccel) {
-          currentAcceleration = maxAccel;
-            leftVelocity = leftVelocity + (currentAcceleration * t);
-            rightVelocity = rightVelocity + (currentAcceleration * t);
-        }
-
-
         leftSRX.set(ControlMode.Velocity, leftVelocity);
         rightSRX.set(ControlMode.Velocity, rightVelocity);
     }
-
-    public double getVelocity(){
-        double currentLeftVelocity = (leftSRX.getSelectedSensorVelocity(0) * 10 * drivetrainConfig.getTicksToFeet());
-        double currentRightVelocity = (rightSRX.getSelectedSensorVelocity(0) * 10 * drivetrainConfig.getTicksToFeet());
-
-        return (currentLeftVelocity + currentRightVelocity)/2;
-    }
+//
+//    public double getLeftVelocity(){
+//        double currentLeftVelocity = (leftSRX.getSelectedSensorVelocity(0) * 10 * drivetrainConfig.getTicksToFeet());
+//        return currentLeftVelocity;
+//    }
+//    public double getRightVelocity(){
+//        double currentRightVelocity = (leftSRX.getSelectedSensorVelocity(0) * 10 * drivetrainConfig.getTicksToFeet());
+//        return currentRightVelocity;
+//    }
 
     private double limit(double value) {
         return Math.copySign(Math.abs(value) > 1.0 ? 1.0 : value, value);
