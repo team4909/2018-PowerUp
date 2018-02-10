@@ -82,22 +82,22 @@ public class Robot extends RoboRio {
         hookDeploy = new MotorSubsystem(
                 new BionicSpark(4,false)
         );
-        // Climber Deploy(manipulatorGamepad(Y), semi-auto)
-        // Cancel Action (manipulatorGamepad(X))
 
         elevator = new ElevatorSubsystem(
                 new BionicSRX(
                         3, false,
-                        FeedbackDevice.CTRE_MagEncoder_Relative, false,
+                        FeedbackDevice.CTRE_MagEncoder_Relative, true,
                         1.0,0,0
                 ),
-                manipulatorGamepad, BionicF310.LY
+                manipulatorGamepad, BionicF310.LY,
+                30000, 0
         );
+        driverGamepad.buttonPressed(BionicF310.X, elevator.holdPosition(15000));
     }
 
     @Override
     public void teleopPeriodic() {
-        hookDeploy.set(manipulatorGamepad, BionicF310.LY, 0.5);
+        hookDeploy.set(manipulatorGamepad, BionicF310.RY, 0.5);
     }
 
     @Override
