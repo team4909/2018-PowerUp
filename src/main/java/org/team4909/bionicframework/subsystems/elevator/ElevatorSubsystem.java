@@ -20,8 +20,8 @@ public class ElevatorSubsystem extends Subsystem {
         this.joystick = joystick;
         this.axis = axis;
 
-        bionicSRX.enableSoftLimits(forwardLimit, reverseLimit);
-        bionicSRX.enableZeroOnRevLimit();
+//        bionicSRX.enableSoftLimits(forwardLimit, reverseLimit);
+//        bionicSRX.enableZeroOnRevLimit();
     }
 
     @Override

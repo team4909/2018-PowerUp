@@ -86,7 +86,7 @@ public class Robot extends RoboRio {
         elevator = new ElevatorSubsystem(
                 new BionicSRX(
                         3, false,
-                        FeedbackDevice.CTRE_MagEncoder_Relative, true,
+                        FeedbackDevice.CTRE_MagEncoder_Relative, false,
                         1.0,0,0
                 ),
                 manipulatorGamepad, BionicF310.LY,
