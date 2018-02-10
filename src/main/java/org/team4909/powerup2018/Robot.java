@@ -5,7 +5,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import edu.wpi.first.wpilibj.command.Command;
 import org.team4909.bionicframework.hardware.core.Arduino;
 import org.team4909.bionicframework.hardware.core.RoboRio;
-import org.team4909.bionicframework.hardware.gyro.BionicNavX;
+import org.team4909.bionicframework.hardware.sensors.gyro.BionicNavX;
 import org.team4909.bionicframework.hardware.motor.BionicSRX;
 import org.team4909.bionicframework.hardware.motor.BionicSpark;
 import org.team4909.bionicframework.hardware.motor.BionicVictorSP;
@@ -57,26 +57,30 @@ public class Robot extends RoboRio {
                 new BionicNavX(),
                 new BionicSingleSolenoid(0)
         );
-        driverGamepad.buttonPressed(BionicF310.A, drivetrain.shiftGear(false));
-        driverGamepad.buttonPressed(BionicF310.B, drivetrain.shiftGear(true));
+        //Flip Front/Back(driverGamepad(LT))
+        driverGamepad.buttonPressed(BionicF310.LT, 0.15, drivetrain.invertDirection());
+        driverGamepad.buttonPressed(BionicF310.RT, 0.15, drivetrain.changeGear());
 
         intake = new MotorSubsystem(
                 new BionicSpark(0, true),
                 new BionicSpark(1, false)
         );
-        driverGamepad.buttonHeld(BionicF310.LB, intake.setPercentOutput(1.0));
-        driverGamepad.buttonHeld(BionicF310.RB, intake.setPercentOutput(-1.0));
+        manipulatorGamepad.buttonHeld(BionicF310.LT, 0.15,intake.setPercentOutput(1.0));
+        manipulatorGamepad.buttonHeld(BionicF310.RT, 0.15,intake.setPercentOutput(-1.0));
+        manipulatorGamepad.buttonHeld(BionicF310.B, intake.setPercentOutput(-0.5));
 
         winch = new MotorSubsystem(
                 new BionicVictorSP(2, true),
                 new BionicVictorSP(3, false)
         );
-        driverGamepad.buttonHeld(BionicF310.RT, 0.15, winch.setPercentOutput(1.0));
-        driverGamepad.buttonHeld(BionicF310.LT, 0.15, winch.setPercentOutput(-0.5));
+        driverGamepad.buttonHeld(BionicF310.LB, winch.setPercentOutput(-0.5));
+        driverGamepad.buttonHeld(BionicF310.RB, winch.setPercentOutput(1.0));
 
         hookDeploy = new MotorSubsystem(
                 new BionicSpark(4,false)
         );
+        // Climber Deploy(manipulatorGamepad(Y), semi-auto)
+        // Cancel Action (manipulatorGamepad(X))
 
         elevator = new ElevatorSubsystem(
                 new BionicSRX(
@@ -91,8 +95,22 @@ public class Robot extends RoboRio {
     }
 
     @Override
+<<<<<<< HEAD
     public void robotEnabled() {
         elevator.holdCurrentPosition();
+=======
+    public void teleopPeriodic() {
+        hookDeploy.set(manipulatorGamepad, BionicF310.LY, 0.5);
+    }
+
+    @Override
+    public void autonomousInit() {
+        super.autonomousInit();
+
+        if (autoCommand != null) {
+            autoCommand.start();
+        }
+>>>>>>> master
     }
 
     @Override
