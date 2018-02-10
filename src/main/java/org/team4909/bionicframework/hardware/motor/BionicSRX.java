@@ -33,7 +33,7 @@ public class BionicSRX extends WPI_TalonSRX {
                      int... slaveNumbers){
         super(deviceNumber);
 
-        configVoltageCompSaturation(11.5, timeoutMs);
+        configVoltageCompSaturation(12, timeoutMs);
         enableVoltageCompensation(true);
 
         setInverted(invertGearbox);
