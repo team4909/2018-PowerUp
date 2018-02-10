@@ -9,6 +9,7 @@ import org.team4909.bionicframework.hardware.motor.BionicSRX;
 import org.team4909.bionicframework.hardware.pneumatics.BionicSingleSolenoid;
 import org.team4909.bionicframework.interfaces.Commandable;
 import org.team4909.bionicframework.subsystems.drive.commands.DriveTrajectory;
+import org.team4909.bionicframework.subsystems.drive.commands.InvertDriveDirection;
 import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainProfileUtil;
 import org.team4909.bionicframework.operator.generic.BionicAxis;
 import org.team4909.bionicframework.operator.controllers.BionicF310;
@@ -27,7 +28,7 @@ public class BionicDrive extends Subsystem {
     private final BionicSRX rightSRX;
     private final BionicSingleSolenoid shifter;
 
-    private final Command defaultCommand;
+    public final DriveOI defaultCommand;
 
     /* Sensors */
     private final Gyro bionicGyro;
@@ -119,8 +120,12 @@ public class BionicDrive extends Subsystem {
         setDefaultCommand(defaultCommand);
     }
 
-    public Commandable shiftGear(boolean gear) {
-        return shifter.setState(gear);
+    public Commandable invertDirection() {
+        return new InvertDriveDirection(this);
+    }
+
+    public Commandable changeGear() {
+        return shifter.invert();
     }
 
     private Command driveTrajectory(DrivetrainTrajectory trajectory) {
