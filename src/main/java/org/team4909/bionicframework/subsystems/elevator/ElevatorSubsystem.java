@@ -14,19 +14,24 @@ public class ElevatorSubsystem extends Subsystem {
     private final BionicAxis axis;
 
     public double holdingPosition;
+    private final double oiMultiplier;
 
-    public ElevatorSubsystem(BionicSRX bionicSRX, BionicJoystick joystick, BionicAxis axis, int forwardLimit, int reverseLimit){
+    public ElevatorSubsystem(BionicSRX bionicSRX,
+                             BionicJoystick joystick, BionicAxis axis, double oiMultiplier,
+                             int forwardLimit, int reverseLimit){
         this.bionicSRX = bionicSRX;
         this.joystick = joystick;
         this.axis = axis;
 
-//        bionicSRX.enableSoftLimits(forwardLimit, reverseLimit);
-//        bionicSRX.enableZeroOnRevLimit();
+        this.oiMultiplier = oiMultiplier;
+
+        bionicSRX.enableSoftLimits(forwardLimit, reverseLimit);
+        bionicSRX.enableZeroOnRevLimit();
     }
 
     @Override
     public void periodic() {
-        double moveSpeed = joystick.getSensitiveAxis(axis);
+        double moveSpeed = joystick.getSensitiveAxis(axis) * oiMultiplier;
 
         if(moveSpeed == 0) {
             bionicSRX.set(ControlMode.Position, holdingPosition);
