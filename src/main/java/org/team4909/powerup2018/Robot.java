@@ -85,11 +85,11 @@ public class Robot extends RoboRio {
         elevator = new ElevatorSubsystem(
                 new BionicSRX(
                         3, true,
-                        FeedbackDevice.CTRE_MagEncoder_Relative, true,
+                        FeedbackDevice.CTRE_MagEncoder_Relative, false,
                         1.0,0,0
                 ),
                 manipulatorGamepad, BionicF310.LY,-1,
-                30000, 0
+                35250, 0
         );
         driverGamepad.buttonPressed(BionicF310.X, elevator.holdPosition(15000));
     }
