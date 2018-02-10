@@ -119,6 +119,11 @@ public class Robot extends RoboRio {
     }
 
     @Override
+    protected void robotEnabled() {
+        elevator.holdCurrentPosition();
+    }
+
+    @Override
     protected void robotDisabled() {
         if (autoCommand != null) {
             autoCommand.cancel();
