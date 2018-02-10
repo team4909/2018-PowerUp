@@ -29,9 +29,6 @@ public class Robot extends RoboRio {
     private static BionicF310 driverGamepad;
     private static BionicF310 manipulatorGamepad;
 
-    /* Auto Commands */
-    private static Command autoCommand;
-
     @Override
     public void robotInit() {
         driverGamepad = new BionicF310(0, 0.15, 0.8);
@@ -60,7 +57,6 @@ public class Robot extends RoboRio {
                 new BionicNavX(),
                 new BionicSingleSolenoid(0)
         );
-        //Flip Front/Back(driverGamepad(LT))
         driverGamepad.buttonPressed(BionicF310.LT, 0.15, drivetrain.invertDirection());
         driverGamepad.buttonPressed(BionicF310.RT, 0.15, drivetrain.changeGear());
 
@@ -88,40 +84,22 @@ public class Robot extends RoboRio {
         elevator = new ElevatorSubsystem(
                 new BionicSRX(
                         3, false,
-                        FeedbackDevice.CTRE_MagEncoder_Relative, false,
+                        FeedbackDevice.CTRE_MagEncoder_Relative, true,
                         1.0,0,0
                 ),
-                manipulatorGamepad, BionicF310.LY
+                manipulatorGamepad, BionicF310.LY,
+                30000,0
         );
+        driverGamepad.buttonHeld(BionicF310.X, elevator.holdPosition(15000));
+    }
+
+    @Override
+    public void robotEnabled() {
+        elevator.holdCurrentPosition();
     }
 
     @Override
     public void teleopPeriodic() {
-        hookDeploy.set(manipulatorGamepad, BionicF310.LY, 0.5);
-    }
-
-    @Override
-    public void autonomousInit() {
-        super.autonomousInit();
-
-        if (autoCommand != null) {
-            autoCommand.start();
-        }
-    }
-
-    @Override
-    public void teleopInit() {
-        super.teleopInit();
-
-        if (autoCommand != null) {
-            autoCommand.cancel();
-        }
-    }
-
-    @Override
-    protected void robotDisabled() {
-        if (autoCommand != null) {
-            autoCommand.cancel();
-        }
+        hookDeploy.set(manipulatorGamepad, BionicF310.RY);
     }
 }
