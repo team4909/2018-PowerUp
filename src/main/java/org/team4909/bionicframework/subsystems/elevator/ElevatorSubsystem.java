@@ -15,7 +15,7 @@ public class ElevatorSubsystem extends Subsystem {
     private final BionicJoystick joystick;
     private final BionicAxis axis;
 
-    private double holdingPosition;
+    public double holdingPosition;
 
     public ElevatorSubsystem(BionicSRX bionicSRX, BionicJoystick joystick, BionicAxis axis, int forwardLimit, int reverseLimit){
         this.bionicSRX = bionicSRX;
@@ -33,18 +33,12 @@ public class ElevatorSubsystem extends Subsystem {
         if(moveSpeed != 0) {
             bionicSRX.set(moveSpeed);
 
-            holdCurrentPosition();
-            System.out.println("PID from :" + holdingPosition);
+            holdingPosition = bionicSRX.getSelectedSensorPosition();
         } else {
-            System.out.println("PID to :" + holdingPosition);
-
             bionicSRX.set(ControlMode.Position, holdingPosition);
         }
     }
 
-    public void holdCurrentPosition(){
-        holdingPosition = bionicSRX.getSelectedSensorPosition();
-    }
 
     public Commandable holdPosition(double position){
         return new SetElevatorPosition(position,this);

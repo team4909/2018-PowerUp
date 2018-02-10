@@ -16,6 +16,6 @@ public class SetElevatorPosition extends Commandable {
 
         @Override
         public void initialize() {
-            elevator.holdPosition(setpoint);
+            elevator.holdingPosition = setpoint;
         }
 }
