@@ -25,7 +25,7 @@ public class ElevatorSubsystem extends Subsystem {
         bionicSRX.setNeutralMode(NeutralMode.Brake);
 
         //bionicSRX.enableSoftLimits(forwardLimit, reverseLimit);
-        bionicSRX.enableZeroOnRevLimit();
+        //bionicSRX.enableZeroOnRevLimit();
     }
 
     @Override
@@ -49,7 +49,7 @@ public class ElevatorSubsystem extends Subsystem {
     }
 
     public Commandable holdPosition(double position){
-        return new SetElevatorPosition(position, bionicSRX);
+        return new SetElevatorPosition(position,this);
     }
 
     @Override
