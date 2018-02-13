@@ -10,7 +10,12 @@ import org.team4909.bionicframework.operator.generic.BionicAxis;
 import org.team4909.bionicframework.subsystems.drive.BionicDrive;
 import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainConfig;
 
+import javax.swing.plaf.basic.BasicSplitPaneUI;
+import javax.swing.plaf.synth.SynthScrollBarUI;
+
 public class DriveOI extends Command {
+    private final BionicDrive subsystem;
+
     private final BionicSRX leftSRX;
     private final BionicSRX rightSRX;
 
@@ -28,6 +33,7 @@ public class DriveOI extends Command {
                    BionicF310 speedInputGamepad, BionicAxis speedInputAxis, double speedMultiplier,
                    BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis, double rotationMultiplier) {
         requires(subsystem);
+        this.subsystem = subsystem;
         this.drivetrainConfig = subsystem.pathgen.drivetrainConfig;
 
         this.leftSRX = leftSRX;
@@ -46,6 +52,7 @@ public class DriveOI extends Command {
     protected void execute() {
         double speed = speedInputGamepad.getSensitiveAxis(speedInputAxis) * speedMultiplier;
         double rotation = rotationInputGamepad.getSensitiveAxis(rotationInputAxis) * rotationMultiplier;
+
         double maxVelocity = drivetrainConfig.getMaxVelocity();
 
         double leftMotorOutput;
@@ -72,9 +79,13 @@ public class DriveOI extends Command {
         leftMotorOutput = limit(leftMotorOutput);
         rightMotorOutput = limit(rightMotorOutput);
 
-        leftSRX.set(ControlMode.Velocity, maxVelocity * leftMotorOutput);
-        rightSRX.set(ControlMode.Velocity, maxVelocity * rightMotorOutput);
+        double leftVelocity = maxVelocity * leftMotorOutput;
+        double rightVelocity = maxVelocity * rightMotorOutput;
+
+        leftSRX.set(ControlMode.Velocity, leftVelocity);
+        rightSRX.set(ControlMode.Velocity, rightVelocity);
     }
+
 
     private double limit(double value) {
         return Math.copySign(Math.abs(value) > 1.0 ? 1.0 : value, value);
@@ -84,4 +95,6 @@ public class DriveOI extends Command {
     protected boolean isFinished() {
         return false;
     }
+
+
 }

@@ -58,12 +58,13 @@ public class Robot extends RoboRio {
                 driverGamepad, BionicF310.LY, 1.0,
                 driverGamepad, BionicF310.RX, 1.0,
                 new DrivetrainConfig(
-                        10, 0.5,120,
-                        10,5,30,
+                        50, 0.5,120,
+                        6.332,100,104.720,
                         0,0
                 ),
                 new BionicNavX(),
-                new BionicSingleSolenoid(0)
+                new BionicSingleSolenoid(0),
+                true
         );
         driverGamepad.buttonPressed(BionicF310.LT, 0.15, drivetrain.invertDirection());
         driverGamepad.buttonPressed(BionicF310.RT, 0.15, drivetrain.changeGear());
@@ -91,12 +92,14 @@ public class Robot extends RoboRio {
 
         elevator = new ElevatorSubsystem(
                 new BionicSRX(
-                        3, false,
+                        3, true,
                         FeedbackDevice.CTRE_MagEncoder_Relative, false,
                         1.0,0,0
                 ),
-                manipulatorGamepad, BionicF310.LY
+                manipulatorGamepad, BionicF310.LY,-1,
+                35250, 0
         );
+<<<<<<< HEAD
 
         autoChooser = new SendableChooser();
         autoChooser.addDefault("Do Nothing", null);
@@ -142,11 +145,14 @@ public class Robot extends RoboRio {
                         new Waypoint(23.41, 7.5, 0)
                 }));
         autoChooser.addObject("DEBUG ONLY: Do Rotation Test", drivetrain.driveRotationTest());
+=======
+        driverGamepad.buttonPressed(BionicF310.X, elevator.holdPosition(15000));
+>>>>>>> master
     }
 
     @Override
     public void teleopPeriodic() {
-        hookDeploy.set(manipulatorGamepad, BionicF310.LY, 0.5);
+        hookDeploy.set(manipulatorGamepad, BionicF310.RY, 0.5);
     }
 
     @Override
@@ -167,6 +173,11 @@ public class Robot extends RoboRio {
         if (autoCommand != null) {
             autoCommand.cancel();
         }
+    }
+
+    @Override
+    protected void robotEnabled() {
+        elevator.holdCurrentPosition();
     }
 
     @Override
