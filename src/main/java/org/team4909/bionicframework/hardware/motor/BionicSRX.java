@@ -42,8 +42,12 @@ public class BionicSRX extends WPI_TalonSRX {
         for (int i = 0; i < slaveNumbers.length; i++) {
             WPI_VictorSPX follower = new WPI_VictorSPX(slaveNumbers[i]);
 
+            follower.configVoltageCompSaturation(12, timeoutMs);
+            follower.enableVoltageCompensation(true);
+
             follower.setInverted(invertGearbox);
             follower.setNeutralMode(NeutralMode.Brake);
+
             follower.follow(this);
         }
     }
