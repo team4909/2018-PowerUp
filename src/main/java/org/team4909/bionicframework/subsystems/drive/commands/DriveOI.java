@@ -82,24 +82,6 @@ public class DriveOI extends Command {
         double leftVelocity = maxVelocity * leftMotorOutput;
         double rightVelocity = maxVelocity * rightMotorOutput;
 
-        double leftAccel = Math.abs(leftVelocity - subsystem.getLeftVelocity()) / drivetrainConfig.getProfileIntervalS();
-        double rightAccel = Math.abs(rightVelocity - subsystem.getRightVelocity()) / drivetrainConfig.getProfileIntervalS();
-
-        System.out.println("VELO" + leftVelocity + " " + rightVelocity);
-        System.out.println("ACC" + leftAccel + " " + rightAccel);
-
-        if(leftAccel > drivetrainConfig.getMaxAcceleration()){
-            leftVelocity = subsystem.getLeftVelocity() +
-                    Math.copySign(2, subsystem.getLeftVelocity());
-        }
-
-        if(rightAccel > drivetrainConfig.getMaxAcceleration()){
-            rightVelocity = subsystem.getRightVelocity() +
-                    Math.copySign(2, subsystem.getRightVelocity());
-        }
-
-        System.out.println("VELO" + leftVelocity + " " + rightVelocity);
-
         leftSRX.set(ControlMode.Velocity, leftVelocity);
         rightSRX.set(ControlMode.Velocity, rightVelocity);
     }
