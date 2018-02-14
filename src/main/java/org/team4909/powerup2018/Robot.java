@@ -53,7 +53,7 @@ public class Robot extends RoboRio {
                 new BionicSRX(
                         4,false,
                         FeedbackDevice.QuadEncoder, true,
-                        0.6,0,0,
+                        4.0,0,0,
                         4
                 ),
                 driverGamepad, BionicF310.LY, 1.0,
