@@ -158,10 +158,6 @@ public class BionicDrive extends Subsystem {
         return shifter.invert();
     }
 
-    public Command driveDistance(double distance){
-        return new DriveDistance(this, leftSRX, rightSRX, distance);
-    }
-
     private Command driveTrajectory(DrivetrainTrajectory trajectory) {
         return new DriveTrajectory(this, leftSRX, rightSRX, trajectory);
     }

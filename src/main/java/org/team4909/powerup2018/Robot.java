@@ -102,7 +102,6 @@ public class Robot extends RoboRio {
 
         autoChooser = new SendableChooser();
         autoChooser.addDefault("Do Nothing", null);
-        autoChooser.addObject("Drive Distance", drivetrain.driveDistance(400));
         autoChooser.addObject("Break Baseline", drivetrain.driveWaypoints(new Waypoint[]{
                 new Waypoint(1.59,0,0),
                 new Waypoint(9,0,0)
