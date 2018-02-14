@@ -45,19 +45,19 @@ public class Robot extends RoboRio {
 
         drivetrain = new BionicDrive(
                 new BionicSRX(
-                        2,true,
-                        FeedbackDevice.QuadEncoder, true,
-                        4.0,0,0,
+                        2,false,
+                        FeedbackDevice.QuadEncoder, false,
+                        1.3,0,4,
                         1
                 ),
                 new BionicSRX(
-                        4,false,
-                        FeedbackDevice.QuadEncoder, true,
-                        4.0,0,0,
+                        4,true,
+                        FeedbackDevice.QuadEncoder, false,
+                        1.3,0,4,
                         4
                 ),
-                driverGamepad, BionicF310.LY, 1.0,
-                driverGamepad, BionicF310.RX, 1.0,
+                driverGamepad, BionicF310.LY, -1.0,
+                driverGamepad, BionicF310.RX, -1.0,
                 new DrivetrainConfig(
                         50, 0.5,120,
                         5.759,11.126,117.809,
@@ -65,6 +65,7 @@ public class Robot extends RoboRio {
                 ),
                 new BionicNavX(),
                 new BionicSingleSolenoid(0),
+                .7,
                 false
         );
         driverGamepad.buttonPressed(BionicF310.LT, 0.1, drivetrain.invertDirection());
@@ -101,6 +102,7 @@ public class Robot extends RoboRio {
 
         autoChooser = new SendableChooser();
         autoChooser.addDefault("Do Nothing", null);
+        autoChooser.addObject("Drive Distance", drivetrain.driveDistance(400));
         autoChooser.addObject("Break Baseline", drivetrain.driveWaypoints(new Waypoint[]{
                 new Waypoint(1.59,0,0),
                 new Waypoint(9,0,0)
@@ -161,9 +163,11 @@ public class Robot extends RoboRio {
     public void autonomousInit() {
         super.autonomousInit();
 
-        autoCommand = (Command) autoChooser.getSelected();
+        drivetrain.resetProfiling();
 
+        autoCommand = (Command) autoChooser.getSelected();
         if (autoCommand != null) {
+            autoCommand.cancel();
             autoCommand.start();
         }
     }

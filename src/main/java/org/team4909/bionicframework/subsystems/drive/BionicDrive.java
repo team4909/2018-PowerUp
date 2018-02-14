@@ -8,6 +8,7 @@ import jaci.pathfinder.Pathfinder;
 import org.team4909.bionicframework.hardware.motor.BionicSRX;
 import org.team4909.bionicframework.hardware.pneumatics.BionicSingleSolenoid;
 import org.team4909.bionicframework.interfaces.Commandable;
+import org.team4909.bionicframework.subsystems.drive.commands.DriveDistance;
 import org.team4909.bionicframework.subsystems.drive.commands.DriveTrajectory;
 import org.team4909.bionicframework.subsystems.drive.commands.InvertDriveDirection;
 import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainProfileUtil;
@@ -58,6 +59,7 @@ public class BionicDrive extends Subsystem {
                        BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis, double rotationMultiplier,
                        DrivetrainConfig drivetrainConfig,
                        Gyro bionicGyro, BionicSingleSolenoid shifter,
+                       double secondsFromNeutralToFull,
                        boolean profiling) {
         super();
 
@@ -76,6 +78,9 @@ public class BionicDrive extends Subsystem {
         this.defaultCommand = new DriveOI(this, leftSRX, rightSRX,
                 speedInputGamepad, speedInputAxis, speedMultiplier,
                 rotationInputGamepad, rotationInputAxis, rotationMultiplier);
+
+        this.leftSRX.configClosedloopRamp(secondsFromNeutralToFull,0);
+        this.rightSRX.configClosedloopRamp(secondsFromNeutralToFull,0);
 
         this.profiling = profiling;
     }
@@ -112,6 +117,10 @@ public class BionicDrive extends Subsystem {
          maxJerk = 0;
          lastVelocity = 0;
          lastAcceleration = 0;
+
+         bionicGyro.reset();
+         leftSRX.setSelectedSensorPosition(0,0,0);
+         rightSRX.setSelectedSensorPosition(0,0,0);
     }
 
     public double getVelocity(){
@@ -147,6 +156,10 @@ public class BionicDrive extends Subsystem {
 
     public Commandable changeGear() {
         return shifter.invert();
+    }
+
+    public Command driveDistance(double distance){
+        return new DriveDistance(this, leftSRX, rightSRX, distance);
     }
 
     private Command driveTrajectory(DrivetrainTrajectory trajectory) {
