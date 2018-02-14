@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import jaci.pathfinder.Waypoint;
 import openrio.powerup.MatchData.GameFeature;
 import org.team4909.bionicframework.hardware.core.Arduino;
@@ -46,7 +47,7 @@ public class Robot extends RoboRio {
                 new BionicSRX(
                         2,true,
                         FeedbackDevice.QuadEncoder, true,
-                        0.6,0,0,
+                        4.0,0,0,
                         1
                 ),
                 new BionicSRX(
@@ -59,12 +60,12 @@ public class Robot extends RoboRio {
                 driverGamepad, BionicF310.RX, 1.0,
                 new DrivetrainConfig(
                         50, 0.5,120,
-                        6.332,100,104.720,
-                        0,0
+                        5.759,11.126,117.809,
+                        1.5,.3
                 ),
                 new BionicNavX(),
                 new BionicSingleSolenoid(0),
-                true
+                false
         );
         driverGamepad.buttonPressed(BionicF310.LT, 0.15, drivetrain.invertDirection());
         driverGamepad.buttonPressed(BionicF310.RT, 0.15, drivetrain.changeGear());
@@ -145,6 +146,7 @@ public class Robot extends RoboRio {
                         new Waypoint(23.41, 7.5, 0)
                 }));
         autoChooser.addObject("DEBUG ONLY: Do Rotation Test", drivetrain.driveRotationTest());
+        SmartDashboard.putData( "autochooser", autoChooser);
     }
 
     @Override
