@@ -61,7 +61,7 @@ public class Robot extends RoboRio {
                 new DrivetrainConfig(
                         50, 0.5,120,
                         5.759,11.126,117.809,
-                        1.5,.3
+                        10,2.599
                 ),
                 new BionicNavX(),
                 new BionicSingleSolenoid(0),
@@ -102,8 +102,8 @@ public class Robot extends RoboRio {
         autoChooser = new SendableChooser();
         autoChooser.addDefault("Do Nothing", null);
         autoChooser.addObject("Break Baseline", drivetrain.driveWaypoints(new Waypoint[]{
-                new Waypoint(1.59, 0, 0) ,
-                new Waypoint(9, 0, 0)
+                new Waypoint(1.59,0,0),
+                new Waypoint(9,0,0)
         }));
         autoChooser.addObject("Left Start Scale L/R", new CubePlaceAuto(
                 intake.setPercentOutput(1.0),
