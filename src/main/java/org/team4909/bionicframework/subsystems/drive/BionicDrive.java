@@ -31,7 +31,7 @@ public class BionicDrive extends Subsystem {
     public final DriveOI defaultCommand;
 
     /* Sensors */
-    private final Gyro bionicGyro;
+    public final Gyro bionicGyro;
     public final DrivetrainProfileUtil pathgen;
     public final double t;
 
