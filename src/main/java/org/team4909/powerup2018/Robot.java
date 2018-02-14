@@ -73,10 +73,8 @@ public class Robot extends RoboRio {
                 new BionicSpark(0, true),
                 new BionicSpark(1, false)
         );
-        Commandable intakeCommand = intake.setPercentOutput(1.0);
-        Commandable outtakeCommand = intake.setPercentOutput(-1.0);
-        manipulatorGamepad.buttonHeld(BionicF310.LT, 0.15, intakeCommand);
-        manipulatorGamepad.buttonHeld(BionicF310.RT, 0.15, outtakeCommand);
+        manipulatorGamepad.buttonHeld(BionicF310.LT, 0.15, intake.setPercentOutput(1.0));
+        manipulatorGamepad.buttonHeld(BionicF310.RT, 0.15, intake.setPercentOutput(-1.0));
         manipulatorGamepad.buttonHeld(BionicF310.B, intake.setPercentOutput(-0.5));
 
         winch = new MotorSubsystem(
@@ -99,7 +97,6 @@ public class Robot extends RoboRio {
                 manipulatorGamepad, BionicF310.LY,-1,
                 35250, 0
         );
-<<<<<<< HEAD
 
         autoChooser = new SendableChooser();
         autoChooser.addDefault("Do Nothing", null);
@@ -108,7 +105,8 @@ public class Robot extends RoboRio {
                 new Waypoint(9, 0, 0)
         }));
         autoChooser.addObject("Left Start Scale L/R", new CubePlaceAuto(
-                intakeCommand, outtakeCommand,
+                intake.setPercentOutput(1.0),
+                intake.setPercentOutput(-1.0),
                 GameFeature.SWITCH_NEAR, drivetrain,
                 new Waypoint[]{
                         new Waypoint(1.59, 23.11, 0),
@@ -121,7 +119,8 @@ public class Robot extends RoboRio {
                         new Waypoint(23.41, 7.5, 0)
                 }));
         autoChooser.addObject("Center Start Switch L/R", new CubePlaceAuto(
-                intakeCommand, outtakeCommand,
+                intake.setPercentOutput(1.0),
+                intake.setPercentOutput(-1.0),
                 GameFeature.SCALE, drivetrain,
                 new Waypoint[]{
                         new Waypoint(1.59, 13.1, 0),
@@ -132,7 +131,8 @@ public class Robot extends RoboRio {
                         new Waypoint(10.41, 9, 0)
                 }));
         autoChooser.addObject("Right Start Scale L/R", new CubePlaceAuto(
-                intakeCommand, outtakeCommand,
+                intake.setPercentOutput(1.0),
+                intake.setPercentOutput(-1.0),
                 GameFeature.SCALE, drivetrain,
                 new Waypoint[]{
                         new Waypoint(1.59, 3.9, 0),
@@ -145,9 +145,6 @@ public class Robot extends RoboRio {
                         new Waypoint(23.41, 7.5, 0)
                 }));
         autoChooser.addObject("DEBUG ONLY: Do Rotation Test", drivetrain.driveRotationTest());
-=======
-        driverGamepad.buttonPressed(BionicF310.X, elevator.holdPosition(15000));
->>>>>>> master
     }
 
     @Override
@@ -169,6 +166,8 @@ public class Robot extends RoboRio {
     @Override
     public void teleopInit() {
         super.teleopInit();
+
+        drivetrain.resetProfiling();
 
         if (autoCommand != null) {
             autoCommand.cancel();
