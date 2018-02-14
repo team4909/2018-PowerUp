@@ -10,9 +10,11 @@ import org.team4909.bionicframework.subsystems.drive.BionicDrive;
 
 public class CubePlaceAuto extends CommandGroup {
     public CubePlaceAuto(Command intakeCommand, Command outtakeCommand,
+                         Command elevateCommand,
                          GameFeature side, BionicDrive drivetrain,
                          Waypoint[] leftPath, Waypoint[] rightPath){
         addParallel(intakeCommand);
+        addParallel(elevateCommand);
         addSequential(new GameFeatureSide(
                 side,
                 drivetrain.driveWaypoints(leftPath),

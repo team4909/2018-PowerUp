@@ -108,6 +108,7 @@ public class Robot extends RoboRio {
         autoChooser.addObject("Left Start Scale L/R", new CubePlaceAuto(
                 intake.setPercentOutput(1.0),
                 intake.setPercentOutput(-1.0),
+                elevator.holdPosition(15000),
                 GameFeature.SWITCH_NEAR, drivetrain,
                 new Waypoint[]{
                         new Waypoint(1.59, 23.11, 0),
@@ -122,6 +123,7 @@ public class Robot extends RoboRio {
         autoChooser.addObject("Center Start Switch L/R", new CubePlaceAuto(
                 intake.setPercentOutput(1.0),
                 intake.setPercentOutput(-1.0),
+                elevator.holdPosition(34000),
                 GameFeature.SCALE, drivetrain,
                 new Waypoint[]{
                         new Waypoint(1.59, 13.1, 0),
@@ -134,6 +136,7 @@ public class Robot extends RoboRio {
         autoChooser.addObject("Right Start Scale L/R", new CubePlaceAuto(
                 intake.setPercentOutput(1.0),
                 intake.setPercentOutput(-1.0),
+                elevator.holdPosition(34000),
                 GameFeature.SCALE, drivetrain,
                 new Waypoint[]{
                         new Waypoint(1.59, 3.9, 0),
