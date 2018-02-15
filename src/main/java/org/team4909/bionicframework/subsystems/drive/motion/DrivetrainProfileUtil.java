@@ -32,48 +32,14 @@ public class DrivetrainProfileUtil {
     }
 
     public DrivetrainTrajectory getTrajectory(Waypoint[] points) {
-        Trajectory leftTrajectory;
-        Trajectory rightTrajectory;
-
-//        try {
-//            String profileJSON = new DrivetrainProfileConfig(drivetrainConfig, points).toJSON();
-//
-//            MessageDigest md = MessageDigest.getInstance("MD5");
-//            md.update(profileJSON.getBytes());
-//            byte[] digest = md.digest();
-//            String profileHash = DatatypeConverter.printHexBinary(digest).toUpperCase();
-//
-//            File leftFile = new File(profile_dir, profileHash + "-left.traj");
-//            File rightFile = new File(profile_dir, profileHash + "-right.traj");
-//
-//            if (leftFile.isFile() && rightFile.isFile()) {
-//                leftTrajectory = Pathfinder.readFromFile(leftFile);
-//                rightTrajectory = Pathfinder.readFromFile(rightFile);
-//            } else {
-//                Trajectory trajectory = Pathfinder.generate(points, pathfinderConfig);
-//                TankModifier modifier = new TankModifier(trajectory).modify(drivetrainConfig.getChassisWidthFeet());
-//
-//                leftTrajectory = modifier.getLeftTrajectory();
-//                rightTrajectory = modifier.getRightTrajectory();
-//
-//                Pathfinder.writeToFile(leftFile, leftTrajectory);
-//                Pathfinder.writeToFile(rightFile, rightTrajectory);
-//            }
-//        } catch (NoSuchAlgorithmException e){
-//            Trajectory trajectory = Pathfinder.generate(points, pathfinderConfig);
-//            TankModifier modifier = new TankModifier(trajectory).modify(drivetrainConfig.getChassisWidthFeet());
-//
-//            leftTrajectory = modifier.getLeftTrajectory();
-//            rightTrajectory = modifier.getRightTrajectory();
-//        }
-
         Trajectory trajectory = Pathfinder.generate(points, pathfinderConfig);
         TankModifier modifier = new TankModifier(trajectory).modify(drivetrainConfig.getChassisWidthFeet());
 
-        leftTrajectory = modifier.getLeftTrajectory();
-        rightTrajectory = modifier.getRightTrajectory();
-
-        return new DrivetrainTrajectory(drivetrainConfig, leftTrajectory, rightTrajectory);
+        return new DrivetrainTrajectory(
+                drivetrainConfig,
+                modifier.getLeftTrajectory(),
+                modifier.getRightTrajectory()
+        );
     }
 
     public DrivetrainTrajectory getRotationTestTrajectory() {
