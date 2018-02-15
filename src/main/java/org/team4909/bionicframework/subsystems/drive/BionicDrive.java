@@ -58,7 +58,6 @@ public class BionicDrive extends Subsystem {
                        BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis, double rotationMultiplier,
                        DrivetrainConfig drivetrainConfig,
                        Gyro bionicGyro, BionicSingleSolenoid shifter,
-                       double secondsFromNeutralToFull,
                        boolean profiling) {
         super();
 
@@ -77,9 +76,6 @@ public class BionicDrive extends Subsystem {
         this.defaultCommand = new DriveOI(this, leftSRX, rightSRX,
                 speedInputGamepad, speedInputAxis, speedMultiplier,
                 rotationInputGamepad, rotationInputAxis, rotationMultiplier);
-
-        this.leftSRX.configClosedloopRamp(secondsFromNeutralToFull,0);
-        this.rightSRX.configClosedloopRamp(secondsFromNeutralToFull,0);
 
         this.profiling = profiling;
     }
