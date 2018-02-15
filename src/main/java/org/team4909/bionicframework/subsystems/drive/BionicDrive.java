@@ -8,7 +8,6 @@ import jaci.pathfinder.Pathfinder;
 import org.team4909.bionicframework.hardware.motor.BionicSRX;
 import org.team4909.bionicframework.hardware.pneumatics.BionicSingleSolenoid;
 import org.team4909.bionicframework.interfaces.Commandable;
-import org.team4909.bionicframework.subsystems.drive.commands.DriveDistance;
 import org.team4909.bionicframework.subsystems.drive.commands.DriveTrajectory;
 import org.team4909.bionicframework.subsystems.drive.commands.InvertDriveDirection;
 import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainProfileUtil;
