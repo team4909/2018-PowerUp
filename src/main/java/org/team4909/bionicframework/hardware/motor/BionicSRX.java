@@ -25,6 +25,8 @@ import org.team4909.bionicframework.operator.generic.BionicJoystick;
  * Wrapper Class for CTRE WPI_TalonSRX implementing BionicFramework Commandables and Other Simplifications/Abstractions
  */
 public class BionicSRX extends WPI_TalonSRX {
+    private boolean finishedMotionProfile;
+
     /**
      * @param deviceNumber - CAN ID's of SRX Master
      * @param slaveNumbers - CAN ID's of SRX Followers
@@ -159,6 +161,7 @@ public class BionicSRX extends WPI_TalonSRX {
     public void runMotionProfile() {
         if (isBottomLevelBufferReady()) {
             this.set(ControlMode.MotionProfile, SetValueMotionProfile.Enable.value);
+            finishedMotionProfile = false;
         }
     }
 
@@ -190,7 +193,11 @@ public class BionicSRX extends WPI_TalonSRX {
      * @return Returns whether the streamed subsystems profile has been completed or not
      */
     public boolean isMotionProfileFinished() {
-        return (this.getMotionProfileStatus()).isLast;
+        if (finishedMotionProfile == false && (this.getMotionProfileStatus()).isLast){
+            finishedMotionProfile = true;
+        }
+
+        return finishedMotionProfile;
     }
 
     private boolean isTopLevelBufferEmpty() {
