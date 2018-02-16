@@ -160,11 +160,12 @@ public class Robot extends RoboRio {
     public void autonomousInit() {
         super.autonomousInit();
 
-        drivetrain.resetProfiling();
+        if (autoCommand != null) {
+            autoCommand.cancel();
+        }
 
         autoCommand = (Command) autoChooser.getSelected();
         if (autoCommand != null) {
-            autoCommand.cancel();
             autoCommand.start();
         }
     }
@@ -172,8 +173,6 @@ public class Robot extends RoboRio {
     @Override
     public void teleopInit() {
         super.teleopInit();
-
-        drivetrain.resetProfiling();
 
         if (autoCommand != null) {
             autoCommand.cancel();
@@ -188,6 +187,7 @@ public class Robot extends RoboRio {
 
     @Override
     protected void robotEnabled() {
+        drivetrain.resetProfiling();
         elevator.holdCurrentPosition();
     }
 
