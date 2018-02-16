@@ -145,8 +145,8 @@ public class BionicSRX extends WPI_TalonSRX {
     /**
      * @param points Path consisting of waypoints to follow
      */
-    public void initMotionProfile(int profileIntervalMs, TrajectoryPoint[] points) {
-        this.changeMotionControlFramePeriod(profileIntervalMs);
+    public void initMotionProfile(int controlFramePeriod, TrajectoryPoint[] points) {
+        this.changeMotionControlFramePeriod(controlFramePeriod);
         this.set(ControlMode.MotionProfile, SetValueMotionProfile.Disable.value);
 
         this.clearMotionProfileTrajectories();
@@ -161,7 +161,7 @@ public class BionicSRX extends WPI_TalonSRX {
         }
 
         // Lag behind for later points
-        processMotionProfileBuffer.startPeriodic((double) profileIntervalMs / 2000);
+        processMotionProfileBuffer.startPeriodic((double) controlFramePeriod / 1000);
     }
 
     public void runMotionProfile() {
