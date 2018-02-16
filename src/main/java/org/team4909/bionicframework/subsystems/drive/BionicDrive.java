@@ -35,15 +35,6 @@ public class BionicDrive extends Subsystem {
     /* Sensors */
     private final Gyro bionicGyro;
     public final DrivetrainProfileUtil pathgen;
-    public final double t;
-
-    private double maxVelocity = 0; //maximum cumulative velocity
-    private double maxAcceleration = 0;// maximum cumulative acceleration
-    private double maxJerk = 0; // maximum cumulative jerk
-
-    private double lastVelocity = 0; // velocity at last calculation interval
-    private double lastAcceleration = 0; // acceleration at last calculation interval
-    private final boolean profiling;
 
     public final double speedDeltaLimit, rotationDeltaLimit;
 
