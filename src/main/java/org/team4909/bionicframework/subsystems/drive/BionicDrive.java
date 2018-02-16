@@ -112,6 +112,7 @@ public class BionicDrive extends Subsystem {
          currentMaxVelocity = 0;
          currentMaxAcceleration = 0;
          currentMaxJerk = 0;
+
          lastVelocity = 0;
          lastAcceleration = 0;
     }
