@@ -123,8 +123,8 @@ public class Robot extends RoboRio {
     public void robotPeriodic() {
         drivetrain.encoderOverride = SmartDashboard.getBoolean("Drivetrain Encoder Override", false);
         SmartDashboard.putBoolean("Is High Gear?", drivetrain.getGear());
-        
-//        if (LIDAR.getDistance() > 1){
+
+//        if (intakeSubsystem.getDistance() > 1){
 //            SmartDashboard.putBoolean("Is Cube In?", true);
 //        } else {
 //            SmartDashboard.putBoolean("Is Cube In?", false);
