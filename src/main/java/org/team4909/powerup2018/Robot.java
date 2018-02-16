@@ -58,12 +58,12 @@ public class Robot extends RoboRio {
                         1.1,0,7,
                         4
                 ),
-                driverGamepad, BionicF310.LY, -1.0, 1.0,
-                driverGamepad, BionicF310.RX, -1.0, 1.0,
+                driverGamepad, BionicF310.LY, -1.0, 2.0,
+                driverGamepad, BionicF310.RX, -1.0, 2.0,
                 new DrivetrainConfig(
                         25, 0.5,120,
                         12.000,11.126,117.809,
-                        10,2.599
+                        3,2.75
                 ),
                 new BionicNavX(),
                 new BionicSingleSolenoid(0)
@@ -97,7 +97,7 @@ public class Robot extends RoboRio {
                         1.0,0,0
                 ),
                 manipulatorGamepad, BionicF310.LY,-1,
-                35250
+                33150
         );
 
         autoChooser = new SendableChooser();

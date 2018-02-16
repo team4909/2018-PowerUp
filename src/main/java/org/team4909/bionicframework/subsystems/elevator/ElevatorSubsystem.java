@@ -27,6 +27,7 @@ public class ElevatorSubsystem extends Subsystem {
         this.oiMultiplier = oiMultiplier;
 
         bionicSRX.enableFwdSoftLimit(forwardLimit);
+        bionicSRX.configReverseSoftLimitEnable(false, 0);
     }
 
     @Override
