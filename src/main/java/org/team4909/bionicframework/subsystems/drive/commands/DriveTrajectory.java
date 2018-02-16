@@ -11,8 +11,7 @@ public class DriveTrajectory extends Command {
     private final DrivetrainTrajectory trajectory;
 
     private final BionicDrive bionicDrive;
-    private final BionicSRX leftSRX;
-    private final BionicSRX rightSRX;
+    private final BionicSRX leftSRX, rightSRX;
 
     public DriveTrajectory(BionicDrive bionicDrive, BionicSRX leftSRX, BionicSRX rightSRX, DrivetrainTrajectory trajectory) {
         requires(bionicDrive);

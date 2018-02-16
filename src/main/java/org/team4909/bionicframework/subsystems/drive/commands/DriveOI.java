@@ -12,16 +12,12 @@ import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainConfig;
 
 public class DriveOI extends Command {
     private final BionicDrive bionicDrive;
-    private final BionicSRX leftSRX;
-    private final BionicSRX rightSRX;
+    private final BionicSRX leftSRX, rightSRX;
 
-    private final BionicF310 speedInputGamepad;
-    private final BionicAxis speedInputAxis;
-    public double speedMultiplier;
-
-    private final BionicF310 rotationInputGamepad;
-    private final BionicAxis rotationInputAxis;
-    public double rotationMultiplier;
+    private final BionicF310 speedInputGamepad, rotationInputGamepad;
+    private final BionicAxis speedInputAxis, rotationInputAxis;
+    public double speedMultiplier, rotationMultiplier;
+    private double limitedSpeed;
 
     private final DrivetrainConfig drivetrainConfig;
 
@@ -47,12 +43,20 @@ public class DriveOI extends Command {
 
     @Override
     protected void execute() {
-        double speed = speedInputGamepad.getSensitiveAxis(speedInputAxis) * speedMultiplier;
-        double rotation = rotationInputGamepad.getSensitiveAxis(rotationInputAxis) * rotationMultiplier;
-        double maxVelocity = drivetrainConfig.getMaxVelocity();
+        double maxVelocity = drivetrainConfig.getMaxVelocity(),
+                speed = speedInputGamepad.getSensitiveAxis(speedInputAxis) * speedMultiplier,
+                speedDelta = speed - limitedSpeed,
+                speedDeltaLimit = bionicDrive.speedDeltaLimit;
 
-        double leftMotorOutput;
-        double rightMotorOutput;
+        double rotation = rotationInputGamepad.getSensitiveAxis(rotationInputAxis) * rotationMultiplier;
+
+        if (speedDelta > speedDeltaLimit)
+            speedDelta = speedDeltaLimit;
+        else if (speedDelta < -speedDeltaLimit)
+            speedDelta = -speedDeltaLimit;
+        limitedSpeed += speedDelta;
+
+        double leftMotorOutput, rightMotorOutput;
 
         if (speed > 0.0) {
             if (rotation > 0.0) {
