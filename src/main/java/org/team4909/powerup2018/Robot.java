@@ -2,9 +2,12 @@ package org.team4909.powerup2018;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import edu.wpi.first.wpilibj.command.Command;
 import org.team4909.bionicframework.hardware.core.Arduino;
 import org.team4909.bionicframework.hardware.core.RoboRio;
+import org.team4909.bionicframework.hardware.sensors.distance.LIDAR;
 import org.team4909.bionicframework.hardware.sensors.gyro.BionicNavX;
 import org.team4909.bionicframework.hardware.motor.BionicSRX;
 import org.team4909.bionicframework.hardware.motor.BionicSpark;
@@ -24,6 +27,11 @@ public class Robot extends RoboRio {
     private static ElevatorSubsystem elevator;
     private static MotorSubsystem winch;
     private static MotorSubsystem hookDeploy;
+    public boolean ElevatorLimitSwitch;
+    public boolean ElevatorEncoderOverride;
+    public boolean IntakeLidarOverride;
+    public boolean DrivetrainOverride;
+    public boolean CubeIn;
 
     /* OI Initialization */
     private static BionicF310 driverGamepad;
@@ -118,8 +126,70 @@ public class Robot extends RoboRio {
     }
 
     @Override
+    public void robotPeriodic() {
+        SmartDashboard.getBoolean("High Gear", drivetrain.getGear());
+        if (LIDAR.getDistance() > 1){
+            CubeIn = true;
+        } else {
+            CubeIn = false;
+        }
+        SmartDashboard.getBoolean("Cube In", CubeIn);
+        ElevatorEncoderOverride = SmartDashboard.putBoolean("Elevator Encoder Override", false);
+        ElevatorLimitSwitch = SmartDashboard.putBoolean("Elevator Limit Switch Override", false);
+        IntakeLidarOverride = SmartDashboard.putBoolean("LIDAR Override", false);
+        DrivetrainOverride = SmartDashboard.putBoolean("Drivetrain Override", false);
+        if (ElevatorEncoderOverride == true) {
+            elevator = new ElevatorSubsystem(
+                    new BionicSRX(
+                            3, true,
+                            FeedbackDevice.None, false,
+                            1.0, 0, 0
+                    ),
+                    manipulatorGamepad, BionicF310.LY, -1,
+                    35250, 0
+            );
+        }
+
+       /* if (ElevatorLimitSwitch == true) {
+            Does not exist yet
+        }
+
+        if (IntakeLidarOverride == true) {
+            Does not exist yet
+        }*/
+
+        if (DrivetrainOverride == true) {
+            drivetrain = new BionicDrive(
+                    new BionicSRX(
+                            2,true,
+                            FeedbackDevice.None, true,
+                            0.6,0,0,
+                            1
+                    ),
+                    new BionicSRX(
+                            4,false,
+                            FeedbackDevice.None, true,
+                            0.6,0,0,
+                            4
+                    ),
+                    driverGamepad, BionicF310.LY, 1.0,
+                    driverGamepad, BionicF310.RX, 1.0,
+                    new DrivetrainConfig(
+                            10, 0.5,120,
+                            10,0,0,
+                            0,0
+                    ),
+                    new BionicNavX(),
+                    new BionicSingleSolenoid(0)
+            );
+        }
+    }
+
+    @Override
     protected void robotEnabled() {
-        elevator.holdCurrentPosition();
+        if (ElevatorEncoderOverride == false) {
+            elevator.holdCurrentPosition();
+        }
     }
 
     @Override

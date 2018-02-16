@@ -1,6 +1,7 @@
 package org.team4909.bionicframework.hardware.pneumatics;
 
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.team4909.bionicframework.hardware.pneumatics.commandables.SingleSolenoidInvertCommandable;
 import org.team4909.bionicframework.interfaces.Commandable;
 

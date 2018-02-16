@@ -3,6 +3,7 @@ package org.team4909.bionicframework.subsystems.drive;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import jaci.pathfinder.Pathfinder;
 import org.team4909.bionicframework.hardware.motor.BionicSRX;
@@ -41,7 +42,6 @@ public class BionicDrive extends Subsystem {
      * @param speedInputAxis       Speed Input Axis
      * @param rotationInputGamepad Rotation Input Gamepad/Joystick
      * @param rotationInputAxis    Rotation Input Axis
-     * @param encoder              Encoder plugged into SRXs
      * @param bionicGyro           Gyro to Use for Closed-Loop
      */
     public BionicDrive(BionicSRX leftSRX, BionicSRX rightSRX,
@@ -80,6 +80,10 @@ public class BionicDrive extends Subsystem {
 
     public Commandable invertDirection() {
         return new InvertDriveDirection(this);
+    }
+
+    public boolean getGear(){
+        return shifter.get();
     }
 
     public Commandable changeGear() {
