@@ -155,7 +155,13 @@ public class BionicSRX extends WPI_TalonSRX {
             this.pushMotionProfileTrajectory(points[i]);
         }
 
-        processMotionProfileBuffer.startPeriodic((double) profileIntervalMs / 1000);
+        // Buffer Minimum Points At First
+        while(!isBottomLevelBufferReady()){
+            super.processMotionProfileBuffer();
+        }
+
+        // Lag behind for later points
+        processMotionProfileBuffer.startPeriodic((double) profileIntervalMs / 2000);
     }
 
     public void runMotionProfile() {
