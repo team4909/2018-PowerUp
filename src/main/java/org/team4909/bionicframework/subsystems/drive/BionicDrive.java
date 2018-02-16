@@ -62,9 +62,6 @@ public class BionicDrive extends Subsystem {
         this.leftSRX = leftSRX;
         this.rightSRX = rightSRX;
 
-        this.leftSRX.config_kF(1023 / drivetrainConfig.getMaxVelocity());
-        this.rightSRX.config_kF(1023 / drivetrainConfig.getMaxVelocity());
-
         this.speedDeltaLimit = speedDeltaLimit;
         this.rotationDeltaLimit = rotationDeltaLimit;
 

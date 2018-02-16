@@ -13,7 +13,7 @@ public class CubePlaceAuto extends CommandGroup {
                          Command elevateCommand,
                          GameFeature side, BionicDrive drivetrain,
                          Waypoint[] leftPath, Waypoint[] rightPath){
-        addParallel(intakeCommand);
+//        addParallel(intakeCommand);
         addParallel(elevateCommand);
         addSequential(new GameFeatureSide(
                 side,

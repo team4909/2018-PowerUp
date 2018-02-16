@@ -44,7 +44,8 @@ public class DriveTrajectory extends Command {
 
     @Override
     protected boolean isFinished() {
-        return leftSRX.isMotionProfileFinished() && rightSRX.isMotionProfileFinished();
+        return leftSRX.isMotionProfileFinished() && leftSRX.getClosedLoopError(0) < 20
+                && rightSRX.isMotionProfileFinished() && rightSRX.getClosedLoopError(0) < 20;
     }
 
     @Override
