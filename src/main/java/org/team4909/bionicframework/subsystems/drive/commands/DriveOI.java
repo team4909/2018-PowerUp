@@ -17,7 +17,7 @@ public class DriveOI extends Command {
     private final BionicF310 speedInputGamepad, rotationInputGamepad;
     private final BionicAxis speedInputAxis, rotationInputAxis;
     public double speedMultiplier, rotationMultiplier;
-    private double limitedSpeed;
+    private double limitedSpeed, limitedRotation;
 
     private final DrivetrainConfig drivetrainConfig;
 
@@ -43,19 +43,26 @@ public class DriveOI extends Command {
 
     @Override
     protected void execute() {
+        // Calculate Change Limited Speed Value
         double maxVelocity = drivetrainConfig.getMaxVelocity(),
                 speed = speedInputGamepad.getSensitiveAxis(speedInputAxis) * speedMultiplier,
                 speedDelta = speed - limitedSpeed,
                 speedDeltaLimit = bionicDrive.speedDeltaLimit;
 
-        double rotation = rotationInputGamepad.getSensitiveAxis(rotationInputAxis) * rotationMultiplier;
-
-        if (speedDelta > speedDeltaLimit)
-            speedDelta = speedDeltaLimit;
-        else if (speedDelta < -speedDeltaLimit)
-            speedDelta = -speedDeltaLimit;
+        if (Math.abs(speedDelta) > speedDeltaLimit)
+            speedDelta = Math.copySign(speedDeltaLimit, speedDelta);
         limitedSpeed += speedDelta;
 
+        // Calculate Change Limited Rotation Value
+        double rotation = rotationInputGamepad.getSensitiveAxis(rotationInputAxis) * rotationMultiplier,
+                rotationDelta = rotation - limitedRotation,
+                rotationDeltaLimit = bionicDrive.rotationDeltaLimit;
+
+        if (Math.abs(rotationDelta) > rotationDeltaLimit)
+            rotationDelta = Math.copySign(rotationDeltaLimit, rotationDelta);
+        limitedRotation += rotationDelta;
+
+        // Calculate Left/Right Percentage Output Values
         double leftMotorOutput, rightMotorOutput;
 
         if (speed > 0.0) {
@@ -76,9 +83,11 @@ public class DriveOI extends Command {
             }
         }
 
+        // Limit Left/Right Percentage Output to -100% to 100%
         leftMotorOutput = limit(leftMotorOutput);
         rightMotorOutput = limit(rightMotorOutput);
 
+        // Set Output to Motors
         if(!bionicDrive.encoderOverride) {
             leftSRX.set(ControlMode.Velocity, maxVelocity * leftMotorOutput);
             rightSRX.set(ControlMode.Velocity, maxVelocity * rightMotorOutput);

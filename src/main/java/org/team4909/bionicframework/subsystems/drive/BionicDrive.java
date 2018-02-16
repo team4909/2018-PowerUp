@@ -35,7 +35,7 @@ public class BionicDrive extends Subsystem {
     /* Sensors */
     private final Gyro bionicGyro;
     public final DrivetrainProfileUtil pathgen;
-    public final double speedDeltaLimit;
+    public final double speedDeltaLimit, rotationDeltaLimit;
 
     /**
      * @param leftSRX              Left Drivetrain SRX
@@ -48,7 +48,7 @@ public class BionicDrive extends Subsystem {
      */
     public BionicDrive(BionicSRX leftSRX, BionicSRX rightSRX,
                        BionicF310 speedInputGamepad, BionicAxis speedInputAxis, double speedMultiplier, double speedDeltaLimit,
-                       BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis, double rotationMultiplier,
+                       BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis, double rotationMultiplier, double rotationDeltaLimit,
                        DrivetrainConfig drivetrainConfig,
                        Gyro bionicGyro, BionicSingleSolenoid shifter) {
         super();
@@ -59,6 +59,7 @@ public class BionicDrive extends Subsystem {
         this.rightSRX.config_kF(1023 / drivetrainConfig.getMaxVelocity());
 
         this.speedDeltaLimit = speedDeltaLimit;
+        this.rotationDeltaLimit = rotationDeltaLimit;
 
         this.bionicGyro = bionicGyro;
         this.pathgen = new DrivetrainProfileUtil(drivetrainConfig);
