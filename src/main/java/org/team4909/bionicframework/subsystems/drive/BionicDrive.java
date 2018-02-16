@@ -3,7 +3,6 @@ package org.team4909.bionicframework.subsystems.drive;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import jaci.pathfinder.Pathfinder;
 import org.team4909.bionicframework.hardware.motor.BionicSRX;
@@ -30,6 +29,8 @@ public class BionicDrive extends Subsystem {
     private final BionicSingleSolenoid shifter;
 
     public final DriveOI defaultCommand;
+
+    public boolean encoderOverride;
 
     /* Sensors */
     private final Gyro bionicGyro;

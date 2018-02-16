@@ -27,6 +27,10 @@ public class DriveTrajectory extends Command {
 
     @Override
     protected void initialize() {
+        if (bionicDrive.encoderOverride){
+            cancel();
+        }
+
         leftSRX.initMotionProfile(trajectory.profileInterval, trajectory.left);
         rightSRX.initMotionProfile(trajectory.profileInterval, trajectory.right);
     }

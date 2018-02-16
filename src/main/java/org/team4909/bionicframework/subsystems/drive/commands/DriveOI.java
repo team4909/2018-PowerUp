@@ -11,6 +11,7 @@ import org.team4909.bionicframework.subsystems.drive.BionicDrive;
 import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainConfig;
 
 public class DriveOI extends Command {
+    private final BionicDrive bionicDrive;
     private final BionicSRX leftSRX;
     private final BionicSRX rightSRX;
 
@@ -24,11 +25,13 @@ public class DriveOI extends Command {
 
     private final DrivetrainConfig drivetrainConfig;
 
-    public DriveOI(BionicDrive subsystem, BionicSRX leftSRX, BionicSRX rightSRX,
+    public DriveOI(BionicDrive bionicDrive, BionicSRX leftSRX, BionicSRX rightSRX,
                    BionicF310 speedInputGamepad, BionicAxis speedInputAxis, double speedMultiplier,
                    BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis, double rotationMultiplier) {
-        requires(subsystem);
-        this.drivetrainConfig = subsystem.pathgen.drivetrainConfig;
+        requires(bionicDrive);
+        this.bionicDrive = bionicDrive;
+
+        this.drivetrainConfig = bionicDrive.pathgen.drivetrainConfig;
 
         this.leftSRX = leftSRX;
         this.rightSRX = rightSRX;
@@ -72,9 +75,13 @@ public class DriveOI extends Command {
         leftMotorOutput = limit(leftMotorOutput);
         rightMotorOutput = limit(rightMotorOutput);
 
-        
-        leftSRX.set(ControlMode.Velocity, maxVelocity * leftMotorOutput);
-        rightSRX.set(ControlMode.Velocity, maxVelocity * rightMotorOutput);
+        if(!bionicDrive.encoderOverride) {
+            leftSRX.set(ControlMode.Velocity, maxVelocity * leftMotorOutput);
+            rightSRX.set(ControlMode.Velocity, maxVelocity * rightMotorOutput);
+        } else {
+            leftSRX.set(ControlMode.PercentOutput,  leftMotorOutput);
+            rightSRX.set(ControlMode.PercentOutput, rightMotorOutput);
+        }
     }
 
     private double limit(double value) {

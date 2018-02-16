@@ -14,6 +14,7 @@ public class ElevatorSubsystem extends Subsystem {
     private final BionicAxis axis;
 
     public double holdingPosition;
+    public boolean encoderOverride;
     private final double oiMultiplier;
 
     public ElevatorSubsystem(BionicSRX bionicSRX,
@@ -33,7 +34,7 @@ public class ElevatorSubsystem extends Subsystem {
     public void periodic() {
         double moveSpeed = joystick.getSensitiveAxis(axis) * oiMultiplier;
 
-        if(moveSpeed == 0) {
+        if(moveSpeed == 0 && !encoderOverride) {
             bionicSRX.set(ControlMode.Position, holdingPosition);
         } else {
             bionicSRX.set(ControlMode.PercentOutput, moveSpeed);
