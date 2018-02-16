@@ -183,6 +183,7 @@ public class Robot extends RoboRio {
     @Override
     protected void dashboardPeriodic() {
         drivetrain.profiling = SmartDashboard.getBoolean("Drivetrain Profiling", false);
+        SmartDashboard.putBoolean("Drivetrain Profiling", drivetrain.profiling);
     }
 
     @Override
