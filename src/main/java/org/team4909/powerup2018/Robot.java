@@ -124,7 +124,7 @@ public class Robot extends RoboRio {
     }
 
     @Override
-    public void robotPeriodic() {
+    public void dashboardPeriodic() {
         SmartDashboard.putBoolean("Has Cube Possession?", intake.hasPossession());
     }
 
