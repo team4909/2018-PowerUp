@@ -223,6 +223,7 @@ public class BionicSRX extends WPI_TalonSRX {
 
     public void enableZeroOnRevLimit() {
         configSetParameter(ParamEnum.eClearPositionOnLimitR, 1, 0, 0, timeoutMs);
+
     }
 
     public double getSelectedSensorPosition() {

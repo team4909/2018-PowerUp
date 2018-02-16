@@ -13,7 +13,7 @@ public class ElevatorSubsystem extends Subsystem {
     private final BionicJoystick joystick;
     private final BionicAxis axis;
 
-    public double holdingPosition;
+    public int holdingPosition;
     public boolean encoderOverride;
     private final double oiMultiplier;
 
@@ -27,11 +27,16 @@ public class ElevatorSubsystem extends Subsystem {
         this.oiMultiplier = oiMultiplier;
 
         bionicSRX.enableFwdSoftLimit(forwardLimit);
-        bionicSRX.enableZeroOnRevLimit();
     }
 
     @Override
     public void periodic() {
+        if(bionicSRX.getSensorCollection().isRevLimitSwitchClosed()){
+            holdingPosition = 0;
+
+            bionicSRX.setSelectedSensorPosition(holdingPosition,0,0);
+        }
+
         double moveSpeed = joystick.getSensitiveAxis(axis) * oiMultiplier;
 
         if(moveSpeed == 0 && !encoderOverride) {
@@ -43,11 +48,11 @@ public class ElevatorSubsystem extends Subsystem {
         }
     }
 
-    public double getCurrentPosition(){
-        return bionicSRX.getSelectedSensorPosition();
+    public int getCurrentPosition(){
+        return (int) bionicSRX.getSelectedSensorPosition();
     }
 
-    public Commandable holdPosition(double position){
+    public Commandable holdPosition(int position){
         return new SetElevatorPosition(position,this);
     }
 
