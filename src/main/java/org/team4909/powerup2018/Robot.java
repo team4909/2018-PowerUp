@@ -121,7 +121,7 @@ public class Robot extends RoboRio {
     }
 
     @Override
-    public void robotPeriodic() {
+    public void dashboardPeriodic() {
         drivetrain.encoderOverride = SmartDashboard.getBoolean("Drivetrain Encoder Override", false);
         SmartDashboard.putBoolean("Is High Gear?", drivetrain.getGear());
 
