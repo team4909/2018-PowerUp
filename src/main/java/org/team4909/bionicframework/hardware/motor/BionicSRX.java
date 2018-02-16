@@ -105,7 +105,6 @@ public class BionicSRX extends WPI_TalonSRX {
 
     /* Motion Profiling */
     private final int minBufferPoints = 20;
-    private final double bufferInterval = 0.005;
 
     private final Notifier processMotionProfileBuffer = new Notifier(this::processMotionProfileBuffer);
 
@@ -154,7 +153,7 @@ public class BionicSRX extends WPI_TalonSRX {
             this.pushMotionProfileTrajectory(points[i]);
         }
 
-        processMotionProfileBuffer.startPeriodic(bufferInterval);
+        processMotionProfileBuffer.startPeriodic((double) profileIntervalMs / 1000);
     }
 
     public void runMotionProfile() {
