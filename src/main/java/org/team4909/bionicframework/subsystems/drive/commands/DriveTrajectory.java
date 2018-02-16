@@ -11,8 +11,7 @@ public class DriveTrajectory extends Command {
     private final DrivetrainTrajectory trajectory;
 
     private final BionicDrive bionicDrive;
-    private final BionicSRX leftSRX;
-    private final BionicSRX rightSRX;
+    private final BionicSRX leftSRX, rightSRX;
 
     public DriveTrajectory(BionicDrive bionicDrive, BionicSRX leftSRX, BionicSRX rightSRX, DrivetrainTrajectory trajectory) {
         requires(bionicDrive);
@@ -27,6 +26,10 @@ public class DriveTrajectory extends Command {
 
     @Override
     protected void initialize() {
+        if (bionicDrive.encoderOverride){
+            cancel();
+        }
+
         leftSRX.initMotionProfile(trajectory.profileIntervalMs / 2, trajectory.left);
         rightSRX.initMotionProfile(trajectory.profileIntervalMs / 2, trajectory.right);
 

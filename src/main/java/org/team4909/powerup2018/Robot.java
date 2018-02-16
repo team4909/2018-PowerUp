@@ -2,6 +2,8 @@ package org.team4909.powerup2018;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -56,8 +58,8 @@ public class Robot extends RoboRio {
                         1.3,0,4,
                         4
                 ),
-                driverGamepad, BionicF310.LY, -1.0,
-                driverGamepad, BionicF310.RX, -1.0,
+                driverGamepad, BionicF310.LY, -1.0, 1.0,
+                driverGamepad, BionicF310.RX, -1.0, 1.0,
                 new DrivetrainConfig(
                         50, 0.5,120,
                         5.759,11.126,117.809,
@@ -95,7 +97,7 @@ public class Robot extends RoboRio {
                         1.0,0,0
                 ),
                 manipulatorGamepad, BionicF310.LY,-1,
-                35250, 0
+                35250
         );
 
         autoChooser = new SendableChooser();
@@ -183,6 +185,16 @@ public class Robot extends RoboRio {
     protected void dashboardPeriodic() {
         drivetrain.profiling = SmartDashboard.getBoolean("Drivetrain Profiling", false);
         SmartDashboard.putBoolean("Drivetrain Profiling", drivetrain.profiling);
+
+        drivetrain.encoderOverride = SmartDashboard.getBoolean("Drivetrain Encoder Override", false);
+        SmartDashboard.putBoolean("Drivetrain Encoder Override", drivetrain.encoderOverride);
+
+        SmartDashboard.putBoolean("Is High Gear?", drivetrain.getGear());
+
+//        drivetrain.speedDeltaLimit = elevator.getCurrentPosition() * .10;
+
+        elevator.encoderOverride = SmartDashboard.getBoolean("Elevator Encoder Override", false);
+        SmartDashboard.putBoolean("Elevator Encoder Override", elevator.encoderOverride);
     }
 
     @Override

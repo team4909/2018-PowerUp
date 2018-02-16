@@ -30,17 +30,17 @@ public class BionicDrive extends Subsystem {
 
     public final DriveOI defaultCommand;
 
+    public boolean encoderOverride;
+
     /* Sensors */
     private final Gyro bionicGyro;
     public final DrivetrainProfileUtil pathgen;
-    public final double t;
 
-    private double maxVelocity = 0; //maximum cumulative velocity
-    private double maxAcceleration = 0;// maximum cumulative acceleration
-    private double maxJerk = 0; // maximum cumulative jerk
+    public double speedDeltaLimit, rotationDeltaLimit;
 
-    private double lastVelocity = 0; // velocity at last calculation interval
-    private double lastAcceleration = 0; // acceleration at last calculation interval
+    private final double t;
+    private double currentMaxVelocity, currentMaxAcceleration, currentMaxJerk = 0;
+    private double lastVelocity, lastAcceleration = 0;
     public boolean profiling;
 
     /**
@@ -50,12 +50,11 @@ public class BionicDrive extends Subsystem {
      * @param speedInputAxis       Speed Input Axis
      * @param rotationInputGamepad Rotation Input Gamepad/Joystick
      * @param rotationInputAxis    Rotation Input Axis
-     * @param encoder              Encoder plugged into SRXs
      * @param bionicGyro           Gyro to Use for Closed-Loop
      */
     public BionicDrive(BionicSRX leftSRX, BionicSRX rightSRX,
-                       BionicF310 speedInputGamepad, BionicAxis speedInputAxis, double speedMultiplier,
-                       BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis, double rotationMultiplier,
+                       BionicF310 speedInputGamepad, BionicAxis speedInputAxis, double speedMultiplier, double speedDeltaLimit,
+                       BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis, double rotationMultiplier, double rotationDeltaLimit,
                        DrivetrainConfig drivetrainConfig,
                        Gyro bionicGyro, BionicSingleSolenoid shifter) {
         super();
@@ -66,6 +65,9 @@ public class BionicDrive extends Subsystem {
         this.leftSRX.config_kF(1023 / drivetrainConfig.getMaxVelocity());
         this.rightSRX.config_kF(1023 / drivetrainConfig.getMaxVelocity());
 
+        this.speedDeltaLimit = speedDeltaLimit;
+        this.rotationDeltaLimit = rotationDeltaLimit;
+
         this.bionicGyro = bionicGyro;
         this.pathgen = new DrivetrainProfileUtil(drivetrainConfig);
         this.t = pathgen.drivetrainConfig.getProfileIntervalS();
@@ -75,8 +77,6 @@ public class BionicDrive extends Subsystem {
         this.defaultCommand = new DriveOI(this, leftSRX, rightSRX,
                 speedInputGamepad, speedInputAxis, speedMultiplier,
                 rotationInputGamepad, rotationInputAxis, rotationMultiplier);
-
-        this.profiling = profiling;
     }
 
     @Override
@@ -85,30 +85,31 @@ public class BionicDrive extends Subsystem {
         double currentAcceleration = (currentVelocity - lastVelocity) / t;
         double currentJerk = (currentAcceleration - lastAcceleration) / t;
 
-        if (currentVelocity > maxVelocity) {
-            maxVelocity = currentVelocity;
+        if (currentVelocity > currentMaxVelocity) {
+            currentMaxVelocity = currentVelocity;
         }
 
-        if (currentAcceleration > maxAcceleration) {
-            maxAcceleration = currentAcceleration;
+        if (currentAcceleration > currentMaxAcceleration) {
+            currentMaxAcceleration = currentAcceleration;
         }
 
-        if (currentJerk > maxJerk) {
-            maxJerk = currentJerk;
+        if (currentJerk > currentMaxJerk) {
+            currentMaxJerk = currentJerk;
         }
 
         lastVelocity = currentVelocity;
         lastAcceleration = currentAcceleration;
 
         if(profiling){
-            System.out.println("V (ft/s): " + maxVelocity + " A (ft/s^2):" + maxAcceleration + " J (ft/sec^3):" + maxJerk );
+            System.out.println("V (ft/s): " + currentMaxVelocity + " A (ft/s^2):" + currentMaxAcceleration + " J (ft/sec^3):" + currentMaxJerk);
         }
     }
 
     public void resetProfiling(){
-         maxVelocity = 0;
-         maxAcceleration = 0;
-         maxJerk = 0;
+         currentMaxVelocity = 0;
+         currentMaxAcceleration = 0;
+         currentMaxJerk = 0;
+      
          lastVelocity = 0;
          lastAcceleration = 0;
 
@@ -146,6 +147,10 @@ public class BionicDrive extends Subsystem {
 
     public Commandable invertDirection() {
         return new InvertDriveDirection(this);
+    }
+
+    public boolean getGear(){
+        return shifter.get();
     }
 
     public Commandable changeGear() {
