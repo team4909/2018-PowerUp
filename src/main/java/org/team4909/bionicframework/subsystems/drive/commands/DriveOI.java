@@ -64,21 +64,21 @@ public class DriveOI extends Command {
         // Calculate Left/Right Percentage Output Values
         double leftMotorOutput, rightMotorOutput;
 
-        if (speed > 0.0) {
-            if (rotation > 0.0) {
-                leftMotorOutput = speed - rotation;
-                rightMotorOutput = Math.max(speed, rotation);
+        if (limitedSpeed > 0.0) {
+            if (limitedRotation > 0.0) {
+                leftMotorOutput = limitedSpeed - limitedRotation;
+                rightMotorOutput = Math.max(limitedSpeed, limitedRotation);
             } else {
-                leftMotorOutput = Math.max(speed, -rotation);
-                rightMotorOutput = speed + rotation;
+                leftMotorOutput = Math.max(limitedSpeed, -limitedRotation);
+                rightMotorOutput = limitedSpeed + limitedRotation;
             }
         } else {
-            if (rotation > 0.0) {
-                leftMotorOutput = -Math.max(-speed, rotation);
-                rightMotorOutput = speed + rotation;
+            if (limitedRotation > 0.0) {
+                leftMotorOutput = -Math.max(-limitedSpeed, limitedRotation);
+                rightMotorOutput = limitedSpeed + limitedRotation;
             } else {
-                leftMotorOutput = speed - rotation;
-                rightMotorOutput = -Math.max(-speed, -rotation);
+                leftMotorOutput = limitedSpeed - limitedRotation;
+                rightMotorOutput = -Math.max(-limitedSpeed, -limitedRotation);
             }
         }
 
