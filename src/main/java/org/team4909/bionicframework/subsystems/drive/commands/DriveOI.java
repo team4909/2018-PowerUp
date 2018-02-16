@@ -87,13 +87,13 @@ public class DriveOI extends Command {
         rightMotorOutput = limit(rightMotorOutput);
 
         // Set Output to Motors
-        if(!bionicDrive.encoderOverride) {
-            leftSRX.set(ControlMode.Velocity, maxVelocity * leftMotorOutput);
-            rightSRX.set(ControlMode.Velocity, maxVelocity * rightMotorOutput);
-        } else {
+//        if(!bionicDrive.encoderOverride) {
+//            leftSRX.set(ControlMode.Velocity, maxVelocity * leftMotorOutput);
+//            rightSRX.set(ControlMode.Velocity, maxVelocity * rightMotorOutput);
+//        } else {
             leftSRX.set(ControlMode.PercentOutput,  leftMotorOutput);
             rightSRX.set(ControlMode.PercentOutput, rightMotorOutput);
-        }
+//        }
     }
 
 
