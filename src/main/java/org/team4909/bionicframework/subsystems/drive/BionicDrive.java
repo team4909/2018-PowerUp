@@ -41,7 +41,7 @@ public class BionicDrive extends Subsystem {
 
     private double lastVelocity = 0; // velocity at last calculation interval
     private double lastAcceleration = 0; // acceleration at last calculation interval
-    private final boolean profiling;
+    public boolean profiling;
 
     /**
      * @param leftSRX              Left Drivetrain SRX
@@ -57,8 +57,7 @@ public class BionicDrive extends Subsystem {
                        BionicF310 speedInputGamepad, BionicAxis speedInputAxis, double speedMultiplier,
                        BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis, double rotationMultiplier,
                        DrivetrainConfig drivetrainConfig,
-                       Gyro bionicGyro, BionicSingleSolenoid shifter,
-                       boolean profiling) {
+                       Gyro bionicGyro, BionicSingleSolenoid shifter) {
         super();
 
         this.leftSRX = leftSRX;

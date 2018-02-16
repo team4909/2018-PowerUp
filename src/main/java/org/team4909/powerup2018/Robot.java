@@ -64,8 +64,7 @@ public class Robot extends RoboRio {
                         10,2.599
                 ),
                 new BionicNavX(),
-                new BionicSingleSolenoid(0),
-                false
+                new BionicSingleSolenoid(0)
         );
         driverGamepad.buttonPressed(BionicF310.LT, 0.1, drivetrain.invertDirection());
         driverGamepad.buttonPressed(BionicF310.RT, 0.1, drivetrain.changeGear());
@@ -179,6 +178,11 @@ public class Robot extends RoboRio {
         if (autoCommand != null) {
             autoCommand.cancel();
         }
+    }
+
+    @Override
+    protected void dashboardPeriodic() {
+        drivetrain.profiling = SmartDashboard.getBoolean("Drivetrain Profiling", false);
     }
 
     @Override
