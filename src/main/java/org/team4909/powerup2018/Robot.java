@@ -123,11 +123,14 @@ public class Robot extends RoboRio {
     @Override
     public void dashboardPeriodic() {
         drivetrain.encoderOverride = SmartDashboard.getBoolean("Drivetrain Encoder Override", false);
+        SmartDashboard.putBoolean("Drivetrain Encoder Override", drivetrain.encoderOverride);
+
         SmartDashboard.putBoolean("Is High Gear?", drivetrain.getGear());
 
 //        drivetrain.speedDeltaLimit = elevator.getCurrentPosition() * .10;
 
         elevator.encoderOverride = SmartDashboard.getBoolean("Elevator Encoder Override", false);
+        SmartDashboard.putBoolean("Elevator Encoder Override", elevator.encoderOverride);
     }
 
     @Override
