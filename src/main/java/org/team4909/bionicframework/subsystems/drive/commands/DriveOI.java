@@ -10,6 +10,9 @@ import org.team4909.bionicframework.operator.generic.BionicAxis;
 import org.team4909.bionicframework.subsystems.drive.BionicDrive;
 import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainConfig;
 
+import javax.swing.plaf.basic.BasicSplitPaneUI;
+import javax.swing.plaf.synth.SynthScrollBarUI;
+
 public class DriveOI extends Command {
     private final BionicDrive bionicDrive;
     private final BionicSRX leftSRX, rightSRX;
@@ -27,7 +30,6 @@ public class DriveOI extends Command {
         requires(bionicDrive);
         this.bionicDrive = bionicDrive;
         this.drivetrainConfig = bionicDrive.pathgen.drivetrainConfig;
-
 
         this.leftSRX = leftSRX;
         this.rightSRX = rightSRX;
