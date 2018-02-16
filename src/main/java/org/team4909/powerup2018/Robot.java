@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.team4909.bionicframework.hardware.core.Arduino;
 import org.team4909.bionicframework.hardware.core.RoboRio;
 import org.team4909.bionicframework.hardware.sensors.distance.LIDAR;
@@ -120,6 +121,11 @@ public class Robot extends RoboRio {
         if (autoCommand != null) {
             autoCommand.cancel();
         }
+    }
+
+    @Override
+    public void robotPeriodic() {
+        SmartDashboard.putBoolean("Has Cube Possession?", intake.hasPossession());
     }
 
     @Override
