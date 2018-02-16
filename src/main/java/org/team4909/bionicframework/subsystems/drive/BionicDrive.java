@@ -36,7 +36,7 @@ public class BionicDrive extends Subsystem {
     private final Gyro bionicGyro;
     public final DrivetrainProfileUtil pathgen;
 
-    public final double speedDeltaLimit, rotationDeltaLimit;
+    public double speedDeltaLimit, rotationDeltaLimit;
 
     private final double t;
     private double currentMaxVelocity, currentMaxAcceleration, currentMaxJerk = 0;

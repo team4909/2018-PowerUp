@@ -92,7 +92,7 @@ public class Robot extends RoboRio {
                         1.0,0,0
                 ),
                 manipulatorGamepad, BionicF310.LY,-1,
-                35250, 0
+                35250
         );
         driverGamepad.buttonPressed(BionicF310.X, elevator.holdPosition(15000));
     }
@@ -124,6 +124,8 @@ public class Robot extends RoboRio {
     public void robotPeriodic() {
         drivetrain.encoderOverride = SmartDashboard.getBoolean("Drivetrain Encoder Override", false);
         SmartDashboard.putBoolean("Is High Gear?", drivetrain.getGear());
+
+        drivetrain.speedDeltaLimit = elevator.getCurrentPosition() * .10;
 
         elevator.encoderOverride = SmartDashboard.getBoolean("Elevator Encoder Override", false);
     }

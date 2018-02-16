@@ -19,14 +19,14 @@ public class ElevatorSubsystem extends Subsystem {
 
     public ElevatorSubsystem(BionicSRX bionicSRX,
                              BionicJoystick joystick, BionicAxis axis, double oiMultiplier,
-                             int forwardLimit, int reverseLimit){
+                             int forwardLimit){
         this.bionicSRX = bionicSRX;
         this.joystick = joystick;
         this.axis = axis;
 
         this.oiMultiplier = oiMultiplier;
 
-        bionicSRX.enableSoftLimits(forwardLimit, reverseLimit);
+        bionicSRX.enableFwdSoftLimit(forwardLimit);
         bionicSRX.enableZeroOnRevLimit();
     }
 
@@ -43,12 +43,16 @@ public class ElevatorSubsystem extends Subsystem {
         }
     }
 
+    public double getCurrentPosition(){
+        return bionicSRX.getSelectedSensorPosition();
+    }
+
     public Commandable holdPosition(double position){
         return new SetElevatorPosition(position,this);
     }
 
     public void holdCurrentPosition(){
-        holdingPosition = bionicSRX.getSelectedSensorPosition();
+        holdingPosition = getCurrentPosition();
     }
 
     @Override
