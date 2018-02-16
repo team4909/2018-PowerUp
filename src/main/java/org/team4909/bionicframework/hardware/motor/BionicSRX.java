@@ -1,6 +1,7 @@
 package org.team4909.bionicframework.hardware.motor;
 
 import com.ctre.phoenix.ErrorCode;
+import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motion.MotionProfileStatus;
 import com.ctre.phoenix.motion.SetValueMotionProfile;
 import com.ctre.phoenix.motion.TrajectoryPoint;
@@ -32,7 +33,7 @@ public class BionicSRX extends WPI_TalonSRX {
                      int... slaveNumbers){
         super(deviceNumber);
 
-        configVoltageCompSaturation(11.5, timeoutMs);
+        configVoltageCompSaturation(12, timeoutMs);
         enableVoltageCompensation(true);
 
         setInverted(invertGearbox);
@@ -41,8 +42,12 @@ public class BionicSRX extends WPI_TalonSRX {
         for (int i = 0; i < slaveNumbers.length; i++) {
             WPI_VictorSPX follower = new WPI_VictorSPX(slaveNumbers[i]);
 
+            follower.configVoltageCompSaturation(12, timeoutMs);
+            follower.enableVoltageCompensation(true);
+
             follower.setInverted(invertGearbox);
             follower.setNeutralMode(NeutralMode.Brake);
+
             follower.follow(this);
         }
     }
@@ -195,5 +200,25 @@ public class BionicSRX extends WPI_TalonSRX {
 
     private boolean isBottomLevelBufferReady() {
         return isTopLevelBufferEmpty() || (this.getMotionProfileStatus()).btmBufferCnt >= minBufferPoints;
+    }
+
+    public void enableSoftLimits(int forwardLimit, int reverseLimit) {
+        configForwardSoftLimitEnable(true, timeoutMs);
+        configForwardSoftLimitThreshold(forwardLimit, timeoutMs);
+
+        configReverseSoftLimitEnable(true, timeoutMs);
+        configReverseSoftLimitThreshold(reverseLimit, timeoutMs);
+    }
+
+    public void enableZeroOnFwdLimit() {
+        configSetParameter(ParamEnum.eClearPositionOnLimitF, 1, 0, 0, timeoutMs);
+    }
+
+    public void enableZeroOnRevLimit() {
+        configSetParameter(ParamEnum.eClearPositionOnLimitR, 1, 0, 0, timeoutMs);
+    }
+
+    public double getSelectedSensorPosition() {
+        return getSelectedSensorPosition(0);
     }
 }

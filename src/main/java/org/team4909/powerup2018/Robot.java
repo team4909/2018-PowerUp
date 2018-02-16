@@ -37,8 +37,8 @@ public class Robot extends RoboRio {
 
     @Override
     public void robotInit() {
-        driverGamepad = new BionicF310(0, 0.15, 0.8);
-        manipulatorGamepad = new BionicF310(1, 0.15, 0.5);
+        driverGamepad = new BionicF310(0, 0.1, 0.8);
+        manipulatorGamepad = new BionicF310(1, 0.1, 0.5);
 
         drivetrain = new BionicDrive(
                 new BionicSRX(
@@ -56,25 +56,24 @@ public class Robot extends RoboRio {
                 driverGamepad, BionicF310.LY, 1.0,
                 driverGamepad, BionicF310.RX, 1.0,
                 new DrivetrainConfig(
-                        10, 0.5,120,
-                        10,0,0,
+                        50, 0.5,120,
+                        6.332,100,104.720,
                         0,0
                 ),
                 new BionicNavX(),
-                new BionicSingleSolenoid(0)
+                new BionicSingleSolenoid(0),
+                true
         );
-        //Flip Front/Back(driverGamepad(LT))
-        driverGamepad.buttonPressed(BionicF310.LT, 0.15, drivetrain.invertDirection());
-        driverGamepad.buttonPressed(BionicF310.RT, 0.15, drivetrain.changeGear());
+        driverGamepad.buttonPressed(BionicF310.LT, 0.1, drivetrain.invertDirection());
+        driverGamepad.buttonPressed(BionicF310.RT, 0.1, drivetrain.changeGear());
 
         intake = new IntakeSubsystem(
                 new LIDAR(I2C.Port.kMXP), 2,
                 new BionicSpark(0, true),
                 new BionicSpark(1, false)
         );
-
-        manipulatorGamepad.buttonHeld(BionicF310.LT, 0.15,intake.setPercentOutput(1.0));
-        manipulatorGamepad.buttonHeld(BionicF310.RT, 0.15,intake.setPercentOutput(-1.0));
+        manipulatorGamepad.buttonHeld(BionicF310.LT, 0.1,intake.setPercentOutput(1.0));
+        manipulatorGamepad.buttonHeld(BionicF310.RT, 0.1,intake.setPercentOutput(-1.0));
         manipulatorGamepad.buttonHeld(BionicF310.B, intake.setPercentOutput(-0.5));
 
         winch = new MotorSubsystem(
@@ -87,22 +86,22 @@ public class Robot extends RoboRio {
         hookDeploy = new MotorSubsystem(
                 new BionicSpark(4,false)
         );
-        // Climber Deploy(manipulatorGamepad(Y), semi-auto)
-        // Cancel Action (manipulatorGamepad(X))
 
         elevator = new ElevatorSubsystem(
                 new BionicSRX(
-                        3, false,
+                        3, true,
                         FeedbackDevice.CTRE_MagEncoder_Relative, false,
                         1.0,0,0
                 ),
-                manipulatorGamepad, BionicF310.LY
+                manipulatorGamepad, BionicF310.LY,-1,
+                35250, 0
         );
+        driverGamepad.buttonPressed(BionicF310.X, elevator.holdPosition(15000));
     }
 
     @Override
     public void teleopPeriodic() {
-        hookDeploy.set(manipulatorGamepad, BionicF310.LY, 0.5);
+        hookDeploy.set(manipulatorGamepad, BionicF310.RY, 0.5);
     }
 
     @Override
@@ -121,6 +120,11 @@ public class Robot extends RoboRio {
         if (autoCommand != null) {
             autoCommand.cancel();
         }
+    }
+
+    @Override
+    protected void robotEnabled() {
+        elevator.holdCurrentPosition();
     }
 
     @Override
