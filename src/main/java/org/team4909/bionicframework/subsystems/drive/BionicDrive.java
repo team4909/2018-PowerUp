@@ -35,7 +35,13 @@ public class BionicDrive extends Subsystem {
     /* Sensors */
     private final Gyro bionicGyro;
     public final DrivetrainProfileUtil pathgen;
+
     public final double speedDeltaLimit, rotationDeltaLimit;
+
+    private final double t;
+    private double currentMaxVelocity, currentMaxAcceleration, currentMaxJerk = 0;
+    private double lastVelocity, lastAcceleration = 0;
+    private final boolean profiling;
 
     /**
      * @param leftSRX              Left Drivetrain SRX
@@ -50,11 +56,13 @@ public class BionicDrive extends Subsystem {
                        BionicF310 speedInputGamepad, BionicAxis speedInputAxis, double speedMultiplier, double speedDeltaLimit,
                        BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis, double rotationMultiplier, double rotationDeltaLimit,
                        DrivetrainConfig drivetrainConfig,
-                       Gyro bionicGyro, BionicSingleSolenoid shifter) {
+                       Gyro bionicGyro, BionicSingleSolenoid shifter,
+                       boolean profiling) {
         super();
 
         this.leftSRX = leftSRX;
         this.rightSRX = rightSRX;
+
         this.leftSRX.config_kF(1023 / drivetrainConfig.getMaxVelocity());
         this.rightSRX.config_kF(1023 / drivetrainConfig.getMaxVelocity());
 
@@ -63,12 +71,64 @@ public class BionicDrive extends Subsystem {
 
         this.bionicGyro = bionicGyro;
         this.pathgen = new DrivetrainProfileUtil(drivetrainConfig);
+        this.t = pathgen.drivetrainConfig.getProfileIntervalS();
 
         this.shifter = shifter;
 
         this.defaultCommand = new DriveOI(this, leftSRX, rightSRX,
                 speedInputGamepad, speedInputAxis, speedMultiplier,
                 rotationInputGamepad, rotationInputAxis, rotationMultiplier);
+
+        this.profiling = profiling;
+    }
+
+    @Override
+    public void periodic() {
+        double currentVelocity = getVelocity();
+        double currentAcceleration = (currentVelocity - lastVelocity) / t;
+        double currentJerk = (currentAcceleration - lastAcceleration) / t;
+
+        if (currentVelocity > currentMaxVelocity) {
+            currentMaxVelocity = currentVelocity;
+        }
+
+        if (currentAcceleration > currentMaxAcceleration) {
+            currentMaxAcceleration = currentAcceleration;
+        }
+
+        if (currentJerk > currentMaxJerk) {
+            currentMaxJerk = currentJerk;
+        }
+
+        lastVelocity = currentVelocity;
+        lastAcceleration = currentAcceleration;
+
+        if(profiling){
+            System.out.println("V (ft/s): " + currentMaxVelocity + " A (ft/s^2):" + currentMaxAcceleration + " J (ft/sec^3):" + currentMaxJerk);
+        }
+    }
+
+    public void resetProfiling(){
+         currentMaxVelocity = 0;
+         currentMaxAcceleration = 0;
+         currentMaxJerk = 0;
+         lastVelocity = 0;
+         lastAcceleration = 0;
+    }
+
+    public double getVelocity(){
+        double currentLeftVelocity = getLeftVelocity();
+        double currentRightVelocity = getRightVelocity();
+
+        return (currentLeftVelocity + currentRightVelocity)/2;
+    }
+
+    public double getLeftVelocity(){
+        return (leftSRX.getSelectedSensorVelocity(0) * 10 * pathgen.drivetrainConfig.getTicksToFeet());
+    }
+
+    public double getRightVelocity(){
+        return (rightSRX.getSelectedSensorVelocity(0) * 10 * pathgen.drivetrainConfig.getTicksToFeet());
     }
 
     /**

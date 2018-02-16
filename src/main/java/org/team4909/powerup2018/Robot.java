@@ -36,8 +36,8 @@ public class Robot extends RoboRio {
 
     @Override
     public void robotInit() {
-        driverGamepad = new BionicF310(0, 0.15, 0.8);
-        manipulatorGamepad = new BionicF310(1, 0.15, 0.5);
+        driverGamepad = new BionicF310(0, 0.1, 0.8);
+        manipulatorGamepad = new BionicF310(1, 0.1, 0.5);
 
         drivetrain = new BionicDrive(
                 new BionicSRX(
@@ -53,24 +53,25 @@ public class Robot extends RoboRio {
                         4
                 ),
                 driverGamepad, BionicF310.LY, 1.0, 0.5,
-                driverGamepad, BionicF310.RX, 1.0,
+                driverGamepad, BionicF310.RX, 1.0, 1.0,
                 new DrivetrainConfig(
-                        10, 0.5,120,
-                        10,0,0,
+                        50, 0.5,120,
+                        6.332,100,104.720,
                         0,0
                 ),
                 new BionicNavX(),
-                new BionicSingleSolenoid(0)
+                new BionicSingleSolenoid(0),
+                true
         );
-        driverGamepad.buttonPressed(BionicF310.LT, 0.15, drivetrain.invertDirection());
-        driverGamepad.buttonPressed(BionicF310.RT, 0.15, drivetrain.changeGear());
+        driverGamepad.buttonPressed(BionicF310.LT, 0.1, drivetrain.invertDirection());
+        driverGamepad.buttonPressed(BionicF310.RT, 0.1, drivetrain.changeGear());
 
         intake = new MotorSubsystem(
                 new BionicSpark(0, true),
                 new BionicSpark(1, false)
         );
-        manipulatorGamepad.buttonHeld(BionicF310.LT, 0.15,intake.setPercentOutput(1.0));
-        manipulatorGamepad.buttonHeld(BionicF310.RT, 0.15,intake.setPercentOutput(-1.0));
+        manipulatorGamepad.buttonHeld(BionicF310.LT, 0.1,intake.setPercentOutput(1.0));
+        manipulatorGamepad.buttonHeld(BionicF310.RT, 0.1,intake.setPercentOutput(-1.0));
         manipulatorGamepad.buttonHeld(BionicF310.B, intake.setPercentOutput(-0.5));
 
         winch = new MotorSubsystem(

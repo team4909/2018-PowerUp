@@ -26,7 +26,6 @@ public class DriveOI extends Command {
                    BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis, double rotationMultiplier) {
         requires(bionicDrive);
         this.bionicDrive = bionicDrive;
-
         this.drivetrainConfig = bionicDrive.pathgen.drivetrainConfig;
 
         this.leftSRX = leftSRX;
@@ -96,6 +95,7 @@ public class DriveOI extends Command {
             rightSRX.set(ControlMode.PercentOutput, rightMotorOutput);
         }
     }
+
 
     private double limit(double value) {
         return Math.copySign(Math.abs(value) > 1.0 ? 1.0 : value, value);
