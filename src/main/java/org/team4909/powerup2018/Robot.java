@@ -63,7 +63,7 @@ public class Robot extends RoboRio {
                 new DrivetrainConfig(
                         25, 0.5,120,
                         12.000,11.126,117.809,
-                        3,2.75
+                        3,2.74
                 ),
                 new BionicNavX(),
                 new BionicSingleSolenoid(0)
@@ -149,6 +149,7 @@ public class Robot extends RoboRio {
                         new Waypoint(16, 5, 0),
                         new Waypoint(23.41, 7.5, 0)
                 }));
+        autoChooser.addObject("Turn 90deg Rotation", drivetrain.driveRotation(90));
         autoChooser.addObject("DEBUG ONLY: Do Rotation Test", drivetrain.driveRotationTest());
         SmartDashboard.putData( "autochooser", autoChooser);
     }

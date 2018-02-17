@@ -8,6 +8,7 @@ import jaci.pathfinder.Pathfinder;
 import org.team4909.bionicframework.hardware.motor.BionicSRX;
 import org.team4909.bionicframework.hardware.pneumatics.BionicSingleSolenoid;
 import org.team4909.bionicframework.interfaces.Commandable;
+import org.team4909.bionicframework.subsystems.drive.commands.DriveRotate;
 import org.team4909.bionicframework.subsystems.drive.commands.DriveTrajectory;
 import org.team4909.bionicframework.subsystems.drive.commands.InvertDriveDirection;
 import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainProfileUtil;
@@ -156,6 +157,10 @@ public class BionicDrive extends Subsystem {
 
     private Command driveTrajectory(DrivetrainTrajectory trajectory) {
         return new DriveTrajectory(this, leftSRX, rightSRX, trajectory);
+    }
+
+    public Command driveRotation(double angle) {
+        return new DriveRotate(this, leftSRX, rightSRX, angle);
     }
 
     public Command driveRotationTest() {

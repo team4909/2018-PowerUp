@@ -42,6 +42,17 @@ public class DrivetrainProfileUtil {
         );
     }
 
+    public DrivetrainTrajectory getRotationTrajectory(double angle) {
+        double distance = 0.5 * drivetrainConfig.getChassisWidthFeet() * Pathfinder.d2r(angle);
+
+        Trajectory rotationTrajectory = Pathfinder.generate(new Waypoint[]{
+                new Waypoint(0,0,0),
+                new Waypoint(distance,0,0)
+        }, pathfinderConfig);
+
+        return new DrivetrainTrajectory(drivetrainConfig, rotationTrajectory);
+    }
+
     public DrivetrainTrajectory getRotationTestTrajectory() {
         Trajectory rotationTrajectory = Pathfinder.generate(new Waypoint[]{
                 new Waypoint(0,0,0),
