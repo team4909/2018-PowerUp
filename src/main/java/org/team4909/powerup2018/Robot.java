@@ -108,12 +108,12 @@ public class Robot extends RoboRio {
                 new Waypoint(9,0,0)
         }));
         autoChooser.addObject("Rot", drivetrain.driveRotation(90));
-        autoChooser.addObject("Center Start Switch L/R", new CubePlaceAuto(
+        autoChooser.addObject("Center Start Switch Basic L/R", new CubePlaceAuto(
                 intake.setPercentOutput(-1.0),
                 elevator.holdPosition(15000),
                 new GameFeatureSide(
                         GameFeature.SWITCH_NEAR,
-                        null,
+                        new LeftSwitchDeadReckon(drivetrain),
                         new RightSwitchDeadReckon(drivetrain)
                 )
         ));
