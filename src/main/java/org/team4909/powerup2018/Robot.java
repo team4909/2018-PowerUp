@@ -107,16 +107,38 @@ public class Robot extends RoboRio {
                 new Waypoint(1.59,0,0),
                 new Waypoint(9,0,0)
         }));
-        autoChooser.addObject("Rot", drivetrain.driveRotation(90));
-        autoChooser.addObject("Center Start Switch Basic L/R", new CubePlaceAuto(
-                intake.setPercentOutput(-1.0),
-                elevator.holdPosition(15000),
-                new GameFeatureSide(
-                        GameFeature.SWITCH_NEAR,
-                        new LeftSwitchDeadReckon(drivetrain),
-                        new RightSwitchDeadReckon(drivetrain)
+        autoChooser.addObject("Center Start Switch Basic L/R", new GameFeatureSide(
+                GameFeature.SWITCH_NEAR,
+                new LeftSwitchDeadReckon(
+                        intake.setPercentOutput(-1.0),
+                        elevator.holdPosition(15000),
+                        drivetrain
+                ),
+                new RightSwitchDeadReckon(
+                        intake.setPercentOutput(-1.0),
+                        elevator.holdPosition(15000),
+                        drivetrain
                 )
         ));
+        autoChooser.addObject("Left Start Scale Basic L", new GameFeatureSide(
+                GameFeature.SCALE,
+                new LeftScaleDeadReckon(
+                        intake.setPercentOutput(-1.0),
+                        elevator.holdPosition(34000),
+                        drivetrain
+                ),
+                null
+        ));
+        autoChooser.addObject("Right Start Scale Basic R", new GameFeatureSide(
+                GameFeature.SCALE,
+                null,
+                new RightScaleDeadReckon(
+                        intake.setPercentOutput(-1.0),
+                        elevator.holdPosition(34000),
+                        drivetrain
+                )
+        ));
+        autoChooser.addObject("DEBUG ONLY: Rotate 90 Degrees", drivetrain.driveRotation(90));
         autoChooser.addObject("DEBUG ONLY: Do Rotation Test", drivetrain.driveRotationTest());
         SmartDashboard.putData( "autochooser", autoChooser);
     }

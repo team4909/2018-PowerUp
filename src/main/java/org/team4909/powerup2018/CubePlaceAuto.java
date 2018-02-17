@@ -9,7 +9,7 @@ import openrio.powerup.MatchData.GameFeature;
 import org.team4909.bionicframework.subsystems.drive.BionicDrive;
 
 public class CubePlaceAuto extends CommandGroup {
-    public CubePlaceAuto(Command outtakeCommand, Command elevateCommand,
+    public CubePlaceAuto(
                          Command driveCommand){
         addParallel(elevateCommand);
         addSequential(driveCommand);
