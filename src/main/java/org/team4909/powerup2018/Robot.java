@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Waypoint;
 import openrio.powerup.MatchData.GameFeature;
 import org.team4909.bionicframework.hardware.core.Arduino;
@@ -49,17 +50,17 @@ public class Robot extends RoboRio {
                 new BionicSRX(
                         2,false,
                         FeedbackDevice.QuadEncoder, false,
-                        1.1,0,7,
+                        1.7,0,7,
                         1
                 ),
                 new BionicSRX(
                         4,true,
                         FeedbackDevice.QuadEncoder, false,
-                        1.1,0,7,
+                        1.7,0,7,
                         4
                 ),
-                driverGamepad, BionicF310.LY, -1.0, 2.0,
-                driverGamepad, BionicF310.RX, -1.0, 2.0,
+                driverGamepad, BionicF310.LY, -1.0, 0.25,
+                driverGamepad, BionicF310.RX, -1.0, 0.25,
                 new DrivetrainConfig(
                         25, 0.5,120,
                         12.000,11.126,117.809,
@@ -106,58 +107,27 @@ public class Robot extends RoboRio {
                 new Waypoint(1.59,0,0),
                 new Waypoint(9,0,0)
         }));
-        autoChooser.addObject("Left Start Scale L/R", new CubePlaceAuto(
-                intake.setPercentOutput(1.0),
+        autoChooser.addObject("Rot", drivetrain.driveRotation(90));
+        autoChooser.addObject("Center Start Switch L/R", new CubePlaceAuto(
                 intake.setPercentOutput(-1.0),
                 elevator.holdPosition(15000),
-                GameFeature.SWITCH_NEAR, drivetrain,
-                new Waypoint[]{
-                        new Waypoint(1.59, 23.11, 0),
-                        new Waypoint(16, 22, 0),
-                        new Waypoint(23.41, 19.5, 0)
-                },
-                new Waypoint[]{
-                        new Waypoint(1.59, 23.11, 0),
-                        new Waypoint(15, 23.11, 0),
-                        new Waypoint(23.41, 7.5, 0)
-                }));
-        autoChooser.addObject("Center Start Switch L/R", new CubePlaceAuto(
-                intake.setPercentOutput(1.0),
-                intake.setPercentOutput(-1.0),
-                elevator.holdPosition(34000),
-                GameFeature.SCALE, drivetrain,
-                new Waypoint[]{
-                        new Waypoint(1.59, 13.1, 0),
-                        new Waypoint(10.41, 18, 0)
-                },
-                new Waypoint[]{
-                        new Waypoint(1.59, 13.1, 0),
-                        new Waypoint(10.41, 9, 0)
-                }));
-        autoChooser.addObject("Right Start Scale L/R", new CubePlaceAuto(
-                intake.setPercentOutput(1.0),
-                intake.setPercentOutput(-1.0),
-                elevator.holdPosition(34000),
-                GameFeature.SCALE, drivetrain,
-                new Waypoint[]{
-                        new Waypoint(1.59, 3.9, 0),
-                        new Waypoint(15, 3.9, 0),
-                        new Waypoint(23.41, 19.5, 0)
-                },
-                new Waypoint[]{
-                        new Waypoint(1.59, 3.9, 0),
-                        new Waypoint(16, 5, 0),
-                        new Waypoint(23.41, 7.5, 0)
-                }));
-        autoChooser.addObject("Turn 90deg Rotation", drivetrain.driveRotation(90));
+                new GameFeatureSide(
+                        GameFeature.SWITCH_NEAR,
+                        null,
+                        new RightSwitchDeadReckon(drivetrain)
+                )
+        ));
         autoChooser.addObject("DEBUG ONLY: Do Rotation Test", drivetrain.driveRotationTest());
         SmartDashboard.putData( "autochooser", autoChooser);
     }
 
     @Override
     public void teleopPeriodic() {
+        System.out.println(drivetrain.getHeading());
+
         hookDeploy.set(manipulatorGamepad, BionicF310.RY, 0.5);
     }
+
 
     @Override
     public void autonomousInit() {

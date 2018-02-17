@@ -15,7 +15,6 @@ public class DriveTrajectory extends Command {
 
     public DriveTrajectory(BionicDrive bionicDrive, BionicSRX leftSRX, BionicSRX rightSRX, DrivetrainTrajectory trajectory) {
         requires(bionicDrive);
-        setInterruptible(false);
 
         this.trajectory = trajectory;
 

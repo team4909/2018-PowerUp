@@ -3,6 +3,7 @@ package org.team4909.bionicframework.subsystems.drive.commands;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.command.PIDCommand;
 import jaci.pathfinder.Pathfinder;
+import openrio.powerup.MatchData;
 import org.team4909.bionicframework.hardware.motor.BionicSRX;
 import org.team4909.bionicframework.subsystems.drive.BionicDrive;
 
@@ -11,16 +12,15 @@ public class DriveRotate extends PIDCommand {
     private final BionicSRX leftSRX, rightSRX;
 
     public DriveRotate(BionicDrive bionicDrive, BionicSRX leftSRX, BionicSRX rightSRX, double angle) {
-        super(.37,0,0.1);
+        super(.7,0,.2);
 
         requires(bionicDrive);
-        setInterruptible(false);
 
         this.bionicDrive = bionicDrive;
         this.leftSRX = leftSRX;
         this.rightSRX = rightSRX;
 
-        getPIDController().setSetpoint(Pathfinder.d2r(angle));
+        getPIDController().setSetpoint(angle / 3);
     }
 
     @Override
@@ -30,14 +30,13 @@ public class DriveRotate extends PIDCommand {
 
     @Override
     protected boolean isFinished() {
-        System.out.println("Error" + getPIDController().getError());
-
-        return getPIDController().getError() < 0.03;
+        return getPIDController().getError() < 0.06;
     }
 
     @Override
     protected double returnPIDInput() {
-        System.out.println("Heading" + bionicDrive.getHeading());
+        System.out.println(bionicDrive.getHeading());
+
         return bionicDrive.getHeading();
     }
 
@@ -77,5 +76,11 @@ public class DriveRotate extends PIDCommand {
 
     private double limit(double value) {
         return Math.copySign(Math.abs(value) > 1.0 ? 1.0 : value, value);
+    }
+
+    @Override
+    protected void end() {
+        leftSRX.set(0);
+        rightSRX.set(0);
     }
 }

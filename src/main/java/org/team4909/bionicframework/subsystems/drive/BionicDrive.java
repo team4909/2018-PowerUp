@@ -63,6 +63,9 @@ public class BionicDrive extends Subsystem {
         this.leftSRX = leftSRX;
         this.rightSRX = rightSRX;
 
+        leftSRX.configOpenloopRamp(0);
+        rightSRX.configOpenloopRamp(0);
+
         this.speedDeltaLimit = speedDeltaLimit;
         this.rotationDeltaLimit = rotationDeltaLimit;
 
@@ -135,7 +138,7 @@ public class BionicDrive extends Subsystem {
      * @return Returns Robot's Current Heading [0, 2pi)
      */
     public double getHeading() {
-        return Pathfinder.d2r(bionicGyro.getAngle());
+        return bionicGyro.getAngle();
     }
 
     @Override
@@ -157,6 +160,13 @@ public class BionicDrive extends Subsystem {
 
     private Command driveTrajectory(DrivetrainTrajectory trajectory) {
         return new DriveTrajectory(this, leftSRX, rightSRX, trajectory);
+    }
+
+    public Command driveDistance(double distance){
+        return driveWaypoints(new Waypoint[]{
+                new Waypoint(0,0,0),
+                new Waypoint(distance,0,0)
+        });
     }
 
     public Command driveRotation(double angle) {
