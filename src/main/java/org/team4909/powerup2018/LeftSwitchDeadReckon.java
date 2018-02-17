@@ -8,9 +8,9 @@ public class LeftSwitchDeadReckon extends CommandGroup {
     public LeftSwitchDeadReckon(Command outtakeCommand, Command elevateCommand, BionicDrive drivetrain){
         addSequential(drivetrain.driveDistance(.41));
         addSequential(drivetrain.driveRotation(-24.94));
+        addSequential(elevateCommand);
         addSequential(drivetrain.driveDistance(5.63));
         addSequential(drivetrain.driveRotation(24.94));
-        addParallel(elevateCommand);
         addSequential(drivetrain.driveDistance(4.4));
         addSequential(outtakeCommand);
     }

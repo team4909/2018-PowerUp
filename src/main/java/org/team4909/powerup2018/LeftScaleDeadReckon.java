@@ -6,12 +6,12 @@ import org.team4909.bionicframework.subsystems.drive.BionicDrive;
 
 public class LeftScaleDeadReckon extends CommandGroup {
     public LeftScaleDeadReckon(Command outtakeCommand, Command elevateCommand, BionicDrive drivetrain){
-        addSequential(drivetrain.driveDistance(.41));
-        addSequential(drivetrain.driveRotation(65.06));
-        addSequential(drivetrain.driveDistance(5.63));
-        addSequential(drivetrain.driveRotation(-65.06));
-        addParallel(elevateCommand);
-        addSequential(drivetrain.driveDistance(4.4));
+        addSequential(drivetrain.driveDistance(16.41));
+        addSequential(drivetrain.driveRotation(50.27));
+        addSequential(elevateCommand);
+        addSequential(drivetrain.driveDistance(4.69));
+        addSequential(drivetrain.driveRotation(-50.27));
+        addSequential(drivetrain.driveDistance(2.41));
         addSequential(outtakeCommand);
     }
 }
