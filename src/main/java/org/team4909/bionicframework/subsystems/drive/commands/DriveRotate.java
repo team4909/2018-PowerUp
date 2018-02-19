@@ -8,9 +8,10 @@ import org.team4909.bionicframework.subsystems.drive.BionicDrive;
 public class DriveRotate extends PIDCommand {
     private final BionicDrive bionicDrive;
     private final BionicSRX leftSRX, rightSRX;
+    private int direction = 0;
 
     public DriveRotate(BionicDrive bionicDrive, BionicSRX leftSRX, BionicSRX rightSRX, double angle) {
-        super(.0065,.000005,0); // Old d Value .2 p .7
+        super(.0065,.000005,0);
 
         requires(bionicDrive);
 
@@ -18,18 +19,19 @@ public class DriveRotate extends PIDCommand {
         this.leftSRX = leftSRX;
         this.rightSRX = rightSRX;
 
+        if(angle<0){
+            direction = -1;
+        }else{
+            direction = 1;
+        }
         //getPIDController().setSetpoint(angle / 3);
         //System.out.println("HI");
-        getPIDController().setSetpoint(angle);
+        getPIDController().setSetpoint(Math.abs(angle));
     }
 
     @Override
     protected void initialize() {
         bionicDrive.resetProfiling();
-//        getPIDController().reset();
-//        getPIDController().setSetpoint(mAngle);
-//        System.out.println("INIT");
-//        System.out.println("P " + this.getPIDController().getP() + " I " + this.getPIDController().getI() + " D " + this.getPIDController().getD());
     }
 
     @Override
@@ -40,12 +42,14 @@ public class DriveRotate extends PIDCommand {
 
     @Override
     protected double returnPIDInput() {
-        return bionicDrive.getHeading();
+        return Math.abs(bionicDrive.getHeading());
     }
 
 
     @Override
     protected void usePIDOutput(double output) {
+        output = output * direction;
+        System.out.println("Output: " + output + " Heading: " + bionicDrive.getHeading());
         double limitedSpeed = 0;
         double limitedRotation = -output;
 

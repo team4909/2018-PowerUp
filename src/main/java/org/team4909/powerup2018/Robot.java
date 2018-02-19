@@ -106,7 +106,7 @@ public class Robot extends RoboRio {
                 new Waypoint(1.59,0,0),
                 new Waypoint(9,0,0)
         }));
-        autoChooser.addObject("Center Start Switch Basic L/R", new GameFeatureSide(
+        autoChooser.addObject("Center Switch L/R", new GameFeatureSide(
                 GameFeature.SWITCH_NEAR,
                 new LeftSwitchDeadReckon(
                         intake,
@@ -119,21 +119,38 @@ public class Robot extends RoboRio {
                         drivetrain
                 )
         ));
-        autoChooser.addObject("Left Start Scale Basic L", new GameFeatureSide(
+        autoChooser.addObject("Left Scale/Switch", new GameFeatureSide(
                 GameFeature.SCALE,
                 new LeftScaleDeadReckon(
                         intake,
-                        elevator.holdPosition(34000),
+                        elevator,
                         drivetrain
                 ),
-                null
-        ));
-        autoChooser.addObject("Right Start Scale Basic R", new GameFeatureSide(
+                new GameFeatureSide(
+                        GameFeature.SWITCH_NEAR,
+                        new LeftSwitchFromLeft(
+                                intake,
+                                elevator,
+                                drivetrain
+                        ),
+                        null
+                        )
+                )
+        );
+        autoChooser.addObject("Right Scale/Switch", new GameFeatureSide(
                 GameFeature.SCALE,
-                null,
+                new GameFeatureSide(
+                        GameFeature.SWITCH_NEAR,
+                        null,
+                        new RightSwitchFromRight(
+                                intake,
+                                elevator,
+                                drivetrain
+                        )
+                ),
                 new RightScaleDeadReckon(
                         intake,
-                        elevator.holdPosition(34000),
+                        elevator,
                         drivetrain
                 )
         ));
@@ -145,7 +162,7 @@ public class Robot extends RoboRio {
     @Override
     public void robotPeriodic(){
         super.robotPeriodic();
-        System.out.println(drivetrain.getHeading());
+        //System.out.println(drivetrain.getHeading());
     }
     @Override
     public void teleopPeriodic() {
