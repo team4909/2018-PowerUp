@@ -25,6 +25,8 @@ import org.team4909.bionicframework.operator.generic.BionicJoystick;
  * Wrapper Class for CTRE WPI_TalonSRX implementing BionicFramework Commandables and Other Simplifications/Abstractions
  */
 public class BionicSRX extends WPI_TalonSRX {
+    private boolean finishedMotionProfile;
+
     /**
      * @param deviceNumber - CAN ID's of SRX Master
      * @param slaveNumbers - CAN ID's of SRX Followers
@@ -105,7 +107,6 @@ public class BionicSRX extends WPI_TalonSRX {
 
     /* Motion Profiling */
     private final int minBufferPoints = 20;
-    private final double bufferInterval = 0.005;
 
     private final Notifier processMotionProfileBuffer = new Notifier(this::processMotionProfileBuffer);
 
@@ -144,8 +145,8 @@ public class BionicSRX extends WPI_TalonSRX {
     /**
      * @param points Path consisting of waypoints to follow
      */
-    public void initMotionProfile(int profileIntervalMs, TrajectoryPoint[] points) {
-        this.changeMotionControlFramePeriod(profileIntervalMs);
+    public void initMotionProfile(int controlFramePeriod, TrajectoryPoint[] points) {
+        this.changeMotionControlFramePeriod(controlFramePeriod);
         this.set(ControlMode.MotionProfile, SetValueMotionProfile.Disable.value);
 
         this.clearMotionProfileTrajectories();
@@ -154,12 +155,19 @@ public class BionicSRX extends WPI_TalonSRX {
             this.pushMotionProfileTrajectory(points[i]);
         }
 
-        processMotionProfileBuffer.startPeriodic(bufferInterval);
+        // Buffer Minimum Points At First
+        while(!isBottomLevelBufferReady()){
+            super.processMotionProfileBuffer();
+        }
+
+        // Lag behind for later points
+        processMotionProfileBuffer.startPeriodic((double) controlFramePeriod / 1000);
     }
 
     public void runMotionProfile() {
         if (isBottomLevelBufferReady()) {
             this.set(ControlMode.MotionProfile, SetValueMotionProfile.Enable.value);
+            finishedMotionProfile = false;
         }
     }
 
@@ -191,7 +199,11 @@ public class BionicSRX extends WPI_TalonSRX {
      * @return Returns whether the streamed subsystems profile has been completed or not
      */
     public boolean isMotionProfileFinished() {
-        return (this.getMotionProfileStatus()).isLast;
+        if (finishedMotionProfile == false && (this.getMotionProfileStatus()).isLast){
+            finishedMotionProfile = true;
+        }
+
+        return finishedMotionProfile;
     }
 
     private boolean isTopLevelBufferEmpty() {

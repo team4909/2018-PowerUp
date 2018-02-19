@@ -15,7 +15,6 @@ public class DriveTrajectory extends Command {
 
     public DriveTrajectory(BionicDrive bionicDrive, BionicSRX leftSRX, BionicSRX rightSRX, DrivetrainTrajectory trajectory) {
         requires(bionicDrive);
-        setInterruptible(false);
 
         this.trajectory = trajectory;
 
@@ -30,8 +29,10 @@ public class DriveTrajectory extends Command {
             cancel();
         }
 
-        leftSRX.initMotionProfile(trajectory.profileInterval, trajectory.left);
-        rightSRX.initMotionProfile(trajectory.profileInterval, trajectory.right);
+        leftSRX.initMotionProfile(trajectory.profileIntervalMs / 2, trajectory.left);
+        rightSRX.initMotionProfile(trajectory.profileIntervalMs / 2, trajectory.right);
+
+        bionicDrive.resetProfiling();
     }
 
     @Override
@@ -42,7 +43,8 @@ public class DriveTrajectory extends Command {
 
     @Override
     protected boolean isFinished() {
-        return leftSRX.isMotionProfileFinished() && rightSRX.isMotionProfileFinished();
+        return leftSRX.isMotionProfileFinished() && leftSRX.getClosedLoopError(0) < 50
+                && rightSRX.isMotionProfileFinished() && rightSRX.getClosedLoopError(0) < 50;
     }
 
     @Override
