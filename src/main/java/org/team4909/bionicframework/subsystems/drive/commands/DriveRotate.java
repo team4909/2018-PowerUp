@@ -2,8 +2,6 @@ package org.team4909.bionicframework.subsystems.drive.commands;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.command.PIDCommand;
-import jaci.pathfinder.Pathfinder;
-import openrio.powerup.MatchData;
 import org.team4909.bionicframework.hardware.motor.BionicSRX;
 import org.team4909.bionicframework.subsystems.drive.BionicDrive;
 
@@ -11,34 +9,50 @@ public class DriveRotate extends PIDCommand {
     private final BionicDrive bionicDrive;
     private final BionicSRX leftSRX, rightSRX;
 
+    private double mAngle;
+
     public DriveRotate(BionicDrive bionicDrive, BionicSRX leftSRX, BionicSRX rightSRX, double angle) {
-        super(.7,0,.2);
+        super(1,0,0); // Old d Value .2 p .7
 
         requires(bionicDrive);
+
+        mAngle = angle;
 
         this.bionicDrive = bionicDrive;
         this.leftSRX = leftSRX;
         this.rightSRX = rightSRX;
 
-        getPIDController().setSetpoint(angle / 3);
+        //getPIDController().setSetpoint(angle / 3);
+        System.out.println("HI");
+        getPIDController().setSetpoint(angle);
     }
 
     @Override
     protected void initialize() {
         bionicDrive.resetProfiling();
+//        getPIDController().reset();
+//        getPIDController().setSetpoint(mAngle);
+        System.out.println("INIT");
+        System.out.println("P " + this.getPIDController().getP() + " I " + this.getPIDController().getI() + " D " + this.getPIDController().getD());
     }
 
     @Override
     protected boolean isFinished() {
-        return getPIDController().getError() < 0.06;
+
+        if (getPIDController().getError() < 0.06)
+        {
+            System.out.println("PID Finished");
+            return true;
+        }
+
+        return false;
     }
 
     @Override
     protected double returnPIDInput() {
-        System.out.println(bionicDrive.getHeading());
-
         return bionicDrive.getHeading();
     }
+
 
     @Override
     protected void usePIDOutput(double output) {

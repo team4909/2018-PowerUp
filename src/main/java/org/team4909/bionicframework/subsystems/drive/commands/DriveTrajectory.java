@@ -1,10 +1,8 @@
 package org.team4909.bionicframework.subsystems.drive.commands;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.wpilibj.command.Command;
 import org.team4909.bionicframework.hardware.motor.BionicSRX;
 import org.team4909.bionicframework.subsystems.drive.BionicDrive;
-import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainProfileUtil;
 import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainTrajectory;
 
 public class DriveTrajectory extends Command {
@@ -29,7 +27,7 @@ public class DriveTrajectory extends Command {
             cancel();
         }
 
-        leftSRX.initMotionProfile(trajectory.profileIntervalMs / 2, trajectory.left);
+        leftSRX.initMotionProfile(trajectory.profileIntervalMs / 2 , trajectory.left);
         rightSRX.initMotionProfile(trajectory.profileIntervalMs / 2, trajectory.right);
 
         bionicDrive.resetProfiling();
@@ -49,6 +47,6 @@ public class DriveTrajectory extends Command {
 
     @Override
     protected void end() {
-        System.out.println("Final Heading: " + bionicDrive.getHeading() + "rad");
+        System.out.println("Final Heading: " + bionicDrive.getHeading() + " degrees"); // NOT RADIANS
     }
 }

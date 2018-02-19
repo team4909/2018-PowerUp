@@ -47,19 +47,19 @@ public class Robot extends RoboRio {
                 new BionicSRX(
                         2,false,
                         FeedbackDevice.QuadEncoder, false,
-                        1.7,0,7,
+                        1,0,0, // P:1.7 I:0 D:7
                         1
                 ),
                 new BionicSRX(
                         4,true,
                         FeedbackDevice.QuadEncoder, false,
-                        1.7,0,7,
+                        1,0,0,
                         4
                 ),
                 driverGamepad, BionicF310.LY, -1.0, 0.10,
                 driverGamepad, BionicF310.RX, -1.0, 0.10,
                 new DrivetrainConfig(
-                        25, 0.5,120,
+                        25, 0.5,360,    // ticksPerRev: 120
                         12.000,11.126,117.809,
                         3,2.74
                 ),
@@ -143,8 +143,13 @@ public class Robot extends RoboRio {
     }
 
     @Override
+    public void robotPeriodic(){
+        super.robotPeriodic();
+//        System.out.println(drivetrain.getHeading());
+    }
+    @Override
     public void teleopPeriodic() {
-        System.out.println(drivetrain.getHeading());
+        //System.out.println(drivetrain.getHeading());
 
         hookDeploy.set(manipulatorGamepad, BionicF310.RY, 0.5);
     }
@@ -166,6 +171,7 @@ public class Robot extends RoboRio {
 
     @Override
     public void teleopInit() {
+        intake.cancel();
         super.teleopInit();
 
         if (autoCommand != null) {

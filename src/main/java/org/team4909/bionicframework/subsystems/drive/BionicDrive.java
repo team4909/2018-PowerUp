@@ -3,21 +3,18 @@ package org.team4909.bionicframework.subsystems.drive;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
-
-import jaci.pathfinder.Pathfinder;
+import jaci.pathfinder.Waypoint;
 import org.team4909.bionicframework.hardware.motor.BionicSRX;
 import org.team4909.bionicframework.hardware.pneumatics.BionicSingleSolenoid;
 import org.team4909.bionicframework.interfaces.Commandable;
+import org.team4909.bionicframework.operator.controllers.BionicF310;
+import org.team4909.bionicframework.operator.generic.BionicAxis;
+import org.team4909.bionicframework.subsystems.drive.commands.DriveOI;
 import org.team4909.bionicframework.subsystems.drive.commands.DriveRotate;
 import org.team4909.bionicframework.subsystems.drive.commands.DriveTrajectory;
 import org.team4909.bionicframework.subsystems.drive.commands.InvertDriveDirection;
-import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainProfileUtil;
-import org.team4909.bionicframework.operator.generic.BionicAxis;
-import org.team4909.bionicframework.operator.controllers.BionicF310;
-
-import jaci.pathfinder.Waypoint;
-import org.team4909.bionicframework.subsystems.drive.commands.DriveOI;
 import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainConfig;
+import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainProfileUtil;
 import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainTrajectory;
 
 /**
@@ -163,6 +160,7 @@ public class BionicDrive extends Subsystem {
     }
 
     public Command driveDistance(double distance){
+
         return driveWaypoints(new Waypoint[]{
                 new Waypoint(0,0,0),
                 new Waypoint(distance,0,0)
