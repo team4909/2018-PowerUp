@@ -20,7 +20,7 @@ public class DriveRotate extends PIDCommand {
         this.leftSRX = leftSRX;
         this.rightSRX = rightSRX;
 
-        getPIDController().setSetpoint(angle / 3);
+        getPIDController().setSetpoint(angle);
     }
 
     @Override

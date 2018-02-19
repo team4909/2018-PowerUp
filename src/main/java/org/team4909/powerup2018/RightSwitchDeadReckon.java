@@ -8,14 +8,18 @@ import org.team4909.bionicframework.subsystems.drive.BionicDrive;
 
 public class RightSwitchDeadReckon extends CommandGroup {
     public RightSwitchDeadReckon(IntakeSubsystem intake, Command elevateCommand, BionicDrive drivetrain){
-        addSequential(drivetrain.driveDistance(.41));
-        addSequential(drivetrain.driveRotation(24.94));
+        addSequential(drivetrain.driveDistance(0));
+        addSequential(drivetrain.driveRotation(0.422));
+        /*
         addSequential(elevateCommand);
-        addSequential(drivetrain.driveDistance(5.63));
-        addSequential(drivetrain.driveRotation(-24.94));
+        */
+        addSequential(drivetrain.driveDistance(0));
+        addSequential(drivetrain.driveRotation(-0.422));
+        /*
         addSequential(drivetrain.driveDistance(4.4));
         addSequential(intake.outtake());
         addSequential(new WaitCommand(3));
         addSequential(intake.cancel());
+        */
     }
 }
