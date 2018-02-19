@@ -1,34 +1,31 @@
 package org.team4909.powerup2018;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Waypoint;
 import openrio.powerup.MatchData.GameFeature;
 import org.team4909.bionicframework.hardware.core.Arduino;
 import org.team4909.bionicframework.hardware.core.RoboRio;
-import org.team4909.bionicframework.hardware.sensors.gyro.BionicNavX;
 import org.team4909.bionicframework.hardware.motor.BionicSRX;
 import org.team4909.bionicframework.hardware.motor.BionicSpark;
 import org.team4909.bionicframework.hardware.motor.BionicVictorSP;
 import org.team4909.bionicframework.hardware.motor.MotorSubsystem;
 import org.team4909.bionicframework.hardware.pneumatics.BionicSingleSolenoid;
-import org.team4909.bionicframework.interfaces.Commandable;
+import org.team4909.bionicframework.hardware.sensors.gyro.BionicNavX;
+import org.team4909.bionicframework.operator.controllers.BionicF310;
+import org.team4909.bionicframework.subsystems.Intake.IntakeSubsystem;
 import org.team4909.bionicframework.subsystems.drive.BionicDrive;
 import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainConfig;
-import org.team4909.bionicframework.operator.controllers.BionicF310;
 import org.team4909.bionicframework.subsystems.elevator.ElevatorSubsystem;
 
 public class Robot extends RoboRio {
     /* Subsystem Initialization */
     private static Arduino arduino;
     private static BionicDrive drivetrain;
-    private static MotorSubsystem intake;
+    private static IntakeSubsystem intake;
     private static ElevatorSubsystem elevator;
     private static MotorSubsystem winch;
     private static MotorSubsystem hookDeploy;
@@ -72,13 +69,11 @@ public class Robot extends RoboRio {
         driverGamepad.buttonPressed(BionicF310.LT, 0.1, drivetrain.invertDirection());
         driverGamepad.buttonPressed(BionicF310.RT, 0.1, drivetrain.changeGear());
 
-        intake = new MotorSubsystem(
-                new BionicSpark(0, true),
-                new BionicSpark(1, false)
-        );
-        manipulatorGamepad.buttonHeld(BionicF310.LT, 0.1,intake.setPercentOutput(1.0));
-        manipulatorGamepad.buttonHeld(BionicF310.RT, 0.1,intake.setPercentOutput(-1.0));
-        manipulatorGamepad.buttonHeld(BionicF310.B, intake.setPercentOutput(-0.5));
+        intake = new IntakeSubsystem(0,true,1,false);
+
+        manipulatorGamepad.buttonHeld(BionicF310.LT, 0.1,intake.intake());
+        manipulatorGamepad.buttonHeld(BionicF310.RT, 0.1,intake.outtake());
+        manipulatorGamepad.buttonHeld(BionicF310.B, intake.outtakeSlow());
 
         winch = new MotorSubsystem(
                 new BionicVictorSP(2, true),
@@ -100,6 +95,10 @@ public class Robot extends RoboRio {
                 manipulatorGamepad, BionicF310.LY,-1,
                 33150
         );
+        SmartDashboard.putNumber("Time: ", DriverStation.getInstance().getMatchTime());
+        SmartDashboard.putBoolean("DS", DriverStation.getInstance().isDSAttached());
+        SmartDashboard.putBoolean("FMS", DriverStation.getInstance().isFMSAttached());
+        SmartDashboard.putBoolean("Brownout", DriverStation.getInstance().isBrownedOut());
 
         autoChooser = new SendableChooser();
         autoChooser.addDefault("Do Nothing", null);
@@ -110,20 +109,20 @@ public class Robot extends RoboRio {
         autoChooser.addObject("Center Start Switch Basic L/R", new GameFeatureSide(
                 GameFeature.SWITCH_NEAR,
                 new LeftSwitchDeadReckon(
-                        intake.setPercentOutput(-1.0),
-                        elevator.holdPosition(15000),
+                        intake,
+                        elevator.holdPosition(11000),
                         drivetrain
                 ),
                 new RightSwitchDeadReckon(
-                        intake.setPercentOutput(-1.0),
-                        elevator.holdPosition(15000),
+                        intake,
+                        elevator.holdPosition(11000),
                         drivetrain
                 )
         ));
         autoChooser.addObject("Left Start Scale Basic L", new GameFeatureSide(
                 GameFeature.SCALE,
                 new LeftScaleDeadReckon(
-                        intake.setPercentOutput(-1.0),
+                        intake,
                         elevator.holdPosition(34000),
                         drivetrain
                 ),
@@ -133,7 +132,7 @@ public class Robot extends RoboRio {
                 GameFeature.SCALE,
                 null,
                 new RightScaleDeadReckon(
-                        intake.setPercentOutput(-1.0),
+                        intake,
                         elevator.holdPosition(34000),
                         drivetrain
                 )
