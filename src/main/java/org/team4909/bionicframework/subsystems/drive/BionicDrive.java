@@ -3,20 +3,18 @@ package org.team4909.bionicframework.subsystems.drive;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
-
-import jaci.pathfinder.Pathfinder;
+import jaci.pathfinder.Waypoint;
 import org.team4909.bionicframework.hardware.motor.BionicSRX;
 import org.team4909.bionicframework.hardware.pneumatics.BionicSingleSolenoid;
 import org.team4909.bionicframework.interfaces.Commandable;
+import org.team4909.bionicframework.operator.controllers.BionicF310;
+import org.team4909.bionicframework.operator.generic.BionicAxis;
+import org.team4909.bionicframework.subsystems.drive.commands.DriveOI;
+import org.team4909.bionicframework.subsystems.drive.commands.DriveRotate;
 import org.team4909.bionicframework.subsystems.drive.commands.DriveTrajectory;
 import org.team4909.bionicframework.subsystems.drive.commands.InvertDriveDirection;
-import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainProfileUtil;
-import org.team4909.bionicframework.operator.generic.BionicAxis;
-import org.team4909.bionicframework.operator.controllers.BionicF310;
-
-import jaci.pathfinder.Waypoint;
-import org.team4909.bionicframework.subsystems.drive.commands.DriveOI;
 import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainConfig;
+import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainProfileUtil;
 import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainTrajectory;
 
 /**
@@ -41,7 +39,7 @@ public class BionicDrive extends Subsystem {
     private final double t;
     private double currentMaxVelocity, currentMaxAcceleration, currentMaxJerk = 0;
     private double lastVelocity, lastAcceleration = 0;
-    private final boolean profiling;
+    public boolean profiling;
 
     /**
      * @param leftSRX              Left Drivetrain SRX
@@ -56,15 +54,14 @@ public class BionicDrive extends Subsystem {
                        BionicF310 speedInputGamepad, BionicAxis speedInputAxis, double speedMultiplier, double speedDeltaLimit,
                        BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis, double rotationMultiplier, double rotationDeltaLimit,
                        DrivetrainConfig drivetrainConfig,
-                       Gyro bionicGyro, BionicSingleSolenoid shifter,
-                       boolean profiling) {
+                       Gyro bionicGyro, BionicSingleSolenoid shifter) {
         super();
 
         this.leftSRX = leftSRX;
         this.rightSRX = rightSRX;
 
-        this.leftSRX.config_kF(1023 / drivetrainConfig.getMaxVelocity());
-        this.rightSRX.config_kF(1023 / drivetrainConfig.getMaxVelocity());
+        leftSRX.configOpenloopRamp(0);
+        rightSRX.configOpenloopRamp(0);
 
         this.speedDeltaLimit = speedDeltaLimit;
         this.rotationDeltaLimit = rotationDeltaLimit;
@@ -78,8 +75,6 @@ public class BionicDrive extends Subsystem {
         this.defaultCommand = new DriveOI(this, leftSRX, rightSRX,
                 speedInputGamepad, speedInputAxis, speedMultiplier,
                 rotationInputGamepad, rotationInputAxis, rotationMultiplier);
-
-        this.profiling = profiling;
     }
 
     @Override
@@ -115,6 +110,10 @@ public class BionicDrive extends Subsystem {
       
          lastVelocity = 0;
          lastAcceleration = 0;
+
+         bionicGyro.reset();
+         leftSRX.setSelectedSensorPosition(0,0,0);
+         rightSRX.setSelectedSensorPosition(0,0,0);
     }
 
     public double getVelocity(){
@@ -136,7 +135,7 @@ public class BionicDrive extends Subsystem {
      * @return Returns Robot's Current Heading [0, 2pi)
      */
     public double getHeading() {
-        return Pathfinder.d2r(bionicGyro.getAngle());
+        return bionicGyro.getAngle();
     }
 
     @Override
@@ -158,6 +157,18 @@ public class BionicDrive extends Subsystem {
 
     private Command driveTrajectory(DrivetrainTrajectory trajectory) {
         return new DriveTrajectory(this, leftSRX, rightSRX, trajectory);
+    }
+
+    public Command driveDistance(double distance){
+
+        return driveWaypoints(new Waypoint[]{
+                new Waypoint(0,0,0),
+                new Waypoint(distance,0,0)
+        });
+    }
+
+    public Command driveRotation(double angle) {
+        return new DriveRotate(this, leftSRX, rightSRX, angle);
     }
 
     public Command driveRotationTest() {

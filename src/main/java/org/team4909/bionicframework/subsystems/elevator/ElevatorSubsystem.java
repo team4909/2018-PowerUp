@@ -1,6 +1,7 @@
 package org.team4909.bionicframework.subsystems.elevator;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.team4909.bionicframework.hardware.motor.BionicSRX;
 import org.team4909.bionicframework.interfaces.Commandable;
@@ -27,11 +28,12 @@ public class ElevatorSubsystem extends Subsystem {
         this.oiMultiplier = oiMultiplier;
 
         bionicSRX.enableFwdSoftLimit(forwardLimit);
+        bionicSRX.configReverseSoftLimitEnable(false, 0);
     }
 
     @Override
     public void periodic() {
-        if(bionicSRX.getSensorCollection().isRevLimitSwitchClosed()){
+        if(bionicSRX.getSensorCollection().isRevLimitSwitchClosed() && !DriverStation.getInstance().isAutonomous()){
             holdingPosition = 0;
 
             bionicSRX.setSelectedSensorPosition(holdingPosition,0,0);

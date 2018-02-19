@@ -27,47 +27,30 @@ public class DrivetrainProfileUtil {
         this.drivetrainConfig = drivetrainConfig;
 
         pathfinderConfig = new Config(FitMethod.HERMITE_CUBIC, Config.SAMPLES_FAST,
-                drivetrainConfig.getProfileIntervalS(), drivetrainConfig.getMaxVelocity(),
+                drivetrainConfig.getProfileIntervalS(), 5.8,
                 drivetrainConfig.getMaxAcceleration(), drivetrainConfig.getMaxJerk());
     }
 
     public DrivetrainTrajectory getTrajectory(Waypoint[] points) {
-        Trajectory leftTrajectory;
-        Trajectory rightTrajectory;
+        Trajectory trajectory = Pathfinder.generate(points, pathfinderConfig);
+        TankModifier modifier = new TankModifier(trajectory).modify(drivetrainConfig.getChassisWidthFeet());
 
-        try {
-            String profileJSON = new DrivetrainProfileConfig(drivetrainConfig, points).toJSON();
+        return new DrivetrainTrajectory(
+                drivetrainConfig,
+                modifier.getLeftTrajectory(),
+                modifier.getRightTrajectory()
+        );
+    }
 
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            md.update(profileJSON.getBytes());
-            byte[] digest = md.digest();
-            String profileHash = DatatypeConverter.printHexBinary(digest).toUpperCase();
+    public DrivetrainTrajectory getRotationTrajectory(double angle) {
+        double distance = 0.5 * drivetrainConfig.getChassisWidthFeet() * Pathfinder.d2r(angle);
 
-            File leftFile = new File(profile_dir, profileHash + "-left.traj");
-            File rightFile = new File(profile_dir, profileHash + "-right.traj");
+        Trajectory rotationTrajectory = Pathfinder.generate(new Waypoint[]{
+                new Waypoint(0,0,0),
+                new Waypoint(distance,0,0)
+        }, pathfinderConfig);
 
-            if (leftFile.isFile() && rightFile.isFile()) {
-                leftTrajectory = Pathfinder.readFromFile(leftFile);
-                rightTrajectory = Pathfinder.readFromFile(rightFile);
-            } else {
-                Trajectory trajectory = Pathfinder.generate(points, pathfinderConfig);
-                TankModifier modifier = new TankModifier(trajectory).modify(drivetrainConfig.getChassisWidthFeet());
-
-                leftTrajectory = modifier.getLeftTrajectory();
-                rightTrajectory = modifier.getRightTrajectory();
-
-                Pathfinder.writeToFile(leftFile, leftTrajectory);
-                Pathfinder.writeToFile(rightFile, rightTrajectory);
-            }
-        } catch (NoSuchAlgorithmException e){
-            Trajectory trajectory = Pathfinder.generate(points, pathfinderConfig);
-            TankModifier modifier = new TankModifier(trajectory).modify(drivetrainConfig.getChassisWidthFeet());
-
-            leftTrajectory = modifier.getLeftTrajectory();
-            rightTrajectory = modifier.getRightTrajectory();
-        }
-
-        return new DrivetrainTrajectory(drivetrainConfig, leftTrajectory, rightTrajectory);
+        return new DrivetrainTrajectory(drivetrainConfig, rotationTrajectory);
     }
 
     public DrivetrainTrajectory getRotationTestTrajectory() {
