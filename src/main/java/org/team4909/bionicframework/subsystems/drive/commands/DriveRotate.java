@@ -9,21 +9,17 @@ public class DriveRotate extends PIDCommand {
     private final BionicDrive bionicDrive;
     private final BionicSRX leftSRX, rightSRX;
 
-    private double mAngle;
-
     public DriveRotate(BionicDrive bionicDrive, BionicSRX leftSRX, BionicSRX rightSRX, double angle) {
-        super(1,0,0); // Old d Value .2 p .7
+        super(.0065,.000005,0); // Old d Value .2 p .7
 
         requires(bionicDrive);
-
-        mAngle = angle;
 
         this.bionicDrive = bionicDrive;
         this.leftSRX = leftSRX;
         this.rightSRX = rightSRX;
 
         //getPIDController().setSetpoint(angle / 3);
-        System.out.println("HI");
+        //System.out.println("HI");
         getPIDController().setSetpoint(angle);
     }
 
@@ -32,20 +28,14 @@ public class DriveRotate extends PIDCommand {
         bionicDrive.resetProfiling();
 //        getPIDController().reset();
 //        getPIDController().setSetpoint(mAngle);
-        System.out.println("INIT");
-        System.out.println("P " + this.getPIDController().getP() + " I " + this.getPIDController().getI() + " D " + this.getPIDController().getD());
+//        System.out.println("INIT");
+//        System.out.println("P " + this.getPIDController().getP() + " I " + this.getPIDController().getI() + " D " + this.getPIDController().getD());
     }
 
     @Override
     protected boolean isFinished() {
 
-        if (getPIDController().getError() < 0.06)
-        {
-            System.out.println("PID Finished");
-            return true;
-        }
-
-        return false;
+        return getPIDController().getError() < 0.06;
     }
 
     @Override

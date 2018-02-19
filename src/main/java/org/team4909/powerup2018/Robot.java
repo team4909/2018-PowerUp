@@ -145,7 +145,7 @@ public class Robot extends RoboRio {
     @Override
     public void robotPeriodic(){
         super.robotPeriodic();
-//        System.out.println(drivetrain.getHeading());
+        System.out.println(drivetrain.getHeading());
     }
     @Override
     public void teleopPeriodic() {
