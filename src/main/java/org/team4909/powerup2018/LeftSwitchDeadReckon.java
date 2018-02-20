@@ -11,14 +11,16 @@ public class LeftSwitchDeadReckon extends CommandGroup {
     public final double toMeters = 0.3048;
 
     public LeftSwitchDeadReckon(IntakeSubsystem intake, ElevatorSubsystem elevator, BionicDrive drivetrain){
-        addSequential(drivetrain.driveDistance(.5));
-        addSequential(drivetrain.driveRotation(-60),1);
-        addSequential(drivetrain.driveDistance(17 * toMeters),2);
-        addSequential(drivetrain.driveRotation(35),1);
+        addSequential(drivetrain.driveDistance(1));
+        addSequential(drivetrain.driveRotation(-60),2);
+        addSequential(drivetrain.driveDistance(19 * toMeters),2);
+        addSequential(drivetrain.driveRotation(60),2);
         addSequential(elevator.holdPosition(11000));
-        addSequential(drivetrain.driveDistance(4.4 * toMeters),2);
+        addSequential(drivetrain.driveDistance(2 * toMeters),2);
         addSequential(intake.outtake());
-        addSequential(new WaitCommand(3));
+        addSequential(new WaitCommand(2));
         addSequential(intake.cancel());
+        addSequential(drivetrain.driveDistance(-2 * toMeters),3);
+        addSequential(elevator.holdPosition(0));
     }
 }
