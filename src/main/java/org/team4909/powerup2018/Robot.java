@@ -224,6 +224,20 @@ public class Robot extends RoboRio {
             drivetrain.speedDeltaLimit = 0.0085;
         }
 
+        drivetrain.rotationDeltaLimit = 0.04 - (elevatorCoefficient * elevator.getCurrentPosition());
+
+        if(elevator.getCurrentPosition() > 20000) {
+            drivetrain.rotationDeltaLimit = 0.004;
+
+            if(elevator.getCurrentPosition() > 15000) {
+                drivetrain.rotationDeltaLimit = 0.005;
+            }
+
+            if(elevator.getCurrentPosition() >10000) {
+                drivetrain.rotationDeltaLimit = 0.006;
+            }
+        }
+
         elevator.encoderOverride = SmartDashboard.getBoolean("Elevator Encoder Override", false);
         SmartDashboard.putBoolean("Elevator Encoder Override", elevator.encoderOverride);
     }
