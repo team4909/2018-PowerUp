@@ -111,7 +111,7 @@ public class Robot extends RoboRio {
                 GameFeature.SWITCH_NEAR,
                 new LeftSwitchDeadReckon(
                         intake,
-                        elevator.holdPosition(11000),
+                        elevator,
                         drivetrain
                 ),
                 new RightSwitchDeadReckon(
@@ -189,8 +189,8 @@ public class Robot extends RoboRio {
 
     @Override
     public void teleopInit() {
-        intake.cancel();
         super.teleopInit();
+       // arduino.send(Arduino.State.enabled);
 
         if (autoCommand != null) {
             autoCommand.cancel();
