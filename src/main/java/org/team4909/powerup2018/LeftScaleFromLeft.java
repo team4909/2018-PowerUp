@@ -6,11 +6,11 @@ import org.team4909.bionicframework.subsystems.Intake.IntakeSubsystem;
 import org.team4909.bionicframework.subsystems.drive.BionicDrive;
 import org.team4909.bionicframework.subsystems.elevator.ElevatorSubsystem;
 
-public class LeftScaleDeadReckon extends CommandGroup {
+public class LeftScaleFromLeft extends CommandGroup {
 
     public final double toMeters = 0.3048;
 
-    public LeftScaleDeadReckon(IntakeSubsystem intake, ElevatorSubsystem elevator, BionicDrive drivetrain){
+    public LeftScaleFromLeft(IntakeSubsystem intake, ElevatorSubsystem elevator, BionicDrive drivetrain){
         addSequential(drivetrain.driveDistance(27 * toMeters)); //Old Value 16.41
         addSequential(drivetrain.driveRotation(90), 3); // Old Value 50.27
         addSequential(elevator.holdPosition(34000));
