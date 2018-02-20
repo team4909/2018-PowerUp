@@ -3,6 +3,7 @@ package org.team4909.powerup2018;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.hal.PDPJNI;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import openrio.powerup.MatchData.GameFeature;
@@ -98,6 +99,7 @@ public class Robot extends RoboRio {
         SmartDashboard.putBoolean("DS", DriverStation.getInstance().isDSAttached());
         SmartDashboard.putBoolean("FMS", DriverStation.getInstance().isFMSAttached());
         SmartDashboard.putBoolean("Brownout", DriverStation.getInstance().isBrownedOut());
+        SmartDashboard.putNumber("PDP Voltage", PDPJNI.getPDPVoltage(0));
 
 
         autoChooser = new SendableChooser();
