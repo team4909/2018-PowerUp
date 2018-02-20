@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import jaci.pathfinder.Waypoint;
 import openrio.powerup.MatchData.GameFeature;
 import org.team4909.bionicframework.hardware.core.Arduino;
 import org.team4909.bionicframework.hardware.core.RoboRio;
@@ -100,12 +99,14 @@ public class Robot extends RoboRio {
         SmartDashboard.putBoolean("FMS", DriverStation.getInstance().isFMSAttached());
         SmartDashboard.putBoolean("Brownout", DriverStation.getInstance().isBrownedOut());
 
+
         autoChooser = new SendableChooser();
         autoChooser.addDefault("Do Nothing", null);
-        autoChooser.addObject("Break Baseline", drivetrain.driveWaypoints(new Waypoint[]{
-                new Waypoint(1.59,0,0),
-                new Waypoint(9,0,0)
-        }));
+//        autoChooser.addObject("Break Baseline", drivetrain.driveWaypoints(new Waypoint[]{
+//                new Waypoint(1.59,0,0),
+//                new Waypoint(9,0,0)
+//        }));
+        autoChooser.addObject("Break Baseline", new  BreakBaseline(drivetrain));
         autoChooser.addObject("Center Switch L/R", new GameFeatureSide(
                 GameFeature.SWITCH_NEAR,
                 new LeftSwitchDeadReckon(
@@ -133,7 +134,7 @@ public class Robot extends RoboRio {
                                 elevator,
                                 drivetrain
                         ),
-                        null
+                        new  BreakBaseline(drivetrain)
                         )
                 )
         );
@@ -141,7 +142,7 @@ public class Robot extends RoboRio {
                 GameFeature.SCALE,
                 new GameFeatureSide(
                         GameFeature.SWITCH_NEAR,
-                        null,
+                        new  BreakBaseline(drivetrain),
                         new RightSwitchFromRight(
                                 intake,
                                 elevator,
