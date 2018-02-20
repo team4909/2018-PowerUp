@@ -47,7 +47,7 @@ public class Robot extends RoboRio {
                 new BionicSRX(
                         2,false,
                         FeedbackDevice.QuadEncoder, false,
-                        1,0,0, // P:1.7 I:0 D:7
+                        1,0,0,
                         1
                 ),
                 new BionicSRX(
@@ -95,25 +95,24 @@ public class Robot extends RoboRio {
                 manipulatorGamepad, BionicF310.LY,-1,
                 33150
         );
-        SmartDashboard.putNumber("Time: ", DriverStation.getInstance().getMatchTime());
-        SmartDashboard.putBoolean("DS", DriverStation.getInstance().isDSAttached());
-        SmartDashboard.putBoolean("FMS", DriverStation.getInstance().isFMSAttached());
-        SmartDashboard.putBoolean("Brownout", DriverStation.getInstance().isBrownedOut());
 
         autoChooser = new SendableChooser();
         autoChooser.addDefault("Do Nothing", null);
-        autoChooser.addObject("Break Baseline", drivetrain.driveWaypoints(new Waypoint[]{
+
+        Command driveStraightCommand = drivetrain.driveWaypoints(new Waypoint[]{
                 new Waypoint(1.59,0,0),
                 new Waypoint(9,0,0)
-        }));
+        });
+
+        autoChooser.addObject("Break Baseline", driveStraightCommand);
         autoChooser.addObject("Center Switch L/R", new GameFeatureSide(
                 GameFeature.SWITCH_NEAR,
-                new LeftSwitchDeadReckon(
+                new LeftSwitchFromCenter(
                         intake,
                         elevator.holdPosition(11000),
                         drivetrain
                 ),
-                new RightSwitchDeadReckon(
+                new RightSwitchFromCenter(
                         intake,
                         elevator.holdPosition(11000),
                         drivetrain
@@ -121,7 +120,7 @@ public class Robot extends RoboRio {
         ));
         autoChooser.addObject("Left Scale/Switch", new GameFeatureSide(
                 GameFeature.SCALE,
-                new LeftScaleDeadReckon(
+                new LeftScaleFromLeft(
                         intake,
                         elevator,
                         drivetrain
@@ -133,41 +132,32 @@ public class Robot extends RoboRio {
                                 elevator,
                                 drivetrain
                         ),
-                        null
-                        )
+                        driveStraightCommand
                 )
-        );
+        ));
         autoChooser.addObject("Right Scale/Switch", new GameFeatureSide(
                 GameFeature.SCALE,
                 new GameFeatureSide(
                         GameFeature.SWITCH_NEAR,
-                        null,
+                        driveStraightCommand,
                         new RightSwitchFromRight(
                                 intake,
                                 elevator,
                                 drivetrain
                         )
                 ),
-                new RightScaleDeadReckon(
+                new RightScaleFromRight(
                         intake,
                         elevator,
                         drivetrain
                 )
         ));
-        autoChooser.addObject("DEBUG ONLY: Rotate 90 Degrees", drivetrain.driveRotation(90));
-        autoChooser.addObject("DEBUG ONLY: Do Rotation Test", drivetrain.driveRotationTest());
+//        autoChooser.addObject("DEBUG ONLY: Do Rotation Test", drivetrain.driveRotationTest());
         SmartDashboard.putData( "autochooser", autoChooser);
     }
 
     @Override
-    public void robotPeriodic(){
-        super.robotPeriodic();
-        //System.out.println(drivetrain.getHeading());
-    }
-    @Override
     public void teleopPeriodic() {
-        //System.out.println(drivetrain.getHeading());
-
         hookDeploy.set(manipulatorGamepad, BionicF310.RY, 0.5);
     }
 
@@ -198,6 +188,11 @@ public class Robot extends RoboRio {
 
     @Override
     protected void dashboardPeriodic() {
+        SmartDashboard.putNumber("Time: ", DriverStation.getInstance().getMatchTime());
+        SmartDashboard.putBoolean("DS", DriverStation.getInstance().isDSAttached());
+        SmartDashboard.putBoolean("FMS", DriverStation.getInstance().isFMSAttached());
+        SmartDashboard.putBoolean("Brownout", DriverStation.getInstance().isBrownedOut());
+
         drivetrain.profiling = SmartDashboard.getBoolean("Drivetrain Profiling", false);
         SmartDashboard.putBoolean("Drivetrain Profiling", drivetrain.profiling);
 
@@ -206,7 +201,7 @@ public class Robot extends RoboRio {
 
         SmartDashboard.putBoolean("Is High Gear?", drivetrain.getGear());
 
-//        drivetrain.speedDeltaLimit = elevator.getCurrentPosition() * .10;
+        drivetrain.speedDeltaLimit = .1 - (.5 * (elevator.getCurrentPosition() / 33150));
 
         elevator.encoderOverride = SmartDashboard.getBoolean("Elevator Encoder Override", false);
         SmartDashboard.putBoolean("Elevator Encoder Override", elevator.encoderOverride);
