@@ -16,6 +16,8 @@ import org.team4909.bionicframework.hardware.pneumatics.BionicSingleSolenoid;
 import org.team4909.bionicframework.hardware.sensors.gyro.BionicNavX;
 import org.team4909.bionicframework.operator.controllers.BionicF310;
 import org.team4909.bionicframework.subsystems.Intake.IntakeSubsystem;
+import org.team4909.bionicframework.subsystems.Underglow.Commands.*;
+import org.team4909.bionicframework.subsystems.Underglow.Underglow;
 import org.team4909.bionicframework.subsystems.drive.BionicDrive;
 import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainConfig;
 import org.team4909.bionicframework.subsystems.elevator.ElevatorSubsystem;
@@ -28,6 +30,7 @@ public class Robot extends RoboRio {
     private static ElevatorSubsystem elevator;
     private static MotorSubsystem winch;
     private static MotorSubsystem hookDeploy;
+    private static Underglow underglow;
 
     /* OI Initialization */
     private static BionicF310 driverGamepad;
@@ -42,6 +45,7 @@ public class Robot extends RoboRio {
         driverGamepad = new BionicF310(0, 0.1, 0.8);
         manipulatorGamepad = new BionicF310(1, 0.1, 0.5);
         arduino = new Arduino(4);
+        underglow = new Underglow(3, 5, 4);
 
         drivetrain = new BionicDrive(
                 new BionicSRX(
@@ -81,6 +85,11 @@ public class Robot extends RoboRio {
         );
         driverGamepad.buttonHeld(BionicF310.LB, winch.setPercentOutput(-0.5));
         driverGamepad.buttonHeld(BionicF310.RB, winch.setPercentOutput(1.0));
+        driverGamepad.buttonPressed(BionicF310.B, new ColorRed(underglow));
+        driverGamepad.buttonPressed(BionicF310.X, new ColorBlue(underglow));
+        driverGamepad.buttonPressed(BionicF310.A, new ColorGreen(underglow));
+        driverGamepad.buttonPressed(BionicF310.Y, new ColorWhite(underglow));
+        driverGamepad.buttonPressed(BionicF310.Start, new ColorPurple(underglow));
 
         hookDeploy = new MotorSubsystem(
                 new BionicSpark(4,false)
@@ -221,6 +230,7 @@ public class Robot extends RoboRio {
 
     @Override
     protected void robotDisabled() {
+        underglow.setGreen();
         if (autoCommand != null) {
             autoCommand.cancel();
         }
