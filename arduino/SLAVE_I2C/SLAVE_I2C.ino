@@ -18,7 +18,7 @@ void setup() {
 
   // Initialize LED Strip
   strip.begin();
-      setColor(0, 255, 0);
+      setColor(148, 0, 211);
   strip.show();
 }
 

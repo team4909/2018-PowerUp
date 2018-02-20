@@ -41,6 +41,7 @@ public class Robot extends RoboRio {
     public void robotInit() {
         driverGamepad = new BionicF310(0, 0.1, 0.8);
         manipulatorGamepad = new BionicF310(1, 0.1, 0.5);
+        arduino = new Arduino(4);
 
         drivetrain = new BionicDrive(
                 new BionicSRX(
@@ -102,21 +103,17 @@ public class Robot extends RoboRio {
 
         autoChooser = new SendableChooser();
         autoChooser.addDefault("Do Nothing", null);
-//        autoChooser.addObject("Break Baseline", drivetrain.driveWaypoints(new Waypoint[]{
-//                new Waypoint(1.59,0,0),
-//                new Waypoint(9,0,0)
-//        }));
         autoChooser.addObject("Break Baseline", new  BreakBaseline(drivetrain));
         autoChooser.addObject("Center Switch L/R", new GameFeatureSide(
                 GameFeature.SWITCH_NEAR,
                 new LeftSwitchDeadReckon(
                         intake,
-                        elevator.holdPosition(11000),
+                        elevator,
                         drivetrain
                 ),
                 new RightSwitchDeadReckon(
                         intake,
-                        elevator.holdPosition(11000),
+                        elevator,
                         drivetrain
                 )
         ));
@@ -189,9 +186,12 @@ public class Robot extends RoboRio {
 
     @Override
     public void teleopInit() {
-        intake.cancel();
         super.teleopInit();
-
+        try {
+            arduino.send(Arduino.State.enabled);
+        }catch(Exception e){
+            System.out.println("No Arduino");
+        }
         if (autoCommand != null) {
             autoCommand.cancel();
         }
