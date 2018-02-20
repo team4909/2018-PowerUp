@@ -232,7 +232,13 @@ public class Robot extends RoboRio {
 
     @Override
     protected void robotDisabled() {
-        underglow.setGreen();
+        if (DriverStation.getInstance().getAlliance() == DriverStation.Alliance.Blue){
+            underglow.setBlue();
+        }else if(DriverStation.getInstance().getAlliance() == DriverStation.Alliance.Red){
+            underglow.setRed();
+        }else{
+            underglow.setGreen();
+        }
         if (autoCommand != null) {
             autoCommand.cancel();
         }
