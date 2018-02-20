@@ -218,7 +218,11 @@ public class Robot extends RoboRio {
 
         SmartDashboard.putBoolean("Is High Gear?", drivetrain.getGear());
         double elevatorCoefficient = (.05/34000);
-       drivetrain.speedDeltaLimit = 0.1 - (elevatorCoefficient * elevator.getCurrentPosition());
+       drivetrain.speedDeltaLimit = 0.04 - (elevatorCoefficient * elevator.getCurrentPosition());
+
+        if(elevator.getCurrentPosition() > 20000) {
+            drivetrain.speedDeltaLimit = 0.0085;
+        }
 
         elevator.encoderOverride = SmartDashboard.getBoolean("Elevator Encoder Override", false);
         SmartDashboard.putBoolean("Elevator Encoder Override", elevator.encoderOverride);
