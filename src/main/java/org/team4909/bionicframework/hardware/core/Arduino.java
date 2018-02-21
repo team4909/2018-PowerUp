@@ -28,7 +28,7 @@ public class Arduino {
 	 * @param address I2C Address as configured on Arduino
 	 */
 	public Arduino(int address) {
-		i2c = new I2C(I2C.Port.kOnboard, address);
+		i2c = new I2C(I2C.Port.kMXP, address);
 	}
 	
 	/**

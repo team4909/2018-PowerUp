@@ -91,6 +91,7 @@ public class Robot extends RoboRio {
         driverGamepad.buttonPressed(BionicF310.A, new ColorGreen(underglow));
         driverGamepad.buttonPressed(BionicF310.Y, new ColorWhite(underglow));
         driverGamepad.buttonPressed(BionicF310.Start, new ColorPurple(underglow));
+        driverGamepad.buttonPressed(BionicF310.Back, arduino.send(Arduino.State.disabled));
 
         hookDeploy = new MotorSubsystem(
                 new BionicSpark(4,false)
