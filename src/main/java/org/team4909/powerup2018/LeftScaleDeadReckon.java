@@ -15,7 +15,7 @@ public class LeftScaleDeadReckon extends CommandGroup {
         addSequential(drivetrain.driveRotation(90), 3); // Old Value 50.27
         addSequential(elevator.holdPosition(34000));
         addSequential(new WaitCommand(3));
-        addSequential(drivetrain.driveDistance(0.5 * toMeters), 2);
+        addSequential(drivetrain.driveDistance(2 * toMeters), 2);
         addSequential(intake.outtake());
         addSequential(new WaitCommand(1.5));
         addSequential(intake.cancel());
