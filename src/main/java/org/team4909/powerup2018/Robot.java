@@ -260,3 +260,7 @@ public class Robot extends RoboRio {
         }
     }
 }
+
+int arduinoElevatorPosition = (255*elevator.getCurrentPosition()/34000);
+
+arduino.send(arduinoElevatorPosition);
