@@ -6,15 +6,15 @@ import org.team4909.bionicframework.subsystems.Intake.IntakeSubsystem;
 import org.team4909.bionicframework.subsystems.drive.BionicDrive;
 import org.team4909.bionicframework.subsystems.elevator.ElevatorSubsystem;
 
-public class LeftSwitchDeadReckon extends CommandGroup {
+public class RightSwitchFromCenter extends CommandGroup {
 
     public final double toMeters = 0.3048;
 
-    public LeftSwitchDeadReckon(IntakeSubsystem intake, ElevatorSubsystem elevator, BionicDrive drivetrain){
+    public RightSwitchFromCenter(IntakeSubsystem intake, ElevatorSubsystem elevator, BionicDrive drivetrain){
         addSequential(drivetrain.driveDistance(1));
-        addSequential(drivetrain.driveRotation(-60),2);
+        addSequential(drivetrain.driveRotation(60),1.5);
         addSequential(drivetrain.driveDistance(19 * toMeters),2);
-        addSequential(drivetrain.driveRotation(60),2);
+        addSequential(drivetrain.driveRotation(-60),2);
         addSequential(elevator.holdPosition(11000));
         addSequential(drivetrain.driveDistance(2 * toMeters),2);
         addSequential(intake.outtake());

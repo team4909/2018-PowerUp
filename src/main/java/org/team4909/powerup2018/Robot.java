@@ -118,12 +118,12 @@ public class Robot extends RoboRio {
         autoChooser.addObject("Break Baseline", new  BreakBaseline(drivetrain));
         autoChooser.addObject("Center Switch L/R", new GameFeatureSide(
                 GameFeature.SWITCH_NEAR,
-                new LeftSwitchDeadReckon(
+                new LeftSwitchFromCenter(
                         intake,
                         elevator,
                         drivetrain
                 ),
-                new RightSwitchDeadReckon(
+                new RightSwitchFromCenter(
                         intake,
                         elevator,
                         drivetrain
@@ -131,7 +131,7 @@ public class Robot extends RoboRio {
         ));
         autoChooser.addObject("Left Scale/Switch", new GameFeatureSide(
                 GameFeature.SCALE,
-                new LeftScaleDeadReckon(
+                new LeftScaleFromLeft(
                         intake,
                         elevator,
                         drivetrain
@@ -158,7 +158,7 @@ public class Robot extends RoboRio {
                                 drivetrain
                         )
                 ),
-                new RightScaleDeadReckon(
+                new RightScaleFromRight(
                         intake,
                         elevator,
                         drivetrain
