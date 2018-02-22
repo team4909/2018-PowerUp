@@ -9,19 +9,6 @@ import org.team4909.bionicframework.interfaces.Commandable;
  * Arduino Library for I2C Communications to be used for LEDs and sensors
  */
 public class Arduino {
-	 /**
-	 * Enum of State Signals to send to an Arduino
-	 */
-	public static enum State {
-		 disabled(7),
-		 enabled(6);
-		 
-		 public final int signal;
-		 State(int signal) {
-			 this.signal = signal;
-		 }
-	}
-	 
 	private I2C i2c;
 	
 	/**
@@ -30,29 +17,33 @@ public class Arduino {
 	public Arduino(int address) {
 		i2c = new I2C(I2C.Port.kMXP, address);
 	}
-	
+
+	public void sendSignal(int state){
+	    byte[] toSend = { (byte) state };
+        try {
+            i2c.transaction(toSend, 1, null, 0);
+        } catch(java.lang.NullPointerException e) {
+            DriverStation.reportError("Could not connect to Arduino", false);
+        }
+	}
+
 	/**
 	 * @param state State signal to be sent to the Arduino
 	 * @return Returns a Commandable that can be used by the operator and autonomous CommandGroups
 	 */
-	public Commandable send(State state) {
+	public Commandable send(int state) {
 		return new SendCommand(state);
 	}
 	
 	private class SendCommand extends Commandable {
-		State state;
+        int state;
 		
-		public SendCommand(State state){
+		public SendCommand(int state){
 			this.state = state;
 		}
 		
 		public void initialize(){
-			byte[] toSend = { (byte) state.signal };
-			try {
-				i2c.transaction(toSend, 1, null, 0);
-			} catch(java.lang.NullPointerException e) {
-				DriverStation.reportError("Could not connect to Arduino", false);
-			}
+            sendSignal(state);
 		}
 	}
 }
