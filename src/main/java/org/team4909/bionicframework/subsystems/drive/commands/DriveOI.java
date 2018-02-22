@@ -2,7 +2,7 @@ package org.team4909.bionicframework.subsystems.drive.commands;
 
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import org.team4909.bionicframework.hardware.motor.BionicSRX;
 import org.team4909.bionicframework.operator.controllers.BionicF310;
@@ -61,6 +61,10 @@ public class DriveOI extends Command {
             rotationDelta = Math.copySign(rotationDeltaLimit, rotationDelta);
         limitedRotation += rotationDelta;
 
+        if(DriverStation.getInstance().isAutonomous()){
+            limitedSpeed = speed;
+            limitedRotation = rotation;
+        }
         // Calculate Left/Right Percentage Output Values
         double leftMotorOutput, rightMotorOutput;
 

@@ -3,6 +3,7 @@ package org.team4909.powerup2018;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.hal.PDPJNI;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import openrio.powerup.MatchData.GameFeature;
@@ -16,6 +17,8 @@ import org.team4909.bionicframework.hardware.pneumatics.BionicSingleSolenoid;
 import org.team4909.bionicframework.hardware.sensors.gyro.BionicNavX;
 import org.team4909.bionicframework.operator.controllers.BionicF310;
 import org.team4909.bionicframework.subsystems.Intake.IntakeSubsystem;
+import org.team4909.bionicframework.subsystems.Underglow.Commands.*;
+import org.team4909.bionicframework.subsystems.Underglow.Underglow;
 import org.team4909.bionicframework.subsystems.drive.BionicDrive;
 import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainConfig;
 import org.team4909.bionicframework.subsystems.elevator.ElevatorSubsystem;
@@ -28,6 +31,7 @@ public class Robot extends RoboRio {
     private static ElevatorSubsystem elevator;
     private static MotorSubsystem winch;
     private static MotorSubsystem hookDeploy;
+    private static Underglow underglow;
 
     /* OI Initialization */
     private static BionicF310 driverGamepad;
@@ -41,6 +45,8 @@ public class Robot extends RoboRio {
     public void robotInit() {
         driverGamepad = new BionicF310(0, 0.1, 0.8);
         manipulatorGamepad = new BionicF310(1, 0.1, 0.5);
+        arduino = new Arduino(4);
+        underglow = new Underglow(3, 5, 4);
 
         drivetrain = new BionicDrive(
                 new BionicSRX(
@@ -80,6 +86,12 @@ public class Robot extends RoboRio {
         );
         driverGamepad.buttonHeld(BionicF310.LB, winch.setPercentOutput(-0.5));
         driverGamepad.buttonHeld(BionicF310.RB, winch.setPercentOutput(1.0));
+        driverGamepad.buttonPressed(BionicF310.B, new ColorRed(underglow));
+        driverGamepad.buttonPressed(BionicF310.X, new ColorBlue(underglow));
+        driverGamepad.buttonPressed(BionicF310.A, new ColorGreen(underglow));
+        driverGamepad.buttonPressed(BionicF310.Y, new ColorWhite(underglow));
+        driverGamepad.buttonPressed(BionicF310.Start, new ColorPurple(underglow));
+        driverGamepad.buttonPressed(BionicF310.Back, arduino.send(Arduino.State.disabled));
 
         hookDeploy = new MotorSubsystem(
                 new BionicSpark(4,false)
@@ -98,25 +110,22 @@ public class Robot extends RoboRio {
         SmartDashboard.putBoolean("DS", DriverStation.getInstance().isDSAttached());
         SmartDashboard.putBoolean("FMS", DriverStation.getInstance().isFMSAttached());
         SmartDashboard.putBoolean("Brownout", DriverStation.getInstance().isBrownedOut());
+        SmartDashboard.putNumber("PDP Voltage", PDPJNI.getPDPVoltage(0));
 
 
         autoChooser = new SendableChooser();
         autoChooser.addDefault("Do Nothing", null);
-//        autoChooser.addObject("Break Baseline", drivetrain.driveWaypoints(new Waypoint[]{
-//                new Waypoint(1.59,0,0),
-//                new Waypoint(9,0,0)
-//        }));
         autoChooser.addObject("Break Baseline", new  BreakBaseline(drivetrain));
         autoChooser.addObject("Center Switch L/R", new GameFeatureSide(
                 GameFeature.SWITCH_NEAR,
                 new LeftSwitchFromCenter(
                         intake,
-                        elevator.holdPosition(11000),
+                        elevator,
                         drivetrain
                 ),
                 new RightSwitchFromCenter(
                         intake,
-                        elevator.holdPosition(11000),
+                        elevator,
                         drivetrain
                 )
         ));
@@ -189,9 +198,12 @@ public class Robot extends RoboRio {
 
     @Override
     public void teleopInit() {
-        intake.cancel();
         super.teleopInit();
-
+        try {
+            arduino.send(Arduino.State.enabled);
+        }catch(Exception e){
+            System.out.println("No Arduino");
+        }
         if (autoCommand != null) {
             autoCommand.cancel();
         }
@@ -206,8 +218,26 @@ public class Robot extends RoboRio {
         SmartDashboard.putBoolean("Drivetrain Encoder Override", drivetrain.encoderOverride);
 
         SmartDashboard.putBoolean("Is High Gear?", drivetrain.getGear());
+        double elevatorCoefficient = (.05/34000);
+       drivetrain.speedDeltaLimit = 0.04 - (elevatorCoefficient * elevator.getCurrentPosition());
 
-//        drivetrain.speedDeltaLimit = elevator.getCurrentPosition() * .10;
+        if(elevator.getCurrentPosition() > 20000) {
+            drivetrain.speedDeltaLimit = 0.0085;
+        }
+
+        drivetrain.rotationDeltaLimit = 0.04 - (elevatorCoefficient * elevator.getCurrentPosition());
+
+        if(elevator.getCurrentPosition() > 20000) {
+            drivetrain.rotationDeltaLimit = 0.004;
+
+            if(elevator.getCurrentPosition() > 15000) {
+                drivetrain.rotationDeltaLimit = 0.005;
+            }
+
+            if(elevator.getCurrentPosition() >10000) {
+                drivetrain.rotationDeltaLimit = 0.006;
+            }
+        }
 
         elevator.encoderOverride = SmartDashboard.getBoolean("Elevator Encoder Override", false);
         SmartDashboard.putBoolean("Elevator Encoder Override", elevator.encoderOverride);
@@ -221,6 +251,13 @@ public class Robot extends RoboRio {
 
     @Override
     protected void robotDisabled() {
+        if (DriverStation.getInstance().getAlliance() == DriverStation.Alliance.Blue){
+            underglow.setBlue();
+        }else if(DriverStation.getInstance().getAlliance() == DriverStation.Alliance.Red){
+            underglow.setRed();
+        }else{
+            underglow.setGreen();
+        }
         if (autoCommand != null) {
             autoCommand.cancel();
         }
