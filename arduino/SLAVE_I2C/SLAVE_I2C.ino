@@ -38,42 +38,10 @@ void receiveEvent(int bytes) {
 }
 
 void loop() {
-  //Add Pre-Programmed cases here:
-  switch (lastValue) {
-    case 0:
-      setColor(0, 255, 0);
-      break;
-    case 1:
-      setColor(255, 0, 0);
-      break;
-    case 2:
-      setColor(30, 255, 30);
-      break;
-    case 3:
-      setColor(0, 0, 255);
-      break;
-    case 4:
-      setColor(255, 204, 0);
-      break;
-    // ENABLE
-    case 6:
-      setColor(0, 0, 0);
-      delay(225);
-      setColor(255, 15, 0);
-      delay(225);
-      break;
-    // DISABLE
-    case 7:
-      setColor(255, 25, 0);
-      break;
-    default:
-      setColor(0, 255, 0);
-      break;
-  }
     
-    if(arduinoElevatorPosition > 0) {
-  if(arduinoElevatorPosition <= 1) {
-    for(int n=0; n <= 29; n++) {
+  if(arduinoElevatorPosition > 0) {
+    if(arduinoElevatorPosition <= 1) {
+      for(int n=0; n <= 29; n++) {
     strip_b.setPixelColor(n, 215, 40, 50);
     strip_b.show();
    }}}
