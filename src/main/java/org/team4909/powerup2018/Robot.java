@@ -91,7 +91,6 @@ public class Robot extends RoboRio {
         driverGamepad.buttonPressed(BionicF310.A, new ColorGreen(underglow));
         driverGamepad.buttonPressed(BionicF310.Y, new ColorWhite(underglow));
         driverGamepad.buttonPressed(BionicF310.Start, new ColorPurple(underglow));
-        driverGamepad.buttonPressed(BionicF310.Back, arduino.send(Arduino.State.disabled));
 
         hookDeploy = new MotorSubsystem(
                 new BionicSpark(4,false)
@@ -173,15 +172,18 @@ public class Robot extends RoboRio {
     public void robotPeriodic(){
         super.robotPeriodic();
         //System.out.println(drivetrain.getHeading());
+        
+        double arduinoElevatorPosition = (30*elevator.getCurrentPosition()/34000);
+        arduino.send(arduinoElevatorPosition);
     }
+    
     @Override
     public void teleopPeriodic() {
         //System.out.println(drivetrain.getHeading());
 
         hookDeploy.set(manipulatorGamepad, BionicF310.RY, 0.5);
     }
-
-
+    
     @Override
     public void autonomousInit() {
         super.autonomousInit();
@@ -199,11 +201,7 @@ public class Robot extends RoboRio {
     @Override
     public void teleopInit() {
         super.teleopInit();
-        try {
-            arduino.send(Arduino.State.enabled);
-        }catch(Exception e){
-            System.out.println("No Arduino");
-        }
+
         if (autoCommand != null) {
             autoCommand.cancel();
         }
