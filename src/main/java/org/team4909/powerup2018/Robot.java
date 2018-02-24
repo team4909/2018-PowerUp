@@ -172,17 +172,18 @@ public class Robot extends RoboRio {
     public void robotPeriodic(){
         super.robotPeriodic();
         //System.out.println(drivetrain.getHeading());
+        
+        int arduinoElevatorPosition = (30*elevator.getCurrentPosition()/34000);
+        arduino.send(arduinoElevatorPosition);
     }
+    
     @Override
     public void teleopPeriodic() {
         //System.out.println(drivetrain.getHeading());
 
-        arduino.send(23);
-
         hookDeploy.set(manipulatorGamepad, BionicF310.RY, 0.5);
     }
-
-
+    
     @Override
     public void autonomousInit() {
         super.autonomousInit();
@@ -260,7 +261,3 @@ public class Robot extends RoboRio {
         }
     }
 }
-
-int arduinoElevatorPosition = (30*elevator.getCurrentPosition()/34000);
-
-arduino.send(arduinoElevatorPosition);

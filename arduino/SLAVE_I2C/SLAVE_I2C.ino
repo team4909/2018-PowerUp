@@ -3,7 +3,6 @@
 #include <Adafruit_GFX.h> 
 #include <Wire.h>
 
-#define PIXEL_PIN    5
 #define PIXEL_PIN    6
 #define PIXEL_COUNT 64
 
