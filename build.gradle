@@ -26,6 +26,11 @@ compileKotlin {
     }
 }
 
+wpi {
+    wpilibVersion = '2018.3.3'
+    ctreVersion = '5.2.2.0'
+}
+
 repositories {
     mavenCentral()
     maven { url "https://kotlin.bintray.com/kotlinx" }
