@@ -1,4 +1,4 @@
-package org.team4909.powerup2018;
+package org.team4909.powerup2018.autonomous;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.ConditionalCommand;

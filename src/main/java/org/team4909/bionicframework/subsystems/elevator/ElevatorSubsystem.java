@@ -16,16 +16,16 @@ public class ElevatorSubsystem extends Subsystem {
 
     public int holdingPosition;
     public boolean encoderOverride;
-    private final double oiMultiplier;
+    private final double joystickMultiplier;
 
     public ElevatorSubsystem(BionicSRX bionicSRX,
-                             BionicJoystick joystick, BionicAxis axis, double oiMultiplier,
+                             BionicJoystick joystick, BionicAxis axis, double joystickMultiplier,
                              int forwardLimit){
         this.bionicSRX = bionicSRX;
         this.joystick = joystick;
         this.axis = axis;
 
-        this.oiMultiplier = oiMultiplier;
+        this.joystickMultiplier = joystickMultiplier;
 
         bionicSRX.enableFwdSoftLimit(forwardLimit);
         bionicSRX.configReverseSoftLimitEnable(false, 0);
@@ -39,7 +39,7 @@ public class ElevatorSubsystem extends Subsystem {
             bionicSRX.setSelectedSensorPosition(holdingPosition,0,0);
         }
 
-        double moveSpeed = joystick.getSensitiveAxis(axis) * oiMultiplier;
+        double moveSpeed = joystick.getSensitiveAxis(axis) * joystickMultiplier;
 
         if(moveSpeed == 0 && !encoderOverride) {
             bionicSRX.set(ControlMode.Position, holdingPosition);
