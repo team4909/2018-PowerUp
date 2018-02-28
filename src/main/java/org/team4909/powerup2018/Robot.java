@@ -168,12 +168,6 @@ public class Robot extends RoboRio {
     protected void dashboardPeriodic() {
         super.dashboardPeriodic();
 
-        SmartDashboard.putNumber("Time: ", DriverStation.getInstance().getMatchTime());
-        SmartDashboard.putBoolean("DS", DriverStation.getInstance().isDSAttached());
-        SmartDashboard.putBoolean("FMS", DriverStation.getInstance().isFMSAttached());
-        SmartDashboard.putBoolean("Brownout", DriverStation.getInstance().isBrownedOut());
-        SmartDashboard.putNumber("PDP Voltage", powerDistributionPanel.getVoltage());
-
         drivetrain.profiling = SmartDashboard.getBoolean("Drivetrain Profiling", false);
         drivetrain.encoderOverride = SmartDashboard.getBoolean("Drivetrain Encoder Override", false);
         SmartDashboard.putBoolean("Drivetrain Profiling", drivetrain.profiling);

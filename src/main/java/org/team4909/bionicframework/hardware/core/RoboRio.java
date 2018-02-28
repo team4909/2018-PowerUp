@@ -1,6 +1,7 @@
 package org.team4909.bionicframework.hardware.core;
 
 import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -20,15 +21,22 @@ public abstract class RoboRio extends TimedRobot {
      * Called from Robot Periodic to Separate all Dashboard Logging
      */
     protected void dashboardPeriodic() {
-        autoChooser.addDefault("Do Nothing", null);
-        SmartDashboard.putData("Autonomous Mode Chooser: ", autoChooser);
+        SmartDashboard.putNumber("Time: ", DriverStation.getInstance().getMatchTime());
+        SmartDashboard.putBoolean("DS", DriverStation.getInstance().isDSAttached());
+        SmartDashboard.putBoolean("FMS", DriverStation.getInstance().isFMSAttached());
+        SmartDashboard.putBoolean("Brownout", DriverStation.getInstance().isBrownedOut());
+        SmartDashboard.putNumber("PDP Voltage", powerDistributionPanel.getVoltage());
     }
 
     @Override
     public void robotInit() {
         controllerInit();
         subsystemInit();
+
+        autoChooser.addDefault("Do Nothing", null);
         autoChooserInit();
+        SmartDashboard.putData("Autonomous Mode Chooser: ", autoChooser);
+
     }
 
     protected void robotEnabled() {
