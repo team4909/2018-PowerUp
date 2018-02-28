@@ -116,7 +116,7 @@ public class Robot extends RoboRio {
         autoChooser = new SendableChooser();
         autoChooser.addDefault("Do Nothing", null);
         autoChooser.addObject("Break Baseline", new  BreakBaseline(drivetrain));
-        autoChooser.addObject("Center Switch L/R", new GameFeatureSide(
+        autoChooser.addObject("Center Switch", new GameFeatureSide(
                 GameFeature.SWITCH_NEAR,
                 new LeftSwitchFromCenter(
                         intake,
@@ -129,41 +129,46 @@ public class Robot extends RoboRio {
                         drivetrain
                 )
         ));
-        autoChooser.addObject("Left Scale/Switch", new GameFeatureSide(
+        autoChooser.addObject("Left Start Scale Preferred", new GameFeatureSide(
                 GameFeature.SCALE,
-                new LeftScaleFromLeft(
-                        intake,
-                        elevator,
-                        drivetrain
-                ),
+                new LeftScaleFromLeft(intake, elevator, drivetrain),
                 new GameFeatureSide(
                         GameFeature.SWITCH_NEAR,
-                        new LeftSwitchFromLeft(
-                                intake,
-                                elevator,
-                                drivetrain
-                        ),
+                        new LeftSwitchFromLeft(intake, elevator, drivetrain),
                         new  BreakBaseline(drivetrain)
                         )
                 )
         );
-        autoChooser.addObject("Right Scale/Switch", new GameFeatureSide(
-                GameFeature.SCALE,
+        autoChooser.addObject("Right Start Scale Preferred", new GameFeatureSide(
+                    GameFeature.SCALE,
+                new RightScaleFromRight(intake, elevator, drivetrain),
                 new GameFeatureSide(
                         GameFeature.SWITCH_NEAR,
-                        new  BreakBaseline(drivetrain),
-                        new RightSwitchFromRight(
-                                intake,
-                                elevator,
-                                drivetrain
-                        )
-                ),
-                new RightScaleFromRight(
-                        intake,
-                        elevator,
-                        drivetrain
+                        new RightSwitchFromRight(intake, elevator, drivetrain),
+                        new  BreakBaseline(drivetrain)
                 )
-        ));
+            )
+        );
+        autoChooser.addObject("Left Start Switch Preferred", new GameFeatureSide(
+                GameFeature.SWITCH_NEAR,
+                new LeftSwitchFromLeft(intake, elevator, drivetrain),
+                new GameFeatureSide(
+                        GameFeature.SWITCH_NEAR,
+                        new LeftScaleFromLeft(intake, elevator, drivetrain),
+        new BreakBaseline(drivetrain)
+                )
+             )
+        );
+        autoChooser.addObject("Right Start Switch Preferred", new GameFeatureSide(
+                GameFeature.SWITCH_NEAR,
+                new RightSwitchFromRight(intake, elevator, drivetrain),
+                new GameFeatureSide(
+                        GameFeature.SCALE,
+                        new RightScaleFromRight(intake, elevator, drivetrain),
+                        new BreakBaseline(drivetrain)
+                        )
+                )
+        );
         autoChooser.addObject("DEBUG ONLY: Rotate 90 Degrees", drivetrain.driveRotation(90));
         autoChooser.addObject("DEBUG ONLY: Do Rotation Test", drivetrain.driveRotationTest());
         SmartDashboard.putData( "autochooser", autoChooser);
