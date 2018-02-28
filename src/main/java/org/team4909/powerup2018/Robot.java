@@ -173,7 +173,7 @@ public class Robot extends RoboRio {
         super.robotPeriodic();
         //System.out.println(drivetrain.getHeading());
         
-        double arduinoElevatorPosition = (30*elevator.getCurrentPosition()/34000);
+        int arduinoElevatorPosition = (int)(30.0*elevator.getCurrentPosition()/34000.0);
         arduino.send(arduinoElevatorPosition);
     }
     
