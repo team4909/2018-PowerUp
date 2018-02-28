@@ -164,6 +164,40 @@ public class Robot extends RoboRio {
                         drivetrain
                 )
         ));
+        autoChooser.addObject("Left Switch/Scale", new GameFeatureSide(
+                GameFeature.SWITCH_NEAR,
+                new GameFeatureSide(
+                        GameFeature.SCALE,
+                        new BreakBaseline(drivetrain),
+                        new LeftScaleFromLeft(
+                                intake,
+                                elevator,
+                                drivetrain
+                        )
+                ),
+                new LeftScaleFromLeft(
+                        intake,
+                        elevator,
+                        drivetrain
+                )
+        ));
+        autoChooser.addObject("Right Switch/Scale", new GameFeatureSide(
+                GameFeature.SWITCH_NEAR,
+                new GameFeatureSide(
+                        GameFeature.SCALE,
+                        new BreakBaseline(drivetrain),
+                        new RightScaleFromRight(
+                                intake,
+                                elevator,
+                                drivetrain
+                        )
+                ),
+                new RightScaleFromRight(
+                        intake,
+                        elevator,
+                        drivetrain
+                )
+        ));
         autoChooser.addObject("DEBUG ONLY: Rotate 90 Degrees", drivetrain.driveRotation(90));
         autoChooser.addObject("DEBUG ONLY: Do Rotation Test", drivetrain.driveRotationTest());
         SmartDashboard.putData( "autochooser", autoChooser);
