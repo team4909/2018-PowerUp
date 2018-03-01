@@ -16,15 +16,8 @@ import org.team4909.bionicframework.operator.controllers.BionicF310;
 import org.team4909.bionicframework.subsystems.drive.BionicDrive;
 import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainConfig;
 import org.team4909.bionicframework.subsystems.elevator.ElevatorSubsystem;
-import org.team4909.powerup2018.subsystems.IntakeSubsystem;
+import org.team4909.bionicframework.subsystems.leds.pcm.RGBStrip;
 import org.team4909.powerup2018.autonomous.*;
-
-import org.team4909.bionicframework.subsystems.Underglow.Commands.ColorRed;
-import org.team4909.bionicframework.subsystems.Underglow.Commands.ColorBlue;
-import org.team4909.bionicframework.subsystems.Underglow.Commands.ColorGreen;
-import org.team4909.bionicframework.subsystems.Underglow.Commands.ColorPurple;
-import org.team4909.bionicframework.subsystems.Underglow.Commands.ColorWhite;
-import org.team4909.bionicframework.subsystems.Underglow.Underglow;
 
 public class Robot extends RoboRio {
     /* Controller Initialization */
@@ -32,13 +25,14 @@ public class Robot extends RoboRio {
     private static BionicF310 manipulatorGamepad;
 
     /* Subsystem Initialization */
-    private static Arduino arduino;
     private static BionicDrive drivetrain;
-    private static IntakeSubsystem intake;
     private static ElevatorSubsystem elevator;
+    private static MotorSubsystem intake;
     private static MotorSubsystem winch;
     private static MotorSubsystem hookDeploy;
-    private static Underglow underglow;
+
+    private static Arduino arduino;
+    private static RGBStrip rgbStrip;
 
     @Override
     protected void controllerInit() {
@@ -53,9 +47,6 @@ public class Robot extends RoboRio {
 
     @Override
     protected void subsystemInit() {
-        arduino = new Arduino(4);
-        underglow = new Underglow(3, 5, 4);
-
         drivetrain = new BionicDrive(
                 new BionicSRX(
                         2, false,
@@ -92,13 +83,13 @@ public class Robot extends RoboRio {
                 33150
         );
 
-        intake = new IntakeSubsystem(
+        intake = new MotorSubsystem(
                 new BionicSpark(0, true),
                 new BionicSpark(1, false)
         );
-        manipulatorGamepad.buttonHeld(BionicF310.LT, 0.1, intake.intakeFast());
-        manipulatorGamepad.buttonHeld(BionicF310.RT, 0.1, intake.outtakeFast());
-        manipulatorGamepad.buttonHeld(BionicF310.B, intake.outtakeSlow());
+        manipulatorGamepad.buttonHeld(BionicF310.LT, 0.1, intake.setPercentOutput(1.0));
+        manipulatorGamepad.buttonHeld(BionicF310.RT, 0.1, intake.setPercentOutput(-1.0));
+        manipulatorGamepad.buttonHeld(BionicF310.B, intake.setPercentOutput(-0.5));
 
         winch = new MotorSubsystem(
                 new BionicVictorSP(2, true),
@@ -111,11 +102,14 @@ public class Robot extends RoboRio {
                 new BionicSpark(4, false)
         );
 
-        driverGamepad.buttonPressed(BionicF310.B, new ColorRed(underglow));
-        driverGamepad.buttonPressed(BionicF310.X, new ColorBlue(underglow));
-        driverGamepad.buttonPressed(BionicF310.A, new ColorGreen(underglow));
-        driverGamepad.buttonPressed(BionicF310.Y, new ColorWhite(underglow));
-        driverGamepad.buttonPressed(BionicF310.Start, new ColorPurple(underglow));
+        arduino = new Arduino(4);
+
+        rgbStrip = new RGBStrip(3, 5, 4);
+        driverGamepad.buttonPressed(BionicF310.B, rgbStrip.set(RGBStrip.Colors.Red));
+        driverGamepad.buttonPressed(BionicF310.B, rgbStrip.set(RGBStrip.Colors.Blue));
+        driverGamepad.buttonPressed(BionicF310.B, rgbStrip.set(RGBStrip.Colors.Lime));
+        driverGamepad.buttonPressed(BionicF310.B, rgbStrip.set(RGBStrip.Colors.White));
+        driverGamepad.buttonPressed(BionicF310.B, rgbStrip.set(RGBStrip.Colors.Magenta));
     }
 
     @Override
@@ -208,11 +202,11 @@ public class Robot extends RoboRio {
         super.robotDisabled();
 
         if (DriverStation.getInstance().getAlliance() == DriverStation.Alliance.Blue) {
-            underglow.setBlue();
+            rgbStrip.set(RGBStrip.Colors.Blue);
         } else if (DriverStation.getInstance().getAlliance() == DriverStation.Alliance.Red) {
-            underglow.setRed();
+            rgbStrip.set(RGBStrip.Colors.Red);
         } else {
-            underglow.setGreen();
+            rgbStrip.set(RGBStrip.Colors.Lime);
         }
     }
 }
