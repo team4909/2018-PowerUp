@@ -107,13 +107,7 @@ public class Robot extends RoboRio {
         );
 
         arduino = new Arduino(4);
-
         rgbStrip = new RGBStrip(3, 5, 4);
-        driverGamepad.buttonPressed(BionicF310.B, rgbStrip.set(RGBStrip.Colors.Red));
-        driverGamepad.buttonPressed(BionicF310.B, rgbStrip.set(RGBStrip.Colors.Blue));
-        driverGamepad.buttonPressed(BionicF310.B, rgbStrip.set(RGBStrip.Colors.Lime));
-        driverGamepad.buttonPressed(BionicF310.B, rgbStrip.set(RGBStrip.Colors.White));
-        driverGamepad.buttonPressed(BionicF310.B, rgbStrip.set(RGBStrip.Colors.Magenta));
     }
 
     @Override
