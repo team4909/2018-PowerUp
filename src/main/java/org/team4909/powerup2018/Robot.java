@@ -2,6 +2,8 @@ package org.team4909.powerup2018;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import openrio.powerup.MatchData.GameFeature;
 import org.team4909.bionicframework.hardware.core.Arduino;
@@ -31,8 +33,10 @@ public class Robot extends RoboRio {
     private static MotorSubsystem winch;
     private static MotorSubsystem hookDeploy;
 
+    /* Cosmetic Subsystems */
     private static Arduino arduino;
     private static RGBStrip rgbStrip;
+    private static SendableChooser underglowChooser = new SendableChooser();
 
     @Override
     protected void controllerInit() {
@@ -107,7 +111,10 @@ public class Robot extends RoboRio {
         );
 
         arduino = new Arduino(4);
+
         rgbStrip = new RGBStrip(3, 5, 4);
+        underglowChooser.addDefault("Alliance Color", rgbStrip.setAllianceColor());
+        SmartDashboard.putData("Underglow Color: ", underglowChooser);
     }
 
     @Override
@@ -184,6 +191,8 @@ public class Robot extends RoboRio {
 
         elevator.encoderOverride = SmartDashboard.getBoolean("Elevator Encoder Override", false);
         SmartDashboard.putBoolean("Elevator Encoder Override", elevator.encoderOverride);
+
+        ((Command) underglowChooser.getSelected()).start();
     }
 
     @Override
@@ -191,20 +200,6 @@ public class Robot extends RoboRio {
         super.robotEnabled();
 
         drivetrain.resetProfiling();
-
         elevator.holdCurrentPosition();
-    }
-
-    @Override
-    protected void robotDisabled() {
-        super.robotDisabled();
-
-        if (DriverStation.getInstance().getAlliance() == DriverStation.Alliance.Blue) {
-            rgbStrip.set(RGBStrip.Colors.Blue);
-        } else if (DriverStation.getInstance().getAlliance() == DriverStation.Alliance.Red) {
-            rgbStrip.set(RGBStrip.Colors.Red);
-        } else {
-            rgbStrip.set(RGBStrip.Colors.Lime);
-        }
     }
 }
