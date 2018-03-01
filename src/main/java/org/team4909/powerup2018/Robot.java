@@ -83,9 +83,9 @@ public class Robot extends RoboRio {
                 33150
         );
         manipulatorGamepad.povActive(BionicF310.Up, elevator.holdPosition(28400));
-        manipulatorGamepad.povActive(BionicF310.Right, elevator.holdPosition(11000));
-        manipulatorGamepad.povActive(BionicF310.Down, elevator.holdPosition(4000));
-        manipulatorGamepad.povActive(BionicF310.Left, elevator.holdPosition(200));
+        manipulatorGamepad.povActive(BionicF310.RightUp, elevator.holdPosition(11000));
+        manipulatorGamepad.povActive(BionicF310.RightDown, elevator.holdPosition(4000));
+        manipulatorGamepad.povActive(BionicF310.Down, elevator.holdPosition(200));
 
         intake = new MotorSubsystem(
                 new BionicSpark(0, true),

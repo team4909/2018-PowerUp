@@ -30,9 +30,13 @@ public class BionicF310 extends BionicJoystick {
     public static BionicButton RB = new BionicButton(6);
 
     public static BionicPOV Up = new BionicPOV(0);
-    public static BionicPOV Right = new BionicPOV(90);
     public static BionicPOV Down = new BionicPOV(180);
+    public static BionicPOV RightUp = new BionicPOV(45);
+    public static BionicPOV Right = new BionicPOV(90);
+    public static BionicPOV RightDown = new BionicPOV(135);
+    public static BionicPOV LeftUp = new BionicPOV(225);
     public static BionicPOV Left = new BionicPOV(270);
+    public static BionicPOV LeftDown = new BionicPOV(315);
 
     /**
      * @param port        Port between 0...5 the USB Joystick is configured to use.
