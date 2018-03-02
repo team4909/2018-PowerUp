@@ -86,10 +86,10 @@ public class Robot extends RoboRio {
                 manipulatorGamepad, BionicF310.LY, -1,
                 33150
         );
-        manipulatorGamepad.povActive(BionicF310.Up, elevator.holdPosition(28400));
-        manipulatorGamepad.povActive(BionicF310.RightUp, elevator.holdPosition(11000));
-        manipulatorGamepad.povActive(BionicF310.RightDown, elevator.holdPosition(4000));
-        manipulatorGamepad.povActive(BionicF310.Down, elevator.holdPosition(200));
+        manipulatorGamepad.povActive(BionicF310.Top, elevator.holdPosition(28400));
+        manipulatorGamepad.povActive(BionicF310.TopRight, elevator.holdPosition(11000));
+        manipulatorGamepad.povActive(BionicF310.BottomRight, elevator.holdPosition(4000));
+        manipulatorGamepad.povActive(BionicF310.Bottom, elevator.holdPosition(200));
 
         intake = new MotorSubsystem(
                 new BionicSpark(0, true),
@@ -173,26 +173,33 @@ public class Robot extends RoboRio {
         SmartDashboard.putBoolean("Drivetrain Encoder Override", drivetrain.encoderOverride);
         SmartDashboard.putBoolean("Is High Gear?", drivetrain.getGear());
 
+        elevator.encoderOverride = SmartDashboard.getBoolean("Elevator Encoder Override", false);
+        SmartDashboard.putBoolean("Elevator Encoder Override", elevator.encoderOverride);
+
+        ((Command) underglowChooser.getSelected()).start();
+    }
+
+    @Override
+    public void robotPeriodic() {
+        super.robotPeriodic();
+
         double elevatorCoefficient = (.05 / 34000);
 
-        drivetrain.speedDeltaLimit = 0.04 - (elevatorCoefficient * elevator.getCurrentPosition());
         if (elevator.getCurrentPosition() > 20000) {
             drivetrain.speedDeltaLimit = 0.0085;
+        } else {
+            drivetrain.speedDeltaLimit = 0.04 - (elevatorCoefficient * elevator.getCurrentPosition());
         }
 
-        drivetrain.rotationDeltaLimit = 0.04 - (elevatorCoefficient * elevator.getCurrentPosition());
         if (elevator.getCurrentPosition() > 20000) {
             drivetrain.rotationDeltaLimit = 0.004;
         } else if (elevator.getCurrentPosition() > 15000) {
             drivetrain.rotationDeltaLimit = 0.005;
         } else if (elevator.getCurrentPosition() > 10000) {
             drivetrain.rotationDeltaLimit = 0.006;
+        } else {
+            drivetrain.rotationDeltaLimit = 0.04 - (elevatorCoefficient * elevator.getCurrentPosition());
         }
-
-        elevator.encoderOverride = SmartDashboard.getBoolean("Elevator Encoder Override", false);
-        SmartDashboard.putBoolean("Elevator Encoder Override", elevator.encoderOverride);
-
-        ((Command) underglowChooser.getSelected()).start();
     }
 
     @Override
