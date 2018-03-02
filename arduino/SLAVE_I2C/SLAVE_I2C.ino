@@ -3,48 +3,78 @@
 #include <Adafruit_GFX.h> 
 #include <Wire.h>
 
-#define PIXEL_PIN    6
+#define PIXEL_PIN    5
 #define PIXEL_COUNT 64
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(PIXEL_COUNT, PIXEL_PIN, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel strip_b = Adafruit_NeoPixel(30, 5, NEO_GRB + NEO_KHZ800);
+//Adafruit_NeoPixel strip_b = Adafruit_NeoPixel(30, 5, NEO_GRB + NEO_KHZ800);
 
 int deviceNumber = 4;
 void setup() {
   // Start I2C as slave
   Wire.begin(deviceNumber);
-  Wire.onReceive(receiveEvent);
-  int arduinoElevatorPosition = 0;
+  //Wire.onReceive(receiveEvent);
   Serial.begin(9600);
   // Initialize LED Strip
   strip.begin();
-      setColor(148, 0, 211);
+//    setColor(148, 0, 211);
   strip.show();
 }
 
-void receiveEvent(int bytes) {
+void receiveEvent() {
   // Read the last number sent (0-30)
-  // int signalStatus = Wire.read();
-  int signalStatus = 29;
-  if (signalStatus <= 30){
-    for(int i = 0; i >= 29-signalStatus; i++){
-          strip.setPixelColor(i, 215, 40, 50);
-    }
-    for(int i = 0; i <= signalStatus; i++){
-          strip.setPixelColor(i, 40, 215, 160);
-    }   
-    strip.show();
-  }
-  
-  Serial.println(signalStatus);
+  // int LED = Wire.read();
+  int LED = 1;
 }
 
-void loop() {}
+int rainbow1(int wait){
+  for(int i = 0; i <= 40; i++){
+    int i1 = i-1;
+    int i2 = i;
+    int i3 = i+1; 
+    strip.setPixelColor(i1, 0, 0, 170);
+    strip.setPixelColor(i2, 0, 0, 255);
+    strip.setPixelColor(i3, 0, 85, 170);
+    strip.show();
+    if(i>0){
+      int x1 = i-4;
+      int x2 = i-3;
+      int x3 = i-2;
+      int y1 = i-7;
+      int y2 = i-6;
+      int y3 = i-5;
+      int z1 = i-10;
+      int z2 = i-9;
+      int z3 = i-8;
+      int a1 = i-11;
+      int a2 = i-12;
+      int a3 = i-13;
+      
+      strip.setPixelColor(x1, 85, 170, 0);
+      strip.setPixelColor(x2, 0, 255, 0);
+      strip.setPixelColor(x3, 0, 170, 85);
+      
+      strip.setPixelColor(y1, 170, 42, 0);
+      strip.setPixelColor(y2, 255, 0, 0);
+      strip.setPixelColor(y3, 170, 85, 0);
+      
+      strip.setPixelColor(z1, 125, 125, 0);
+      strip.setPixelColor(z2, 125, 125, 0);
+      strip.setPixelColor(z3, 42, 42, 0);
 
-void setColor(int red, int green, int blue) {
-  for(int i = 0; i < PIXEL_COUNT; i++){
-    strip.setPixelColor(i, red, green, blue);
+      strip.setPixelColor(a1, 0, 0, 0);
+      strip.setPixelColor(a2, 0, 0, 0);
+      strip.setPixelColor(a3, 0, 0, 0);
+      
+      strip.show();
+    }
+    delay(wait);
   }
-  
-  strip.show();
+}
+
+void loop() {
+  int LED = 1;
+  if (LED = 1){
+    rainbow1(25); 
+  }
 }
