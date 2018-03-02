@@ -7,8 +7,9 @@ import org.team4909.bionicframework.interfaces.Commandable;
 
 public class RGBStrip extends Subsystem {
     private Solenoid red, green, blue;
+    private Color currentColor = Color.Black;
 
-    public enum Colors {
+    public enum Color {
         Black(false, false, false),
         White(true, true, true),
         Red(true, false, false),
@@ -22,7 +23,7 @@ public class RGBStrip extends Subsystem {
         public final boolean green;
         public final boolean blue;
 
-        Colors(boolean red, boolean green, boolean blue) {
+        Color(boolean red, boolean green, boolean blue) {
             this.red = red;
             this.green = green;
             this.blue = blue;
@@ -35,23 +36,29 @@ public class RGBStrip extends Subsystem {
         blue = new Solenoid(blueChannel);
     }
 
-    public void setColor(Colors color){
+    public Color getCurrentColor(){
+        return currentColor;
+    }
+    
+    public void setColor(Color color){
+        currentColor = color;
+
         red.set(color.red);
         green.set(color.green);
         blue.set(color.blue);
     }
 
     public void reset(){
-        setColor(Colors.Black);
+        setColor(Color.Black);
     }
 
-    public Commandable set(Colors color) {
+    public Commandable set(Color color) {
         return new SetColor(color);
     }
     private class SetColor extends Commandable {
-        Colors color;
+        Color color;
 
-        public SetColor(Colors color){
+        public SetColor(Color color){
             this.color = color;
         }
 
@@ -68,13 +75,13 @@ public class RGBStrip extends Subsystem {
         public void initialize(){
             switch (DriverStation.getInstance().getAlliance()){
                 case Red:
-                    setColor(Colors.Red);
+                    setColor(Color.Red);
                     break;
                 case Blue:
-                    setColor(Colors.Blue);
+                    setColor(Color.Blue);
                     break;
                 default:    
-                    setColor(Colors.Lime);
+                    setColor(Color.Lime);
                     break;
             }
         }

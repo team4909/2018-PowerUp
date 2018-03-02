@@ -114,19 +114,19 @@ public class Robot extends RoboRio {
 
         rgbStrip = new RGBStrip(3, 5, 4);
         driverGamepad.buttonPressed(BionicF310.Back, rgbStrip.setAllianceColor());
-        driverGamepad.buttonPressed(BionicF310.Start, rgbStrip.set(RGBStrip.Colors.Magenta));
-        driverGamepad.buttonPressed(BionicF310.A, rgbStrip.set(RGBStrip.Colors.Lime));
-        driverGamepad.buttonPressed(BionicF310.B, rgbStrip.set(RGBStrip.Colors.White));
-        driverGamepad.buttonPressed(BionicF310.Y, rgbStrip.set(RGBStrip.Colors.Yellow));
-        driverGamepad.buttonPressed(BionicF310.X, rgbStrip.set(RGBStrip.Colors.Cyan));
+        driverGamepad.buttonPressed(BionicF310.Start, rgbStrip.set(RGBStrip.Color.Magenta));
+        driverGamepad.buttonPressed(BionicF310.A, rgbStrip.set(RGBStrip.Color.Lime));
+        driverGamepad.buttonPressed(BionicF310.B, rgbStrip.set(RGBStrip.Color.White));
+        driverGamepad.buttonPressed(BionicF310.Y, rgbStrip.set(RGBStrip.Color.Yellow));
+        driverGamepad.buttonPressed(BionicF310.X, rgbStrip.set(RGBStrip.Color.Cyan));
 
         underglowChooser.addDefault("Alliance Color", rgbStrip.setAllianceColor());
-        underglowChooser.addObject("Black", rgbStrip.set(RGBStrip.Colors.Black));
-        underglowChooser.addObject("White", rgbStrip.set(RGBStrip.Colors.White));
-        underglowChooser.addObject("Lime", rgbStrip.set(RGBStrip.Colors.Lime));
-        underglowChooser.addObject("Yellow", rgbStrip.set(RGBStrip.Colors.Yellow));
-        underglowChooser.addObject("Cyan", rgbStrip.set(RGBStrip.Colors.Cyan));
-        underglowChooser.addObject("Magenta", rgbStrip.set(RGBStrip.Colors.Magenta));
+        underglowChooser.addObject("Black", rgbStrip.set(RGBStrip.Color.Black));
+        underglowChooser.addObject("White", rgbStrip.set(RGBStrip.Color.White));
+        underglowChooser.addObject("Lime", rgbStrip.set(RGBStrip.Color.Lime));
+        underglowChooser.addObject("Yellow", rgbStrip.set(RGBStrip.Color.Yellow));
+        underglowChooser.addObject("Cyan", rgbStrip.set(RGBStrip.Color.Cyan));
+        underglowChooser.addObject("Magenta", rgbStrip.set(RGBStrip.Color.Magenta));
         SmartDashboard.putData("Underglow Color: ", underglowChooser);
     }
 
