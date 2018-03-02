@@ -113,6 +113,13 @@ public class Robot extends RoboRio {
         arduino = new Arduino(4);
 
         rgbStrip = new RGBStrip(3, 5, 4);
+        driverGamepad.buttonPressed(BionicF310.Back, rgbStrip.setAllianceColor());
+        driverGamepad.buttonPressed(BionicF310.Start, rgbStrip.set(RGBStrip.Colors.Magenta));
+        driverGamepad.buttonPressed(BionicF310.A, rgbStrip.set(RGBStrip.Colors.Lime));
+        driverGamepad.buttonPressed(BionicF310.B, rgbStrip.set(RGBStrip.Colors.White));
+        driverGamepad.buttonPressed(BionicF310.Y, rgbStrip.set(RGBStrip.Colors.Yellow));
+        driverGamepad.buttonPressed(BionicF310.X, rgbStrip.set(RGBStrip.Colors.Cyan));
+
         underglowChooser.addDefault("Alliance Color", rgbStrip.setAllianceColor());
         underglowChooser.addObject("Black", rgbStrip.set(RGBStrip.Colors.Black));
         underglowChooser.addObject("White", rgbStrip.set(RGBStrip.Colors.White));
@@ -181,6 +188,11 @@ public class Robot extends RoboRio {
 
         elevator.encoderOverride = SmartDashboard.getBoolean("Elevator Encoder Override", false);
         SmartDashboard.putBoolean("Elevator Encoder Override", elevator.encoderOverride);
+    }
+
+    @Override
+    public void autonomousInit() {
+        super.autonomousInit();
 
         ((Command) underglowChooser.getSelected()).start();
     }
