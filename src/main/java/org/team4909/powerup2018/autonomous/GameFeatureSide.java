@@ -15,7 +15,8 @@ public class GameFeatureSide extends ConditionalCommand {
 
     @Override
     protected boolean condition() {
-        System.out.println(MatchData.getOwnedSide(gameFeature));
+        System.out.println(gameFeature.name() + ": " + MatchData.getOwnedSide(gameFeature));
+
         return MatchData.getOwnedSide(gameFeature) == MatchData.OwnedSide.LEFT;
     }
 }
