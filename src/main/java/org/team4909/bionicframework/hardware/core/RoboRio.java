@@ -35,7 +35,7 @@ public abstract class RoboRio extends TimedRobot {
 
         autoChooser.addDefault("Do Nothing", null);
         autoChooserInit();
-        SmartDashboard.putData("Autonomous Mode Chooser: ", autoChooser);
+        SmartDashboard.putData("Autonomous Mode: ", autoChooser);
 
     }
 
