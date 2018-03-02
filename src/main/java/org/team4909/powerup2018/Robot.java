@@ -114,6 +114,12 @@ public class Robot extends RoboRio {
 
         rgbStrip = new RGBStrip(3, 5, 4);
         underglowChooser.addDefault("Alliance Color", rgbStrip.setAllianceColor());
+        underglowChooser.addObject("Black", rgbStrip.set(RGBStrip.Colors.Black));
+        underglowChooser.addObject("White", rgbStrip.set(RGBStrip.Colors.White));
+        underglowChooser.addObject("Lime", rgbStrip.set(RGBStrip.Colors.Lime));
+        underglowChooser.addObject("Yellow", rgbStrip.set(RGBStrip.Colors.Yellow));
+        underglowChooser.addObject("Cyan", rgbStrip.set(RGBStrip.Colors.Cyan));
+        underglowChooser.addObject("Magenta", rgbStrip.set(RGBStrip.Colors.Magenta));
         SmartDashboard.putData("Underglow Color: ", underglowChooser);
     }
 
