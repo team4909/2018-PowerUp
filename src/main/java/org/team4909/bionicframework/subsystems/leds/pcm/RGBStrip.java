@@ -73,7 +73,7 @@ public class RGBStrip extends Subsystem {
                 case Blue:
                     setColor(Colors.Blue);
                     break;
-                case Invalid:
+                default:    
                     setColor(Colors.Lime);
                     break;
             }
