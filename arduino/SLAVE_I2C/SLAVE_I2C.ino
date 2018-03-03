@@ -24,7 +24,6 @@ void setup() {
 void receiveEvent() {
   // Read the last number sent (0-30)
   // int LED = Wire.read();
-  //int LED = 1;
 }
 
 int rainbow1(int wait){
@@ -248,33 +247,43 @@ int pong(int wait){
 void loop() {
   int LED = 10;
   if (LED == 1){
+    // A rainbow line goes up
     rainbow1(25); 
   }
   else if (LED == 2){
+    //Whole strip is rainbow
     rainbow2(0.7);
   }
   else if (LED == 3){
+    //Looks like fire
     Fire(55,120,15);
   }
   else if (LED == 4){
+    //A green line goes up with a white background
     greenWhite();
   }
   else if (LED==5){
+    //Sets all pixels to green
     color(25, 190, 6);
   }
   else if (LED==6){
+    //Sets all pixels to blue
     color(0, 0, 255);
   }
   else if (LED==7){
+    //Sets all pixels to red
     color(255, 0, 0);
   }
   else if (LED==8){
+    //Every pixel turns a random color
     randUp(100);
   }
   else if(LED==9){
+    //Every pixel slowly turns green
     climbing(100);
   }
   else if (LED==10){
+    //Green Line goes up and down
     pong(25);
   }
 }
