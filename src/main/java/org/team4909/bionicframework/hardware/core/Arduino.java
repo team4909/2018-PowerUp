@@ -18,9 +18,9 @@ public class Arduino {
         byte[] toSend = {(byte) signal};
 
         try {
-            i2c.transaction(toSend, 1, null, 0);
-        } catch (java.lang.NullPointerException e) {
-            DriverStation.reportError("Could not connect to Arduino", false);
+            i2c.transaction(toSend, 1, new byte[] {}, 0);
+        } catch (Exception e) {
+            DriverStation.reportError("Could not send to Arduino", true);
         }
     }
 }
