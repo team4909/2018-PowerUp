@@ -8,6 +8,7 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(PIXEL_COUNT, PIXEL_PIN, NEO_GRB + NE
 //Adafruit_NeoPixel strip_b = Adafruit_NeoPixel(30, 5, NEO_GRB + NEO_KHZ800);
 
 int deviceNumber = 4;
+int Last = 0;
 void setup() {
   // Start I2C as slave
   Wire.begin(deviceNumber);
@@ -15,7 +16,7 @@ void setup() {
   Serial.begin(9600);
   // Initialize LED Strip
   strip.begin();
-  strip.setBrightness(255);
+  strip.setBrightness(135);
 //    setColor(148, 0, 211);
   strip.show();
 }
@@ -194,8 +195,19 @@ void greenWhite(){
   };
 }
 
+int color(int r, int g, int b){
+  for(int i=0; i<30; i++){
+    strip.setPixelColor(i, r, g, b);
+    strip.show();  
+  }
+}
+
 void loop() {
-  int LED = 3;
+  if (Serial.available()){
+    char Last = Serial.read(); 
+    Serial.print(Last);
+  }
+  int LED = Last-48;
   if (LED == 1){
     rainbow1(25); 
   }
@@ -207,5 +219,14 @@ void loop() {
   }
   else if (LED == 4){
     greenWhite();
+  }
+  else if (LED==5){
+    color(25, 190, 6);
+  }
+  else if (LED==6){
+    color(0, 0, 255);
+  }
+  else if (LED==7){
+    color(255, 0, 0);
   }
 }
