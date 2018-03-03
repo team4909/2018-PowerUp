@@ -10,7 +10,7 @@ public class Neopixels {
         int getInt();
     }
 
-    public enum Pattern implements Signal{
+    public enum Pattern implements Signal {
         RainbowSegment(1),
         RainbowStrip(2),
         Fire(3),
@@ -29,7 +29,7 @@ public class Neopixels {
         }
     }
 
-    public enum Color  implements Signal{
+    public enum Color implements Signal {
         BionicGreen(5),
         Blue(6),
         Red(7),
@@ -46,11 +46,11 @@ public class Neopixels {
         }
     }
 
-    public Neopixels(Arduino arduino, int pin, int pixelCount){
+    public Neopixels(Arduino arduino, int pin, int pixelCount) {
         this.arduino = arduino;
     }
 
-    public void setState(Signal signal){
+    public void setState(Signal signal) {
         arduino.send(signal.getInt());
     }
 
@@ -61,11 +61,11 @@ public class Neopixels {
     private class Set extends Commandable {
         Signal signal;
 
-        public Set(Signal color){
+        public Set(Signal signal) {
             this.signal = signal;
         }
 
-        public void initialize(){
+        public void initialize() {
             setState(signal);
         }
     }

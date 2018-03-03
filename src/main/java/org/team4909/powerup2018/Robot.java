@@ -115,7 +115,12 @@ public class Robot extends RoboRio {
         lightSaberNeopixels = new Neopixels(arduino, 5, 32);
         driverGamepad.povActive(BionicF310.Top, lightSaberNeopixels.set(Neopixels.Pattern.LightSaber));
         driverGamepad.povActive(BionicF310.Bottom, lightSaberNeopixels.set(Neopixels.Color.BionicGreen));
-
+        driverGamepad.povActive(BionicF310.TopRight, lightSaberNeopixels.set(Neopixels.Pattern.LevelUp));
+        driverGamepad.povActive(BionicF310.TopLeft, lightSaberNeopixels.set(Neopixels.Pattern.PingPong));
+        driverGamepad.povActive(BionicF310.Right, lightSaberNeopixels.set(Neopixels.Pattern.RainbowSegment));
+        driverGamepad.povActive(BionicF310.Left, lightSaberNeopixels.set(Neopixels.Pattern.RainbowStrip));
+        driverGamepad.povActive(BionicF310.BottomRight, lightSaberNeopixels.set(Neopixels.Pattern.Fire));
+        driverGamepad.povActive(BionicF310.BottomLeft, lightSaberNeopixels.set(Neopixels.Color.Random));
 
         underglowLEDs = new RGBStrip(3, 5, 4);
         driverGamepad.buttonPressed(BionicF310.Back, underglowLEDs.setAllianceColor());
