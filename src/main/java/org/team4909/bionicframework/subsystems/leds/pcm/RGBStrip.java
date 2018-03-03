@@ -5,8 +5,8 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.team4909.bionicframework.interfaces.Commandable;
 
-public class RGBStrip extends Subsystem {
-    private Solenoid red, green, blue;
+public class RGBStrip {
+    private final Solenoid red, green, blue;
     private Color currentColor = Color.Black;
 
     public enum Color {
@@ -85,10 +85,5 @@ public class RGBStrip extends Subsystem {
                     break;
             }
         }
-    }
-
-    @Override
-    protected void initDefaultCommand() {
-
     }
 }

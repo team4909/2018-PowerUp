@@ -8,11 +8,11 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(PIXEL_COUNT, PIXEL_PIN, NEO_GRB + NE
 //Adafruit_NeoPixel strip_b = Adafruit_NeoPixel(30, 5, NEO_GRB + NEO_KHZ800);
 
 int deviceNumber = 4;
-int LED = 0;
+int Last = 0;
 void setup() {
   // Start I2C as slave
   Wire.begin(deviceNumber);
-  Wire.onReceive(receiveEvent);
+  //Wire.onReceive(receiveEvent);
   Serial.begin(9600);
   // Initialize LED Strip
   strip.begin();
@@ -23,8 +23,8 @@ void setup() {
 
 void receiveEvent() {
   // Read the last number sent (0-30)
- LED = Wire.read();
-  Serial.print(LED);
+  // int LED = Wire.read();
+  //int LED = 1;
 }
 
 int rainbow1(int wait){
@@ -218,7 +218,7 @@ bool ran = false;
 int climbing(int wait){
   if (ran==false){
      for(int i=0; i<30; i++){
-    strip.setPixelColor(i, 25, 190, 6);
+    strip.setPixelColor(i, 0, 255, 0);
     strip.show();  
     delay(wait);
     ran = true;
@@ -226,64 +226,33 @@ int climbing(int wait){
 }
 }
 
-int pong(int wait){
-  for(int i=0; i<30; i++){
-    strip.setPixelColor(i, 25, 190, 6);
-    strip.setPixelColor(i-6, 0, 0, 0);
-    strip.show();
-     if (i!=0 and i!=30){
-      delay(wait);
-    }  
-  }
-  for(int i=30; i>0; i=i-1){
-    strip.setPixelColor(i, 25, 190, 6);
-    strip.setPixelColor(i+6, 0, 0, 0);
-    strip.show();  
-    if (i!=0 and i!=30){
-      delay(wait);
-    }
-  }
-}
-
 void loop() {
+  int LED = 9;
   if (LED == 1){
-    // A rainbow line goes up
     rainbow1(25); 
   }
   else if (LED == 2){
-    //Whole strip is rainbow
     rainbow2(0.7);
   }
   else if (LED == 3){
-    //Looks like fire
     Fire(55,120,15);
   }
   else if (LED == 4){
-    //A green line goes up with a white background
     greenWhite();
   }
   else if (LED==5){
-    //Sets all pixels to green
     color(25, 190, 6);
   }
   else if (LED==6){
-    //Sets all pixels to blue
     color(0, 0, 255);
   }
   else if (LED==7){
-    //Sets all pixels to red
     color(255, 0, 0);
   }
   else if (LED==8){
-    //Every pixel turns a random color
-    randUp(100);
+    randUp(10);
   }
   else if(LED==9){
-    //Every pixel slowly turns green
     climbing(100);
-  }
-  else if (LED==10){
-    //Green Line goes up and down
-    pong(25);
   }
 }
