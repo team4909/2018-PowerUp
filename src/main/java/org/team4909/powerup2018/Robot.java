@@ -234,8 +234,6 @@ public class Robot extends RoboRio {
     protected void robotEnabled() {
         super.robotEnabled();
 
-        arduino.send(10);
-
         drivetrain.resetProfiling();
         elevator.holdCurrentPosition();
     }
