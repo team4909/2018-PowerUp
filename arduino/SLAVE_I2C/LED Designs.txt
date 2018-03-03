@@ -1,0 +1,10 @@
+1 = Rainbow Little Line
+2 = Rainbow Whole Strip
+3 = Fire
+4 = Green and White
+5 = Green
+6 = Blue
+7 = Red
+8 = Random
+9 = Climbing
+10 = Pong

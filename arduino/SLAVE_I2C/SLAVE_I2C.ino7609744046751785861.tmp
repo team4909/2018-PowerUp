@@ -218,7 +218,7 @@ bool ran = false;
 int climbing(int wait){
   if (ran==false){
      for(int i=0; i<30; i++){
-    strip.setPixelColor(i, 25, 190, 6);
+    strip.setPixelColor(i, 0, 255, 0);
     strip.show();  
     delay(wait);
     ran = true;
@@ -226,27 +226,8 @@ int climbing(int wait){
 }
 }
 
-int pong(int wait){
-  for(int i=0; i<30; i++){
-    strip.setPixelColor(i, 25, 190, 6);
-    strip.setPixelColor(i-6, 0, 0, 0);
-    strip.show();
-     if (i!=0 and i!=30){
-      delay(wait);
-    }  
-  }
-  for(int i=30; i>0; i=i-1){
-    strip.setPixelColor(i, 25, 190, 6);
-    strip.setPixelColor(i+6, 0, 0, 0);
-    strip.show();  
-    if (i!=0 and i!=30){
-      delay(wait);
-    }
-  }
-}
-
 void loop() {
-  int LED = 10;
+  int LED = 9;
   if (LED == 1){
     rainbow1(25); 
   }
@@ -269,12 +250,9 @@ void loop() {
     color(255, 0, 0);
   }
   else if (LED==8){
-    randUp(100);
+    randUp(10);
   }
   else if(LED==9){
     climbing(100);
-  }
-  else if (LED==10){
-    pong(25);
   }
 }
