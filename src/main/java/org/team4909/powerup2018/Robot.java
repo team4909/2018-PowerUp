@@ -111,6 +111,8 @@ public class Robot extends RoboRio {
         );
 
         arduino = new Arduino(4);
+        driverGamepad.povActive(BionicF310.Top, arduino.sendSignal(1));
+        driverGamepad.povActive(BionicF310.TopRight, arduino.sendSignal(2));
 
         rgbStrip = new RGBStrip(3, 5, 4);
         driverGamepad.buttonPressed(BionicF310.Back, rgbStrip.setAllianceColor());
@@ -223,6 +225,8 @@ public class Robot extends RoboRio {
     @Override
     protected void robotEnabled() {
         super.robotEnabled();
+
+        arduino.send(10);
 
         drivetrain.resetProfiling();
         elevator.holdCurrentPosition();

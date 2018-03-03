@@ -8,11 +8,11 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(PIXEL_COUNT, PIXEL_PIN, NEO_GRB + NE
 //Adafruit_NeoPixel strip_b = Adafruit_NeoPixel(30, 5, NEO_GRB + NEO_KHZ800);
 
 int deviceNumber = 4;
-int Last = 0;
+int LED = 0;
 void setup() {
   // Start I2C as slave
   Wire.begin(deviceNumber);
-  //Wire.onReceive(receiveEvent);
+  Wire.onReceive(receiveEvent);
   Serial.begin(9600);
   // Initialize LED Strip
   strip.begin();
@@ -23,7 +23,8 @@ void setup() {
 
 void receiveEvent() {
   // Read the last number sent (0-30)
-  // int LED = Wire.read();
+ LED = Wire.read();
+  Serial.print(LED);
 }
 
 int rainbow1(int wait){
@@ -245,7 +246,6 @@ int pong(int wait){
 }
 
 void loop() {
-  int LED = 10;
   if (LED == 1){
     // A rainbow line goes up
     rainbow1(25); 
