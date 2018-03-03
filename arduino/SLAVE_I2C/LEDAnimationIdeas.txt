@@ -1,5 +1,5 @@
-Rainbow 1 
-Rainbow 2
+Rainbow 1 /
+Rainbow 2/
 Solid Color
 Alternate Green and White
-Fire
+Fire/
