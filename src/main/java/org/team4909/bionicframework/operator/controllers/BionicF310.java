@@ -32,10 +32,10 @@ public class BionicF310 extends BionicJoystick {
     public static BionicPOV Top = new BionicPOV(0);
     public static BionicPOV Bottom = new BionicPOV(180);
     public static BionicPOV TopRight = new BionicPOV(45);
-    public static BionicPOV CenterRight = new BionicPOV(90);
+    public static BionicPOV Right = new BionicPOV(90);
     public static BionicPOV BottomRight = new BionicPOV(135);
     public static BionicPOV TopLeft = new BionicPOV(225);
-    public static BionicPOV CenterLeft = new BionicPOV(270);
+    public static BionicPOV Left = new BionicPOV(270);
     public static BionicPOV BottomLeft = new BionicPOV(315);
 
     /**

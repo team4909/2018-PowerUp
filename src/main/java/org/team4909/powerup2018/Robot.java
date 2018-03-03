@@ -1,7 +1,6 @@
 package org.team4909.powerup2018;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,6 +17,7 @@ import org.team4909.bionicframework.operator.controllers.BionicF310;
 import org.team4909.bionicframework.subsystems.drive.BionicDrive;
 import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainConfig;
 import org.team4909.bionicframework.subsystems.elevator.ElevatorSubsystem;
+import org.team4909.bionicframework.subsystems.leds.arduino.Neopixels;
 import org.team4909.bionicframework.subsystems.leds.pcm.RGBStrip;
 import org.team4909.powerup2018.autonomous.*;
 
@@ -35,7 +35,8 @@ public class Robot extends RoboRio {
 
     /* Cosmetic Subsystems */
     private static Arduino arduino;
-    private static RGBStrip rgbStrip;
+    private static Neopixels lightSaberNeopixels;
+    private static RGBStrip underglowLEDs;
     private static SendableChooser underglowChooser = new SendableChooser();
 
     @Override
@@ -87,8 +88,8 @@ public class Robot extends RoboRio {
                 33150
         );
         manipulatorGamepad.povActive(BionicF310.Top, elevator.holdPosition(28400));
-        manipulatorGamepad.povActive(BionicF310.CenterLeft, elevator.holdPosition(11000));
-        manipulatorGamepad.povActive(BionicF310.CenterRight, elevator.holdPosition(11000));
+        manipulatorGamepad.povActive(BionicF310.Left, elevator.holdPosition(11000));
+        manipulatorGamepad.povActive(BionicF310.Right, elevator.holdPosition(11000));
         manipulatorGamepad.povActive(BionicF310.Bottom, elevator.holdPosition(1410));
 
         intake = new MotorSubsystem(
@@ -111,24 +112,26 @@ public class Robot extends RoboRio {
         );
 
         arduino = new Arduino(4);
-        driverGamepad.povActive(BionicF310.Top, arduino.sendSignal(1));
-        driverGamepad.povActive(BionicF310.TopRight, arduino.sendSignal(2));
+        lightSaberNeopixels = new Neopixels(arduino, 5, 32);
+        driverGamepad.povActive(BionicF310.Top, lightSaberNeopixels.set(Neopixels.Pattern.LightSaber));
+        driverGamepad.povActive(BionicF310.Bottom, lightSaberNeopixels.set(Neopixels.Color.BionicGreen));
 
-        rgbStrip = new RGBStrip(3, 5, 4);
-        driverGamepad.buttonPressed(BionicF310.Back, rgbStrip.setAllianceColor());
-        driverGamepad.buttonPressed(BionicF310.Start, rgbStrip.set(RGBStrip.Color.Magenta));
-        driverGamepad.buttonPressed(BionicF310.A, rgbStrip.set(RGBStrip.Color.Lime));
-        driverGamepad.buttonPressed(BionicF310.B, rgbStrip.set(RGBStrip.Color.White));
-        driverGamepad.buttonPressed(BionicF310.Y, rgbStrip.set(RGBStrip.Color.Yellow));
-        driverGamepad.buttonPressed(BionicF310.X, rgbStrip.set(RGBStrip.Color.Cyan));
 
-        underglowChooser.addDefault("Alliance Color", rgbStrip.setAllianceColor());
-        underglowChooser.addObject("Black", rgbStrip.set(RGBStrip.Color.Black));
-        underglowChooser.addObject("White", rgbStrip.set(RGBStrip.Color.White));
-        underglowChooser.addObject("Lime", rgbStrip.set(RGBStrip.Color.Lime));
-        underglowChooser.addObject("Yellow", rgbStrip.set(RGBStrip.Color.Yellow));
-        underglowChooser.addObject("Cyan", rgbStrip.set(RGBStrip.Color.Cyan));
-        underglowChooser.addObject("Magenta", rgbStrip.set(RGBStrip.Color.Magenta));
+        underglowLEDs = new RGBStrip(3, 5, 4);
+        driverGamepad.buttonPressed(BionicF310.Back, underglowLEDs.setAllianceColor());
+        driverGamepad.buttonPressed(BionicF310.Start, underglowLEDs.set(RGBStrip.Color.Magenta));
+        driverGamepad.buttonPressed(BionicF310.A, underglowLEDs.set(RGBStrip.Color.Lime));
+        driverGamepad.buttonPressed(BionicF310.B, underglowLEDs.set(RGBStrip.Color.White));
+        driverGamepad.buttonPressed(BionicF310.Y, underglowLEDs.set(RGBStrip.Color.Yellow));
+        driverGamepad.buttonPressed(BionicF310.X, underglowLEDs.set(RGBStrip.Color.Cyan));
+
+        underglowChooser.addDefault("Alliance Color", underglowLEDs.setAllianceColor());
+        underglowChooser.addObject("Black", underglowLEDs.set(RGBStrip.Color.Black));
+        underglowChooser.addObject("White", underglowLEDs.set(RGBStrip.Color.White));
+        underglowChooser.addObject("Lime", underglowLEDs.set(RGBStrip.Color.Lime));
+        underglowChooser.addObject("Yellow", underglowLEDs.set(RGBStrip.Color.Yellow));
+        underglowChooser.addObject("Cyan", underglowLEDs.set(RGBStrip.Color.Cyan));
+        underglowChooser.addObject("Magenta", underglowLEDs.set(RGBStrip.Color.Magenta));
         SmartDashboard.putData("Underglow Color: ", underglowChooser);
     }
 
