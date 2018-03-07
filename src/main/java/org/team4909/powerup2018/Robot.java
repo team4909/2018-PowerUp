@@ -15,10 +15,12 @@ import org.team4909.bionicframework.hardware.motor.MotorSubsystem;
 import org.team4909.bionicframework.hardware.pneumatics.BionicSingleSolenoid;
 import org.team4909.bionicframework.hardware.sensors.gyro.BionicNavX;
 import org.team4909.bionicframework.operator.controllers.BionicF310;
+import org.team4909.bionicframework.operator.generic.BionicButton;
 import org.team4909.bionicframework.subsystems.drive.BionicDrive;
 import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainConfig;
 import org.team4909.bionicframework.subsystems.elevator.ElevatorSubsystem;
 import org.team4909.bionicframework.subsystems.leds.pcm.RGBStrip;
+import org.team4909.bionicframework.operator.generic.BionicButton;
 import org.team4909.powerup2018.autonomous.*;
 
 public class Robot extends RoboRio {
@@ -113,6 +115,15 @@ public class Robot extends RoboRio {
         arduino = new Arduino(4);
         driverGamepad.povActive(BionicF310.Top, arduino.sendSignal(1));
         driverGamepad.povActive(BionicF310.TopRight, arduino.sendSignal(2));
+        driverGamepad.povActive(BionicF310.CenterRight, arduino.sendSignal(3));
+        driverGamepad.povActive(BionicF310.BottomRight, arduino.sendSignal(4));
+        driverGamepad.povActive(BionicF310.Bottom, arduino.sendSignal(5));
+        driverGamepad.povActive(BionicF310.BottomLeft, arduino.sendSignal(6));
+        driverGamepad.povActive(BionicF310.CenterLeft, arduino.sendSignal(9));
+        driverGamepad.povActive(BionicF310.TopLeft, arduino.sendSignal(10));
+
+
+
 
         rgbStrip = new RGBStrip(3, 5, 4);
         driverGamepad.buttonPressed(BionicF310.Back, rgbStrip.setAllianceColor());

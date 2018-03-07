@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.I2C.Port;
 import org.team4909.bionicframework.interfaces.Commandable;
+import org.team4909.bionicframework.subsystems.leds.pcm.RGBStrip;
 
 /**
  * Arduino Library for I2C Communications to be used for LEDs and sensors
@@ -32,7 +33,7 @@ public class Arduino {
     private class SendSignal extends Commandable {
         private final int signal;
 
-        public SendSignal(int signal){
+        public SendSignal(int signal) {
             this.signal = signal;
         }
 
@@ -42,3 +43,4 @@ public class Arduino {
         }
     }
 }
+

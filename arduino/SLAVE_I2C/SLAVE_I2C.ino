@@ -9,6 +9,8 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(PIXEL_COUNT, PIXEL_PIN, NEO_GRB + NE
 
 int deviceNumber = 4;
 int LED = 0;
+bool ran = false;
+
 void setup() {
   // Start I2C as slave
   Wire.begin(deviceNumber);
@@ -23,8 +25,13 @@ void setup() {
 
 void receiveEvent() {
   // Read the last number sent (0-30)
+ for(int i=0; i < 65; i++){
+   strip.setPixelColor(i, 0, 0, 0);
+  }
+ strip.show();
+ ran = false;
  LED = Wire.read();
-  Serial.print(LED);
+ Serial.print(LED);
 }
 
 int rainbow1(int wait){
@@ -191,7 +198,7 @@ void greenWhite(){
     strip.setPixelColor(b1, 255, 255, 255);
     strip.show();
      
-    delay(100);
+    delay(25);
   };
 }
 
@@ -212,8 +219,6 @@ int randUp(int wait){
     delay(wait);
   }
 }
-
-bool ran = false;
 
 int climbing(int wait){
   if (ran==false){

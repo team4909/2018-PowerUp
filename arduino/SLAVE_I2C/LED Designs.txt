@@ -4,7 +4,8 @@
 4 = Green and White
 5 = Green
 6 = Blue
+\/Make one Command/\
 7 = Red
-8 = Random
+8 = Random(X)
 9 = Climbing
 10 = Pong
