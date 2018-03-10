@@ -38,10 +38,13 @@ public class Arduino {
                 DriverStation.Alliance color;
                 color = DriverStation.getInstance().getAlliance();
                 if(color == DriverStation.Alliance.Blue){
-                    this.signal = signal;
+                    this.signal = 6;
                 }
                 if(color == DriverStation.Alliance.Red){
                     this.signal = 7;
+                }
+                if(color == DriverStation.Alliance.Invalid){
+                    this.signal = 5;
                 }
             }   else {
                 this.signal = signal;
