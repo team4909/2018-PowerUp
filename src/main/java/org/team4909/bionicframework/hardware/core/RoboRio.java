@@ -24,8 +24,6 @@ public abstract class RoboRio extends TimedRobot {
         SmartDashboard.putNumber("Time: ", DriverStation.getInstance().getMatchTime());
         SmartDashboard.putBoolean("DS", DriverStation.getInstance().isDSAttached());
         SmartDashboard.putBoolean("FMS", DriverStation.getInstance().isFMSAttached());
-        SmartDashboard.putBoolean("Brownout", DriverStation.getInstance().isBrownedOut());
-        SmartDashboard.putNumber("PDP Voltage", powerDistributionPanel.getVoltage());
     }
 
     @Override
