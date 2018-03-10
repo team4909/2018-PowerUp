@@ -19,18 +19,16 @@ void setup() {
   // Initialize LED Strip
   strip.begin();
   strip.setBrightness(135);
-//    setColor(148, 0, 211);
   strip.show();
 }
 
 void receiveEvent() {
-  // Read the last number sent (0-30)
- for(int i=0; i < 65; i++){
-   strip.setPixelColor(i, 0, 0, 0);
+ LED = Wire.read();
+ for(int i=0; i < 30; i++){
+    strip.setPixelColor(i, 0, 0, 1);
   }
  strip.show();
  ran = false;
- LED = Wire.read();
  Serial.print(LED);
 }
 
@@ -222,7 +220,10 @@ int randUp(int wait){
 
 int climbing(int wait){
   if (ran==false){
-     for(int i=0; i<30; i++){
+    for(int i=0; i < 30; i++){
+      strip.setPixelColor(i, 0, 0, 1);
+      }
+    for(int i=0; i<30; i++){
     strip.setPixelColor(i, 25, 190, 6);
     strip.show();  
     delay(wait);
@@ -286,6 +287,11 @@ void loop() {
   else if(LED==9){
     //Every pixel slowly turns green
     climbing(100);
+    delay(3000);
+    for(int  i=0; i<30; i++){
+      strip.setPixelColor(i, 0, 0, 0);
+    }
+    ran = false;
   }
   else if (LED==10){
     //Green Line goes up and down

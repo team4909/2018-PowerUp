@@ -31,10 +31,21 @@ public class Arduino {
     }
 
     private class SendSignal extends Commandable {
-        private final int signal;
+        private int signal;
 
         public SendSignal(int signal) {
-            this.signal = signal;
+            if (signal == 6){
+                DriverStation.Alliance color;
+                color = DriverStation.getInstance().getAlliance();
+                if(color == DriverStation.Alliance.Blue){
+                    this.signal = signal;
+                }
+                if(color == DriverStation.Alliance.Red){
+                    this.signal = 7;
+                }
+            }   else {
+                this.signal = signal;
+            }
         }
 
         @Override

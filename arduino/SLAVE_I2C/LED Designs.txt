@@ -3,9 +3,6 @@
 3 = Fire
 4 = Green and White
 5 = Green
-6 = Blue
-\/Make one Command/\
-7 = Red
-8 = Random(X)
+6 = Alliance Color
 9 = Climbing
 10 = Pong
