@@ -13,8 +13,9 @@ public class LeftSwitchFromLeft extends CommandGroup {
         addSequential(elevator.holdPosition(11000));
         addSequential(new WaitCommand(.25));
         addSequential(drivetrain.driveDistance(2), 2);
-        addParallel(intake.setPercentOutput(-1.0), 1.5);
+        addSequential(intake.setPercentOutput(-1.0), 1.5);
         addSequential(new WaitCommand(1.5));
+        addSequential(intake.setPercentOutput(0));
         addSequential(drivetrain.driveDistance(-2));
         addSequential(new WaitCommand(.25));
         addSequential(elevator.holdPosition(0));

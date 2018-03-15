@@ -27,7 +27,7 @@ compileKotlin {
 }
 
 wpi {
-    wpilibVersion = '2018.3.3'
+    wpilibVersion = '2018.4.1'
     ctreVersion = '5.2.2.0'
 }
 
