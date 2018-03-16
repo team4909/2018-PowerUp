@@ -7,6 +7,7 @@ import org.team4909.bionicframework.subsystems.drive.BionicDrive;
 import org.team4909.bionicframework.subsystems.elevator.ElevatorSubsystem;
 public class LeftScaleFromLeft extends CommandGroup {
     public LeftScaleFromLeft(MotorSubsystem intake, ElevatorSubsystem elevator, BionicDrive drivetrain) {
+        addSequential(elevator.holdPosition(1410));
         addSequential(drivetrain.driveDistance(27));
         addSequential(drivetrain.driveRotation(90), 3);
         addSequential(elevator.holdPosition(33000));
