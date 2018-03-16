@@ -11,7 +11,7 @@ public class DriveRotate extends PIDCommand {
     private int direction = 0;
 
     public DriveRotate(BionicDrive bionicDrive, BionicSRX leftSRX, BionicSRX rightSRX, double angle) {
-        super(.0065,.000005,0);
+        super(.007,.00001,0);
 
         requires(bionicDrive);
 
@@ -37,7 +37,7 @@ public class DriveRotate extends PIDCommand {
     @Override
     protected boolean isFinished() {
 
-        return getPIDController().getError() < 0.06;
+        return getPIDController().getError() < 1.5;
     }
 
     @Override

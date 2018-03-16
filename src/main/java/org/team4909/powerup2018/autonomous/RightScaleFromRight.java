@@ -10,11 +10,12 @@ public class RightScaleFromRight extends CommandGroup {
     public RightScaleFromRight(MotorSubsystem intake, ElevatorSubsystem elevator, BionicDrive drivetrain) {
         addSequential(drivetrain.driveDistance(27));
         addSequential(drivetrain.driveRotation(-90), 3);
-        addSequential(elevator.holdPosition(34000));
+        addSequential(elevator.holdPosition(33000));
         addSequential(new WaitCommand(3));
         addSequential(drivetrain.driveDistance(1), 2);
-        addParallel(intake.setPercentOutput(-1.0), 1.5);
+        addSequential(intake.setPercentOutput(-1.0), 1.5);
         addSequential(new WaitCommand(1.5));
+        addSequential(intake.setPercentOutput(0));
         addSequential(drivetrain.driveDistance(-1), 2);
         addSequential(elevator.holdPosition(0));
     }

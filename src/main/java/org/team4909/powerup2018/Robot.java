@@ -56,7 +56,7 @@ public class Robot extends RoboRio {
                 new BionicSRX(
                         2, false,
                         FeedbackDevice.QuadEncoder, false,
-                        1, 0, 0, // P:1.7 I:0 D:7
+                        1, 0, 0,
                         1
                 ),
                 new BionicSRX(
