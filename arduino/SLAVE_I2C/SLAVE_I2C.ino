@@ -8,7 +8,7 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(PIXEL_COUNT, PIXEL_PIN, NEO_GRB + NE
 //Adafruit_NeoPixel strip_b = Adafruit_NeoPixel(30, 5, NEO_GRB + NEO_KHZ800);
 
 int deviceNumber = 4;
-int LED = 0;
+int LED = 2;
 void setup() {
   // Start I2C as slave
   Wire.begin(deviceNumber);
