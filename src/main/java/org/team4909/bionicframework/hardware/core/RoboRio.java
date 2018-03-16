@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * Generic roboRio Utilities to Abstract the Robot into Distinguishable Parts
  */
 public abstract class RoboRio extends TimedRobot {
-    protected PowerDistributionPanel powerDistributionPanel = new PowerDistributionPanel();
     protected SendableChooser autoChooser = new SendableChooser();
     private Command autoCommand;
 
