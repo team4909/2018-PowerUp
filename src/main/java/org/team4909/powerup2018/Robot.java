@@ -211,7 +211,7 @@ public class Robot extends RoboRio {
     public void robotPeriodic() {
         super.robotPeriodic();
 
-        double elevatorCoefficient = (.05 / 34000);
+        double elevatorCoefficient = (.02 / 34000);
 
         if (elevator.getCurrentPosition() > 20000) {
             drivetrain.speedDeltaLimit = 0.0085;
@@ -219,15 +219,7 @@ public class Robot extends RoboRio {
             drivetrain.speedDeltaLimit = 0.04 - (elevatorCoefficient * elevator.getCurrentPosition());
         }
 
-        if (elevator.getCurrentPosition() > 20000) {
-            drivetrain.rotationDeltaLimit = 0.004;
-        } else if (elevator.getCurrentPosition() > 15000) {
-            drivetrain.rotationDeltaLimit = 0.005;
-        } else if (elevator.getCurrentPosition() > 10000) {
-            drivetrain.rotationDeltaLimit = 0.006;
-        } else {
-            drivetrain.rotationDeltaLimit = 0.04 - (elevatorCoefficient * elevator.getCurrentPosition());
-        }
+        drivetrain.rotationDeltaLimit = 0.04 - (elevatorCoefficient * elevator.getCurrentPosition());
     }
 
     @Override
