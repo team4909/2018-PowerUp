@@ -15,8 +15,9 @@ public class LeftSwitchFromCenter extends CommandGroup {
         addSequential(drivetrain.driveRotation(60), 2);
         addSequential(elevator.holdPosition(11000));
         addSequential(drivetrain.driveDistance(2), 2);
-        addParallel(intake.setPercentOutput(-1.0), 2);
+        addSequential(intake.setPercentOutput(-1.0), 2);
         addSequential(new WaitCommand(2));
+        addSequential(intake.setPercentOutput(0));
         addSequential(drivetrain.driveDistance(-2), 3);
         addSequential(elevator.holdPosition(0));
     }
