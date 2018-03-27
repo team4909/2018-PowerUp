@@ -3,6 +3,8 @@ package org.team4909.bionicframework.subsystems.drive;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import jaci.pathfinder.Pathfinder;
+import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
 import org.team4909.bionicframework.hardware.motor.BionicSRX;
 import org.team4909.bionicframework.hardware.pneumatics.BionicSingleSolenoid;
@@ -13,9 +15,6 @@ import org.team4909.bionicframework.subsystems.drive.commands.DriveOI;
 import org.team4909.bionicframework.subsystems.drive.commands.DriveRotate;
 import org.team4909.bionicframework.subsystems.drive.commands.DriveTrajectory;
 import org.team4909.bionicframework.subsystems.drive.commands.InvertDriveDirection;
-import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainConfig;
-import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainProfileUtil;
-import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainTrajectory;
 
 /**
  * BionicDrive abstracts away much of the underlying drivetrain functionality
@@ -28,18 +27,13 @@ public class BionicDrive extends Subsystem {
 
     public final DriveOI defaultCommand;
 
-    public boolean encoderOverride;
-
     /* Sensors */
     private final Gyro bionicGyro;
-    public final DrivetrainProfileUtil pathgen;
+    public boolean encoderOverride;
 
+    public final double wheelbaseWidth, ticksToFeet;
+    public final Trajectory.Config pathfinderConfig;
     public double speedDeltaLimit, rotationDeltaLimit;
-
-    private final double t;
-    private double currentMaxVelocity, currentMaxAcceleration, currentMaxJerk = 0;
-    private double lastVelocity, lastAcceleration = 0;
-    public boolean profiling;
 
     /**
      * @param leftSRX              Left Drivetrain SRX
@@ -53,82 +47,41 @@ public class BionicDrive extends Subsystem {
     public BionicDrive(BionicSRX leftSRX, BionicSRX rightSRX,
                        BionicF310 speedInputGamepad, BionicAxis speedInputAxis, double speedMultiplier, double speedDeltaLimit,
                        BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis, double rotationMultiplier, double rotationDeltaLimit,
-                       DrivetrainConfig drivetrainConfig,
-                       Gyro bionicGyro, BionicSingleSolenoid shifter) {
+                       Gyro bionicGyro, double maxVelocity, double maxAccel, double maxJerk,
+                       double wheelbaseWidth, double ticksToFeet) {
+        this(leftSRX, rightSRX,
+                speedInputGamepad, speedInputAxis, speedMultiplier, speedDeltaLimit,
+                rotationInputGamepad, rotationInputAxis, rotationMultiplier, rotationDeltaLimit,
+                bionicGyro, maxVelocity, maxAccel, maxJerk, wheelbaseWidth, ticksToFeet, null);
+    }
+
+    public BionicDrive(BionicSRX leftSRX, BionicSRX rightSRX,
+                       BionicF310 speedInputGamepad, BionicAxis speedInputAxis, double speedMultiplier, double speedDeltaLimit,
+                       BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis, double rotationMultiplier, double rotationDeltaLimit,
+                       Gyro bionicGyro, double maxVelocity, double maxAccel, double maxJerk,
+                       double wheelbaseWidth, double ticksToFeet, BionicSingleSolenoid shifter) {
         super();
 
         this.leftSRX = leftSRX;
         this.rightSRX = rightSRX;
 
-        leftSRX.configOpenloopRamp(0);
-        rightSRX.configOpenloopRamp(0);
-
         this.speedDeltaLimit = speedDeltaLimit;
         this.rotationDeltaLimit = rotationDeltaLimit;
 
         this.bionicGyro = bionicGyro;
-        this.pathgen = new DrivetrainProfileUtil(drivetrainConfig);
-        this.t = pathgen.drivetrainConfig.getProfileIntervalS();
 
         this.shifter = shifter;
 
         this.defaultCommand = new DriveOI(this, leftSRX, rightSRX,
                 speedInputGamepad, speedInputAxis, speedMultiplier,
                 rotationInputGamepad, rotationInputAxis, rotationMultiplier);
-    }
 
-    @Override
-    public void periodic() {
-        double currentVelocity = getVelocity();
-        double currentAcceleration = (currentVelocity - lastVelocity) / t;
-        double currentJerk = (currentAcceleration - lastAcceleration) / t;
+        this.ticksToFeet = ticksToFeet;
+        this.wheelbaseWidth = wheelbaseWidth;
 
-        if (currentVelocity > currentMaxVelocity) {
-            currentMaxVelocity = currentVelocity;
-        }
-
-        if (currentAcceleration > currentMaxAcceleration) {
-            currentMaxAcceleration = currentAcceleration;
-        }
-
-        if (currentJerk > currentMaxJerk) {
-            currentMaxJerk = currentJerk;
-        }
-
-        lastVelocity = currentVelocity;
-        lastAcceleration = currentAcceleration;
-
-        if(profiling){
-            System.out.println("V (ft/s): " + currentMaxVelocity + " A (ft/s^2):" + currentMaxAcceleration + " J (ft/sec^3):" + currentMaxJerk);
-        }
-    }
-
-    public void resetProfiling(){
-         currentMaxVelocity = 0;
-         currentMaxAcceleration = 0;
-         currentMaxJerk = 0;
-      
-         lastVelocity = 0;
-         lastAcceleration = 0;
-
-         bionicGyro.reset();
-         leftSRX.setSelectedSensorPosition(0,0,0);
-         rightSRX.setSelectedSensorPosition(0,0,0);
-    }
-
-    public double getVelocity(){
-        double currentLeftVelocity = getLeftVelocity();
-        double currentRightVelocity = getRightVelocity();
-
-        return (currentLeftVelocity + currentRightVelocity)/2;
-    }
-
-    public double getLeftVelocity(){
-        return (leftSRX.getSelectedSensorVelocity(0) * 10 * pathgen.drivetrainConfig.getTicksToFeet());
-    }
-
-    public double getRightVelocity(){
-        return (rightSRX.getSelectedSensorVelocity(0) * 10 * pathgen.drivetrainConfig.getTicksToFeet());
+        this.pathfinderConfig = new Trajectory.Config(
+                Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_FAST, 10, maxVelocity, maxAccel, maxJerk
+        )
     }
 
     /**
@@ -148,34 +101,32 @@ public class BionicDrive extends Subsystem {
     }
 
     public boolean getGear(){
-        return shifter.get();
+        if(shifter != null) {
+            return shifter.get();
+        } else {
+            return false;
+        }
     }
 
     public Commandable changeGear() {
-        return shifter.invert();
+        if(shifter != null) {
+            return shifter.invert();
+        } else {
+            return null;
+        }
     }
 
-    private Command driveTrajectory(DrivetrainTrajectory trajectory) {
-        return new DriveTrajectory(this, leftSRX, rightSRX, trajectory);
-    }
-
-    public Command driveDistance(double distance){
-
-        return driveWaypoints(new Waypoint[]{
-                new Waypoint(0,0,0),
-                new Waypoint(distance,0,0)
-        });
+    public Command driveWaypoints(Waypoint[] points, double maxVelocity, double maxAccel, double maxJerk,
+                                  double xProportional, double xDerivative,
+                                  double kVelocity, double kAccel, double vIntercept) {
+        return new DriveTrajectory(
+                this, leftSRX, rightSRX,
+                points, maxVelocity, maxAccel, maxJerk,
+                xProportional, xDerivative, kVelocity, kAccel, vIntercept
+        );
     }
 
     public Command driveRotation(double angle) {
         return new DriveRotate(this, leftSRX, rightSRX, angle);
-    }
-
-    public Command driveRotationTest() {
-        return driveTrajectory(pathgen.getRotationTestTrajectory());
-    }
-
-    public Command driveWaypoints(Waypoint[] points) {
-        return driveTrajectory(pathgen.getTrajectory(points));
     }
 }

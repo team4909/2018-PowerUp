@@ -65,14 +65,24 @@ public class BionicSRX extends WPI_TalonSRX {
         setSensorPhase(invertSensor);
         zeroEncoderPosition();
 
-        config_kP(pidIdx, p, timeoutMs);
-        config_kI(pidIdx, i, timeoutMs);
-        config_kD(pidIdx, d, timeoutMs);
-        config_kF(pidIdx, 0, timeoutMs);
+        config_kPIDF(p,i,d,0);
+    }
+
+    public BionicSRX(int deviceNumber, boolean invertGearbox,
+                     FeedbackDevice feedbackDevice, boolean invertSensor,
+                     int... slaveNumbers) {
+        this(deviceNumber, invertGearbox, feedbackDevice, invertSensor, 0,0,0, slaveNumbers);
     }
 
     public void config_kF(double value) {
         super.config_kF(pidIdx, value, timeoutMs);
+    }
+
+    public void config_kPIDF(double p, double i, double d, double f) {
+        config_kP(0, p,0);
+        config_kI(0, i,0);
+        config_kD(0, d,0);
+        config_kF(0, f,0);
     }
 
     /* Command-based */
@@ -105,42 +115,14 @@ public class BionicSRX extends WPI_TalonSRX {
         setSelectedSensorPosition(0, 0, timeoutMs);
     }
 
-    /* Motion Profiling */
-    private final int minBufferPoints = 20;
-
-    private final Notifier processMotionProfileBuffer = new Notifier(this::processMotionProfileBuffer);
-
     public void configOpenloopRamp(double secondsFromNeutralToFull) {
         configOpenloopRamp(secondsFromNeutralToFull, timeoutMs);
     }
 
-    public static TrajectoryPoint[] convertToSRXTrajectory(Trajectory trajectory, double conversionFactor){
-        return convertToSRXTrajectory(trajectory, conversionFactor, false);
-    }
+    /* Motion Profiling */
+    private final int minBufferPoints = 20;
 
-    public static TrajectoryPoint[] convertToSRXTrajectory(Trajectory trajectory, double conversionFactor, boolean invert) {
-        int length = trajectory.length();
-        TrajectoryPoint[] parsedSRXTrajectory = new TrajectoryPoint[length];
-
-        for (int i = 0; i < length; i++) {
-            TrajectoryPoint point = new TrajectoryPoint();
-
-            // Profile Data: Position is in Ticks, Velo is in ft/s
-            point.position = (invert ? -1 : 1) * (trajectory.get(i).x / conversionFactor);
-            point.velocity = (invert ? -1 : 1) * trajectory.get(i).velocity;
-
-            // Configuration Data
-            point.timeDur = TrajectoryDuration.Trajectory_Duration_0ms;
-            point.profileSlotSelect0 = 0;
-            point.zeroPos = (i == 0);
-            point.isLastPoint = (i == length - 1);
-            point.velocity = point.zeroPos ? point.velocity : 0;
-
-            parsedSRXTrajectory[i] = point;
-        }
-
-        return parsedSRXTrajectory;
-    }
+    private final Notifier processMotionProfileBuffer = new Notifier(this::processMotionProfileBuffer);
 
     /**
      * @param points Path consisting of waypoints to follow

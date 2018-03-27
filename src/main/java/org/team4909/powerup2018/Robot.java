@@ -15,7 +15,6 @@ import org.team4909.bionicframework.hardware.pneumatics.BionicSingleSolenoid;
 import org.team4909.bionicframework.hardware.sensors.gyro.BionicNavX;
 import org.team4909.bionicframework.operator.controllers.BionicF310;
 import org.team4909.bionicframework.subsystems.drive.BionicDrive;
-import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainConfig;
 import org.team4909.bionicframework.subsystems.elevator.ElevatorSubsystem;
 import org.team4909.bionicframework.subsystems.leds.arduino.Neopixels;
 import org.team4909.bionicframework.subsystems.leds.pcm.RGBStrip;
@@ -52,32 +51,29 @@ public class Robot extends RoboRio {
 
     @Override
     protected void subsystemInit() {
+        /*** Drivetrain ***/
         drivetrain = new BionicDrive(
                 new BionicSRX(
                         2, false,
                         FeedbackDevice.QuadEncoder, false,
-                        1, 0, 0,
                         1
                 ),
                 new BionicSRX(
                         4, true,
                         FeedbackDevice.QuadEncoder, false,
-                        1, 0, 0,
                         4
                 ),
                 driverGamepad, BionicF310.LY, -1.0, 0.10,
                 driverGamepad, BionicF310.RX, -1.0, 0.10,
-                new DrivetrainConfig(
-                        25, 0.5, 120,
-                        12.000, 11.126, 117.809,
-                        3, 2.74
-                ),
                 new BionicNavX(),
-                new BionicSingleSolenoid(0)
+                11,10,105,
+                30 /* ( 2 * ROTATION TEST FEET ) / ROTATION TEST RAD */,
+                Math.PI * (0.5 /* WHEEL DIAMETER */) / (4 * 360 /* TICKS PER REV, 4X SUBSAMPLING*/)
         );
         driverGamepad.buttonPressed(BionicF310.LT, 0.1, drivetrain.invertDirection());
         driverGamepad.buttonPressed(BionicF310.RT, 0.1, drivetrain.changeGear());
 
+        /*** Elevator ***/
         elevator = new ElevatorSubsystem(
                 new BionicSRX(
                         3, true,
@@ -92,6 +88,7 @@ public class Robot extends RoboRio {
         manipulatorGamepad.povActive(BionicF310.Right, elevator.holdPosition(11000));
         manipulatorGamepad.povActive(BionicF310.Bottom, elevator.holdPosition(1410));
 
+        /*** Intake ***/
         intake = new MotorSubsystem(
                 new BionicSpark(0, true),
                 new BionicSpark(1, false)
@@ -100,6 +97,7 @@ public class Robot extends RoboRio {
         manipulatorGamepad.buttonHeld(BionicF310.RT, 0.1, intake.setPercentOutput(-1.0));
         manipulatorGamepad.buttonHeld(BionicF310.B, intake.setPercentOutput(-0.5));
 
+        /*** Winch ***/
         winch = new MotorSubsystem(
                 new BionicVictorSP(2, true),
                 new BionicVictorSP(3, false)
@@ -107,10 +105,12 @@ public class Robot extends RoboRio {
         driverGamepad.buttonHeld(BionicF310.LB, winch.setPercentOutput(-0.5));
         driverGamepad.buttonHeld(BionicF310.RB, winch.setPercentOutput(1.0));
 
+        /*** Hook Deploy ***/
         hookDeploy = new MotorSubsystem(
                 new BionicSpark(4, false)
         );
 
+        /*** Climber LEDs ***/
         arduino = new Arduino(4);
         lightSaberNeopixels = new Neopixels(arduino, 5, 32);
         driverGamepad.povActive(BionicF310.Top, lightSaberNeopixels.set(Neopixels.Pattern.LightSaber));
@@ -122,6 +122,7 @@ public class Robot extends RoboRio {
         driverGamepad.povActive(BionicF310.BottomRight, lightSaberNeopixels.set(Neopixels.Pattern.Fire));
         driverGamepad.povActive(BionicF310.BottomLeft, lightSaberNeopixels.set(Neopixels.Color.Random));
 
+        /*** Underglow LEDs ***/
         underglowLEDs = new RGBStrip(3, 5, 4);
         driverGamepad.buttonPressed(BionicF310.Back, underglowLEDs.setAllianceColor());
         driverGamepad.buttonPressed(BionicF310.Start, underglowLEDs.set(RGBStrip.Color.Magenta));
@@ -190,9 +191,7 @@ public class Robot extends RoboRio {
     protected void dashboardPeriodic() {
         super.dashboardPeriodic();
 
-        drivetrain.profiling = SmartDashboard.getBoolean("Drivetrain Profiling", false);
         drivetrain.encoderOverride = SmartDashboard.getBoolean("Drivetrain Encoder Override", false);
-        SmartDashboard.putBoolean("Drivetrain Profiling", drivetrain.profiling);
         SmartDashboard.putBoolean("Drivetrain Encoder Override", drivetrain.encoderOverride);
         SmartDashboard.putBoolean("Is High Gear?", drivetrain.getGear());
 
@@ -226,7 +225,6 @@ public class Robot extends RoboRio {
     protected void robotEnabled() {
         super.robotEnabled();
 
-        drivetrain.resetProfiling();
         elevator.holdCurrentPosition();
     }
 }
