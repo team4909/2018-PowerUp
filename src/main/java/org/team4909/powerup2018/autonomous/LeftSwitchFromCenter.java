@@ -10,7 +10,7 @@ import org.team4909.bionicframework.subsystems.elevator.ElevatorSubsystem;
 public class LeftSwitchFromCenter extends CommandGroup {
     public LeftSwitchFromCenter(MotorSubsystem intake, ElevatorSubsystem elevator, BionicDrive drivetrain) {
 //        addSequential(elevator.holdPosition(1410));
-        addSequential(drivetrain.driveDistance(3));
+        addSequential(drivetrain.driveDistance(3),2);
         addSequential(drivetrain.driveRotation(-60), 2);
         addSequential(drivetrain.driveDistance(16), 2);
         addSequential(drivetrain.driveRotation(60), 2);
