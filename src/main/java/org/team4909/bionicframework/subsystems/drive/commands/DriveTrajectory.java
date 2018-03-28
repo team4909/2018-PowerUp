@@ -14,22 +14,16 @@ public class DriveTrajectory extends Command {
     private final BionicDrive bionicDrive;
     private final BionicSRX leftSRX, rightSRX;
     private final TrajectoryPoint[] leftTrajectory, rightTrajectory;
-    private final double kVelocity, kAccel, vIntercept;
 
     public DriveTrajectory(BionicDrive bionicDrive, BionicSRX leftSRX, BionicSRX rightSRX,
                            Waypoint[] points,
                            // Following Control
-                           double xProportional, double xDerivative,
-                           double kVelocity, double kAccel, double vIntercept) {
+                           double xProportional, double xDerivative) {
         requires(bionicDrive);
 
         this.bionicDrive = bionicDrive;
         this.leftSRX = leftSRX;
         this.rightSRX = rightSRX;
-
-        this.kVelocity = kVelocity;
-        this.kAccel = kAccel;
-        this.vIntercept = vIntercept;
 
         /*** GENERATE TRAJECTORY ***/
         Trajectory centerTrajectory = Pathfinder.generate(points, bionicDrive.pathfinderConfig);
@@ -51,7 +45,7 @@ public class DriveTrajectory extends Command {
 
             // Profile Data: Position is in Ticks, Velo is in Volts
             point.position = (trajectory.get(i).x / bionicDrive.ticksToFeet);
-            point.velocity = kVelocity * trajectory.get(i).velocity + kAccel * trajectory.get(i).acceleration + vIntercept;
+            point.velocity = bionicDrive.kVelocity * trajectory.get(i).velocity + bionicDrive.kAccel * trajectory.get(i).acceleration + bionicDrive.vIntercept;
 
             // Configuration Data
             point.timeDur = TrajectoryPoint.TrajectoryDuration.Trajectory_Duration_0ms;

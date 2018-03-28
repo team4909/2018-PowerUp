@@ -34,6 +34,7 @@ public class BionicDrive extends Subsystem {
     public final double wheelbaseWidth, ticksToFeet;
     public final Trajectory.Config pathfinderConfig;
     public double speedDeltaLimit, rotationDeltaLimit;
+    public final double kVelocity, kAccel, vIntercept;
 
     /**
      * @param leftSRX              Left Drivetrain SRX
@@ -47,18 +48,22 @@ public class BionicDrive extends Subsystem {
     public BionicDrive(BionicSRX leftSRX, BionicSRX rightSRX,
                        BionicF310 speedInputGamepad, BionicAxis speedInputAxis, double speedMultiplier, double speedDeltaLimit,
                        BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis, double rotationMultiplier, double rotationDeltaLimit,
-                       Gyro bionicGyro, double maxVelocity, double maxAccel, double maxJerk,
+                       Gyro bionicGyro,
+                       double maxVelocity, double maxAccel, double maxJerk,
+                       double kVelocity, double kAccel, double vIntercept,
                        double wheelbaseWidth, double ticksToFeet) {
         this(leftSRX, rightSRX,
                 speedInputGamepad, speedInputAxis, speedMultiplier, speedDeltaLimit,
                 rotationInputGamepad, rotationInputAxis, rotationMultiplier, rotationDeltaLimit,
-                bionicGyro, maxVelocity, maxAccel, maxJerk, wheelbaseWidth, ticksToFeet, null);
+                bionicGyro, maxVelocity, maxAccel, maxJerk,
+                kVelocity, kAccel, vIntercept,wheelbaseWidth, ticksToFeet, null);
     }
 
     public BionicDrive(BionicSRX leftSRX, BionicSRX rightSRX,
                        BionicF310 speedInputGamepad, BionicAxis speedInputAxis, double speedMultiplier, double speedDeltaLimit,
                        BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis, double rotationMultiplier, double rotationDeltaLimit,
                        Gyro bionicGyro, double maxVelocity, double maxAccel, double maxJerk,
+                       double kVelocity, double kAccel, double vIntercept,
                        double wheelbaseWidth, double ticksToFeet, BionicSingleSolenoid shifter) {
         super();
 
@@ -81,7 +86,11 @@ public class BionicDrive extends Subsystem {
 
         this.pathfinderConfig = new Trajectory.Config(
                 Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_FAST, 10, maxVelocity, maxAccel, maxJerk
-        )
+        );
+
+        this.kVelocity = kVelocity;
+        this.kAccel = kAccel;
+        this.vIntercept = vIntercept;
     }
 
     /**
@@ -116,13 +125,11 @@ public class BionicDrive extends Subsystem {
         }
     }
 
-    public Command driveWaypoints(Waypoint[] points, double maxVelocity, double maxAccel, double maxJerk,
-                                  double xProportional, double xDerivative,
-                                  double kVelocity, double kAccel, double vIntercept) {
+    public Command driveWaypoints(Waypoint[] points,
+                                  double xProportional, double xDerivative) {
         return new DriveTrajectory(
                 this, leftSRX, rightSRX,
-                points, maxVelocity, maxAccel, maxJerk,
-                xProportional, xDerivative, kVelocity, kAccel, vIntercept
+                points, xProportional, xDerivative
         );
     }
 
