@@ -1,6 +1,7 @@
 package org.team4909.powerup2018;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -64,7 +65,7 @@ public class Robot extends RoboRio {
                         4
                 ),
                 driverGamepad, BionicF310.LY, -1.0, 0.10,
-                driverGamepad, BionicF310.RX, -1.0, 0.10,
+                driverGamepad, BionicF310.RX, -0.75, 0.10,
                 new BionicNavX(),
                 0,0,0,
                 0,0,0,
@@ -140,11 +141,19 @@ public class Robot extends RoboRio {
         underglowChooser.addObject("Cyan", underglowLEDs.set(RGBStrip.Color.Cyan));
         underglowChooser.addObject("Magenta", underglowLEDs.set(RGBStrip.Color.Magenta));
         SmartDashboard.putData("Underglow Color: ", underglowChooser);
+
+        /*** Camera Server ***/
+        CameraServer.getInstance().startAutomaticCapture();
     }
 
     @Override
     protected void autoChooserInit() {
         autoChooser.addObject("Break Baseline", new BreakBaseline(drivetrain));
+        autoChooser.addObject("Left Start Switch ONLY", new GameFeatureSide(
+                GameFeature.SWITCH_NEAR,
+                new LeftSwitchFromLeft(intake, elevator, drivetrain),
+                new BreakBaseline(drivetrain)
+        ));
         autoChooser.addObject("Left Start Scale Preferred", new GameFeatureSide(
                 GameFeature.SCALE,
                 new LeftScaleFromLeft(intake, elevator, drivetrain),
@@ -167,6 +176,11 @@ public class Robot extends RoboRio {
                 GameFeature.SWITCH_NEAR,
                 new LeftSwitchFromCenter(intake, elevator, drivetrain),
                 new RightSwitchFromCenter(intake, elevator, drivetrain)
+        ));
+        autoChooser.addObject("Right Start Switch ONLY", new GameFeatureSide(
+                GameFeature.SWITCH_NEAR,
+                new BreakBaseline(drivetrain),
+                new RightSwitchFromRight(intake, elevator, drivetrain)
         ));
         autoChooser.addObject("Right Start Scale Preferred", new GameFeatureSide(
                 GameFeature.SCALE,

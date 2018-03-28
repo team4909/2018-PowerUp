@@ -1,7 +1,6 @@
 package org.team4909.bionicframework.subsystems.elevator;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.team4909.bionicframework.hardware.motor.BionicSRX;
 import org.team4909.bionicframework.interfaces.Commandable;
@@ -33,19 +32,18 @@ public class ElevatorSubsystem extends Subsystem {
 
     @Override
     public void periodic() {
-        if(bionicSRX.getSensorCollection().isRevLimitSwitchClosed() && !DriverStation.getInstance().isAutonomous()){
-            holdingPosition = 0;
-
-            bionicSRX.setSelectedSensorPosition(holdingPosition,0,0);
-        }
-
         double moveSpeed = joystick.getSensitiveAxis(axis) * joystickMultiplier;
 
         if(moveSpeed == 0 && !encoderOverride) {
             bionicSRX.set(ControlMode.Position, holdingPosition);
-        } else {
+        } else if(moveSpeed > 0){
             bionicSRX.set(ControlMode.PercentOutput, moveSpeed);
-
+            holdCurrentPosition();
+        } else if(bionicSRX.getSensorCollection().isRevLimitSwitchClosed()){
+            holdingPosition = 0;
+            bionicSRX.setSelectedSensorPosition(holdingPosition,0,0);
+        } else if(moveSpeed < 0){
+            bionicSRX.set(ControlMode.PercentOutput, moveSpeed);
             holdCurrentPosition();
         }
     }

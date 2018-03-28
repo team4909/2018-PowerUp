@@ -4,7 +4,6 @@ import com.ctre.phoenix.motion.TrajectoryPoint;
 import edu.wpi.first.wpilibj.command.Command;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
-import jaci.pathfinder.Trajectory.*;
 import jaci.pathfinder.Waypoint;
 import jaci.pathfinder.modifiers.TankModifier;
 import org.team4909.bionicframework.hardware.motor.BionicSRX;
@@ -37,28 +36,28 @@ public class DriveTrajectory extends Command {
     }
 
     public TrajectoryPoint[] convertToSRXTrajectory(Trajectory trajectory) {
-        int length = trajectory.length();
-        TrajectoryPoint[] parsedSRXTrajectory = new TrajectoryPoint[length];
+        TrajectoryPoint[] parsedSRXTrajectory = new TrajectoryPoint[trajectory.length()];
 
-        for (int i = 0; i < length; i++) {
+        for (int index = 0; index < trajectory.length(); index++) {
             TrajectoryPoint point = new TrajectoryPoint();
 
             // Profile Data: Position is in Ticks, Velo is in Volts
-            point.position = (trajectory.get(i).x / bionicDrive.ticksToFeet);
-            point.velocity = bionicDrive.kVelocity * trajectory.get(i).velocity + bionicDrive.kAccel * trajectory.get(i).acceleration + bionicDrive.vIntercept;
+            point.position =
+                    trajectory.get(index).x / bionicDrive.ticksToFeet;
+            point.velocity =
+                    bionicDrive.kVelocity * trajectory.get(index).velocity +
+                    bionicDrive.kAccel * trajectory.get(index).acceleration +
+                    bionicDrive.vIntercept;
 
             // Configuration Data
             point.timeDur = TrajectoryPoint.TrajectoryDuration.Trajectory_Duration_0ms;
             point.profileSlotSelect0 = 0;
-            point.isLastPoint = (i == length - 1);
+            point.isLastPoint = (index == trajectory.length() - 1);
 
-            point.zeroPos = (i == 0);
+            point.zeroPos = (index == 0);
             point.velocity = point.zeroPos ? 0 : point.velocity;
 
-//            point.position = (invert ? -1 : 1) * point.position;
-//            point.velocity = (invert ? -1 : 1) * point.velocity;
-
-            parsedSRXTrajectory[i] = point;
+            parsedSRXTrajectory[index] = point;
         }
 
         return parsedSRXTrajectory;
