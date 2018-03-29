@@ -129,11 +129,20 @@ public class BionicDrive extends Subsystem {
         }
     }
 
-    public Command driveWaypoints(Waypoint[] points,
-                                  double xProportional, double xDerivative) {
+    public Command driveWaypoints(Waypoint[] points, double xProportional, double xDerivative) {
         return new DriveTrajectory(
                 this, leftSRX, rightSRX,
                 points, xProportional, xDerivative
+        );
+    }
+
+    public Command driveDistance(double distance, double xProportional, double xDerivative) {
+        return new DriveTrajectory(
+                this, leftSRX, rightSRX,
+                new Waypoint[]{
+                        new Waypoint(0,0,0),
+                        new Waypoint(distance,0,0)
+                }, xProportional, xDerivative
         );
     }
 

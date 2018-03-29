@@ -3,6 +3,7 @@ package org.team4909.bionicframework.subsystems.drive.commands;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
+import org.team4909.bionicframework.hardware.core.RioFS;
 import org.team4909.bionicframework.hardware.motor.BionicSRX;
 import org.team4909.bionicframework.subsystems.drive.BionicDrive;
 
@@ -36,6 +37,10 @@ public class TuneMotionProfile extends Command {
     @Override
     protected void initialize() {
         System.out.println("MOTION PROFILE TUNING STARTED");
+
+        RioFS.makeDir("telemetry");
+        RioFS.writeFile("telemetry", "voltage", "ELAPSED TIME, LINEAR DISTANCE, OUTPUT VOLTAGE, LINEAR VELOCITY");
+        RioFS.writeFile("telemetry", "acceleration", "ELAPSED TIME, OUTPUT VOLTAGE, LINEAR VELOCITY, COMPUTED ACCELERATION");
     }
 
     @Override
@@ -85,8 +90,8 @@ public class TuneMotionProfile extends Command {
 
                 break;
             case VoltageTelemetry:
-                /*** CSV EXPORT SHOULD OCCUR HERE: ELAPSED TIME, LINEAR DISTANCE, OUTPUT VOLTAGE, LINEAR VELOCITY ***/
-                System.out.println(stateTimer.get() + "," + distance + "," + voltage + "," + velocity + "\n");
+                RioFS.appendFile("telemetry", "voltage",
+                        stateTimer.get() + "," + distance + "," + voltage + "," + velocity + "\n");
 
                 throttle += voltageStep;
 
@@ -110,8 +115,8 @@ public class TuneMotionProfile extends Command {
                             acceleration = (velocity - lastVelocity) / (dt);
                     lastVelocity = velocity;
 
-                    /*** CSV EXPORT SHOULD OCCUR HERE: ELAPSED TIME, OUTPUT VOLTAGE, LINEAR VELOCITY, COMPUTED ACCELERATION ***/
-                    System.out.println(stateTimer.get() + "," + voltage + "," + velocity + "," + acceleration + "\n");
+                    RioFS.appendFile("telemetry", "acceleration",
+                            stateTimer.get() + "," + voltage + "," + velocity + "," + acceleration + "\n");
                 } else {
                     isFinished = true;
                 }
