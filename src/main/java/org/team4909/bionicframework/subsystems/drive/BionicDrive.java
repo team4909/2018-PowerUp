@@ -51,12 +51,14 @@ public class BionicDrive extends Subsystem {
                        Gyro bionicGyro,
                        double maxVelocity, double maxAccel, double maxJerk,
                        double kVelocity, double kAccel, double vIntercept,
-                       double wheelbaseWidth, double ticksToFeet) {
+                       double wheelbaseWidth,
+                       double wheelDiameter, double ticksPerRev) {
         this(leftSRX, rightSRX,
                 speedInputGamepad, speedInputAxis, speedMultiplier, speedDeltaLimit,
                 rotationInputGamepad, rotationInputAxis, rotationMultiplier, rotationDeltaLimit,
                 bionicGyro, maxVelocity, maxAccel, maxJerk,
-                kVelocity, kAccel, vIntercept,wheelbaseWidth, ticksToFeet, null);
+                kVelocity, kAccel, vIntercept,wheelbaseWidth,
+                wheelDiameter, ticksPerRev, null);
     }
 
     public BionicDrive(BionicSRX leftSRX, BionicSRX rightSRX,
@@ -64,7 +66,8 @@ public class BionicDrive extends Subsystem {
                        BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis, double rotationMultiplier, double rotationDeltaLimit,
                        Gyro bionicGyro, double maxVelocity, double maxAccel, double maxJerk,
                        double kVelocity, double kAccel, double vIntercept,
-                       double wheelbaseWidth, double ticksToFeet, BionicSingleSolenoid shifter) {
+                       double wheelbaseWidth,
+                       double wheelDiameter, double ticksPerRev, BionicSingleSolenoid shifter) {
         super();
 
         this.leftSRX = leftSRX;
@@ -81,7 +84,7 @@ public class BionicDrive extends Subsystem {
                 speedInputGamepad, speedInputAxis, speedMultiplier,
                 rotationInputGamepad, rotationInputAxis, rotationMultiplier);
 
-        this.ticksToFeet = ticksToFeet;
+        this.ticksToFeet = Math.PI * wheelDiameter / (4 * ticksPerRev);
         this.wheelbaseWidth = wheelbaseWidth;
 
         this.pathfinderConfig = new Trajectory.Config(
@@ -129,20 +132,20 @@ public class BionicDrive extends Subsystem {
         }
     }
 
-    public Command driveWaypoints(Waypoint[] points, double xProportional, double xDerivative) {
+    public Command driveWaypoints(Waypoint[] points) {
         return new DriveTrajectory(
                 this, leftSRX, rightSRX,
-                points, xProportional, xDerivative
+                points, 0.8, 0
         );
     }
 
-    public Command driveDistance(double distance, double xProportional, double xDerivative) {
+    public Command driveDistance(double distance) {
         return new DriveTrajectory(
                 this, leftSRX, rightSRX,
                 new Waypoint[]{
                         new Waypoint(0,0,0),
                         new Waypoint(distance,0,0)
-                }, xProportional, xDerivative
+                }, 0.8, 0
         );
     }
 
