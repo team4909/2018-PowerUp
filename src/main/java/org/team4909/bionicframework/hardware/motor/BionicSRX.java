@@ -223,4 +223,8 @@ public class BionicSRX extends WPI_TalonSRX {
     public double getSelectedSensorPosition() {
         return getSelectedSensorPosition(0);
     }
+
+    public double getSelectedSensorVelocity() {
+        return getSelectedSensorVelocity(0);
+    }
 }
