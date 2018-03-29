@@ -69,7 +69,8 @@ public class Robot extends RoboRio {
                 new BionicNavX(),
                 0.5,360,
                 0,
-                0,0, 0, 0,0, 0
+                0,0,0,0,0,0,
+                0,0
         );
         driverGamepad.buttonPressed(BionicF310.LT, 0.1, drivetrain.invertDirection());
         driverGamepad.buttonPressed(BionicF310.RT, 0.1, drivetrain.changeGear());
