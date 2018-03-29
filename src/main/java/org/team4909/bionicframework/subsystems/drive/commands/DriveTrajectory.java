@@ -92,6 +92,6 @@ public class DriveTrajectory extends Command {
 
     @Override
     protected void end() {
-        System.out.println("FINAL HEADING: " + bionicDrive.getHeading() + " DEG"); // NOT RADIANS
+        System.out.println("FINAL HEADING: " + bionicDrive.getHeading() + " DEGREES");
     }
 }

@@ -94,10 +94,14 @@ public class BionicDrive extends Subsystem {
     }
 
     /**
-     * @return Returns Robot's Current Heading [0, 2pi)
+     * @return Returns Robot's Current Heading [0, 360)
      */
     public double getHeading() {
         return bionicGyro.getAngle();
+    }
+
+    public void resetHeading() {
+        bionicGyro.reset();
     }
 
     @Override
