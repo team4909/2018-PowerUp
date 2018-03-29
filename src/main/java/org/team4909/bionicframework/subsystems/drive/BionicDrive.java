@@ -34,7 +34,7 @@ public class BionicDrive extends Subsystem {
     public final double wheelbaseWidth, ticksToFeet;
     public final Trajectory.Config pathfinderConfig;
     public double speedDeltaLimit, rotationDeltaLimit;
-    public final double kVelocity, kAccel, vIntercept;
+    public final double kVelocity, kAccel, vIntercept, xProportional, xDerivative;
 
     /**
      * @param leftSRX              Left Drivetrain SRX
@@ -49,25 +49,31 @@ public class BionicDrive extends Subsystem {
                        BionicF310 speedInputGamepad, BionicAxis speedInputAxis, double speedMultiplier, double speedDeltaLimit,
                        BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis, double rotationMultiplier, double rotationDeltaLimit,
                        Gyro bionicGyro,
+                       double wheelDiameter, double ticksPerRev,
+                       double wheelbaseWidth,
                        double maxVelocity, double maxAccel, double maxJerk,
                        double kVelocity, double kAccel, double vIntercept,
-                       double wheelbaseWidth,
-                       double wheelDiameter, double ticksPerRev) {
+                       double xProportional, double xDerivative) {
         this(leftSRX, rightSRX,
                 speedInputGamepad, speedInputAxis, speedMultiplier, speedDeltaLimit,
                 rotationInputGamepad, rotationInputAxis, rotationMultiplier, rotationDeltaLimit,
-                bionicGyro, maxVelocity, maxAccel, maxJerk,
-                kVelocity, kAccel, vIntercept,wheelbaseWidth,
-                wheelDiameter, ticksPerRev, null);
+                bionicGyro, wheelDiameter, ticksPerRev,
+                wheelbaseWidth,
+                maxVelocity, maxAccel, maxJerk,
+                kVelocity, kAccel, vIntercept,
+                xProportional, xDerivative,null);
     }
 
     public BionicDrive(BionicSRX leftSRX, BionicSRX rightSRX,
                        BionicF310 speedInputGamepad, BionicAxis speedInputAxis, double speedMultiplier, double speedDeltaLimit,
                        BionicF310 rotationInputGamepad, BionicAxis rotationInputAxis, double rotationMultiplier, double rotationDeltaLimit,
-                       Gyro bionicGyro, double maxVelocity, double maxAccel, double maxJerk,
-                       double kVelocity, double kAccel, double vIntercept,
+                       Gyro bionicGyro,
+                       double wheelDiameter, double ticksPerRev,
                        double wheelbaseWidth,
-                       double wheelDiameter, double ticksPerRev, BionicSingleSolenoid shifter) {
+                       double maxVelocity, double maxAccel, double maxJerk,
+                       double kVelocity, double kAccel, double vIntercept,
+                       double xProportional, double xDerivative,
+                       BionicSingleSolenoid shifter) {
         super();
 
         this.leftSRX = leftSRX;
@@ -94,6 +100,8 @@ public class BionicDrive extends Subsystem {
         this.kVelocity = kVelocity;
         this.kAccel = kAccel;
         this.vIntercept = vIntercept;
+        this.xProportional = xProportional;
+        this.xDerivative = xDerivative;
     }
 
     /**
@@ -135,18 +143,15 @@ public class BionicDrive extends Subsystem {
     public Command driveWaypoints(Waypoint[] points) {
         return new DriveTrajectory(
                 this, leftSRX, rightSRX,
-                points, 0.8, 0
+                points, xProportional, xDerivative
         );
     }
 
     public Command driveDistance(double distance) {
-        return new DriveTrajectory(
-                this, leftSRX, rightSRX,
-                new Waypoint[]{
-                        new Waypoint(0,0,0),
-                        new Waypoint(distance,0,0)
-                }, 0.8, 0
-        );
+        return driveWaypoints(new Waypoint[]{
+                new Waypoint(0,0,0),
+                new Waypoint(distance,0,0)
+        });
     }
 
     public Command driveRotation(double angle) {
