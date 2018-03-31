@@ -26,6 +26,7 @@ public class Robot extends RoboRio {
     /* Controller Initialization */
     private static BionicF310 driverGamepad;
     private static BionicF310 manipulatorGamepad;
+    private static BionicF310 debugGamepad;
 
     /* Subsystem Initialization */
     private static BionicDrive drivetrain;
@@ -44,6 +45,7 @@ public class Robot extends RoboRio {
     protected void controllerInit() {
         driverGamepad = new BionicF310(0, 0.1, 0.8);
         manipulatorGamepad = new BionicF310(1, 0.1, 0.5);
+        debugGamepad = new BionicF310(2, 0.1, 0.5);
     }
 
     @Override
@@ -105,9 +107,9 @@ public class Robot extends RoboRio {
 
         winch = new MotorSubsystem(
                 new BionicVictorSP(2, true),
-                new BionicVictorSP(3, false)
+                new BionicVictorSP(3, true)
         );
-        driverGamepad.buttonHeld(BionicF310.LB, winch.setPercentOutput(-0.5));
+        debugGamepad.buttonHeld(BionicF310.LB, winch.setPercentOutput(-0.5));
         driverGamepad.buttonHeld(BionicF310.RB, winch.setPercentOutput(1.0));
 
         hookDeploy = new MotorSubsystem(
