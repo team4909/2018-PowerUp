@@ -43,9 +43,6 @@ public class TuneMotionProfile extends Command {
         RioFS.makeDir("telemetry");
         RioFS.writeFile("telemetry", "voltage", "OUTPUT VOLTAGE,LINEAR VELOCITY\n");
         RioFS.writeFile("telemetry", "acceleration", "ELAPSED TIME,OUTPUT VOLTAGE,LINEAR VELOCITY\n");
-
-        stateTimer.reset();
-        stateTimer.start();
     }
 
     @Override
@@ -59,36 +56,31 @@ public class TuneMotionProfile extends Command {
 
         switch (state) {
             case Initialization:
-                System.out.println("MOTION PROFILE TUNING INIT");
-                leftSRX.zeroEncoderPosition();
-                rightSRX.zeroEncoderPosition();
+                System.out.println("MOTION PROFILE TUNING INIT.");
                 bionicDrive.resetHeading();
 
                 state = MPTuningState.TrackwidthRotation;
-                stateTimer.reset();
-                stateTimer.start();
 
                 break;
             case TrackwidthRotation:
                 System.out.println("MOTION PROFILE TUNING TRACKWIDTH ROTATION");
+                System.out.println("- ROTATIONS: " + rotations);
+
                 if (rotations > 10){
                     leftSRX.set(ControlMode.PercentOutput, 0);
                     rightSRX.set(ControlMode.PercentOutput, 0);
 
                     state = MPTuningState.TrackwidthCalculation;
-                    stateTimer.reset();
-                    stateTimer.start();
                 } else {
-                    System.out.println("- ROTATIONS: " + rotations);
                     leftSRX.set(ControlMode.PercentOutput, 0.45);
                     rightSRX.set(ControlMode.PercentOutput, -0.45);
                 }
 
                 break;
             case TrackwidthCalculation:
-                System.out.println("MOTION PROFILE TUNING TRACKWIDTH CALCULATION");
                 double trackwidth = distance / (rotations * Math.PI);
 
+                System.out.println("MOTION PROFILE TUNING TRACKWIDTH CALCULATION");
                 System.out.println(" - EMPIRICAL TRACKWIDTH: " + toCSVFormat(trackwidth) + " FEET");
 
                 state = MPTuningState.VoltageRamp;
@@ -151,7 +143,6 @@ public class TuneMotionProfile extends Command {
     public String toCSVFormat(double number){
         DecimalFormat df = new DecimalFormat("#");
         df.setMaximumFractionDigits(4);
-
         return df.format(number);
     }
 
