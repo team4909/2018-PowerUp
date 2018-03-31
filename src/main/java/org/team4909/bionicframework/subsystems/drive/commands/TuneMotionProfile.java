@@ -24,9 +24,9 @@ public class TuneMotionProfile extends Command {
 
     private MPTuningState state = MPTuningState.Initialization;
     private Timer stateTimer = new Timer();
-    private double throttle = 0, lastVelocity = 0, lastTime = 0;
+    private double throttle;
     private final double voltageStep = 0.025;
-    private boolean isFinished = false;
+    private boolean isFinished;
 
     public TuneMotionProfile(BionicDrive bionicDrive, BionicSRX leftSRX, BionicSRX rightSRX){
         requires(bionicDrive);
@@ -41,8 +41,8 @@ public class TuneMotionProfile extends Command {
         System.out.println("MOTION PROFILE TUNING STARTED");
 
         RioFS.makeDir("telemetry");
-        RioFS.writeFile("telemetry", "voltage", "ELAPSED TIME,LINEAR DISTANCE,OUTPUT VOLTAGE,LINEAR VELOCITY\n");
-        RioFS.writeFile("telemetry", "acceleration", "ELAPSED TIME,OUTPUT VOLTAGE,LINEAR VELOCITY,COMPUTED ACCELERATION\n");
+        RioFS.writeFile("telemetry", "voltage", "OUTPUT VOLTAGE,LINEAR VELOCITY\n");
+        RioFS.writeFile("telemetry", "acceleration", "ELAPSED TIME,OUTPUT VOLTAGE,LINEAR VELOCITY\n");
 
         stateTimer.reset();
         stateTimer.start();
@@ -111,7 +111,7 @@ public class TuneMotionProfile extends Command {
             case VoltageTelemetry:
                 System.out.println("MOTION PROFILE TUNING VOLTAGE TELEMETRY");
                 RioFS.appendFile("telemetry", "voltage",
-                        toCSVFormat(stateTimer.get()) + "," + toCSVFormat(distance) + "," + toCSVFormat(voltage) + "," + toCSVFormat(velocity) + "\n");
+                        toCSVFormat(voltage) + "," + toCSVFormat(velocity) + "\n");
 
                 throttle += voltageStep;
 
@@ -133,14 +133,8 @@ public class TuneMotionProfile extends Command {
                     leftSRX.set(ControlMode.PercentOutput, 0.6);
                     rightSRX.set(ControlMode.PercentOutput, -0.6);
 
-                    double dt = stateTimer.get() - lastTime,
-                            acceleration = (velocity - lastVelocity) / (dt);
-
-                    lastVelocity = velocity;
-                    lastTime = stateTimer.get();
-
                     RioFS.appendFile("telemetry", "acceleration",
-                            toCSVFormat(stateTimer.get()) + "," + toCSVFormat(voltage) + "," + toCSVFormat(velocity) + "," + toCSVFormat(acceleration) + "\n");
+                            toCSVFormat(stateTimer.get()) + "," + toCSVFormat(voltage) + "," + toCSVFormat(velocity) + "\n");
                 } else {
                     leftSRX.set(ControlMode.PercentOutput, 0);
                     rightSRX.set(ControlMode.PercentOutput, 0);
