@@ -16,6 +16,7 @@ import org.team4909.bionicframework.hardware.pneumatics.BionicSingleSolenoid;
 import org.team4909.bionicframework.hardware.sensors.gyro.BionicNavX;
 import org.team4909.bionicframework.operator.controllers.BionicF310;
 import org.team4909.bionicframework.subsystems.drive.BionicDrive;
+import org.team4909.bionicframework.subsystems.drive.commands.TuneMotionProfile;
 import org.team4909.bionicframework.subsystems.elevator.ElevatorSubsystem;
 import org.team4909.bionicframework.subsystems.leds.arduino.Neopixels;
 import org.team4909.bionicframework.subsystems.leds.pcm.RGBStrip;
@@ -151,12 +152,7 @@ public class Robot extends RoboRio {
     @Override
     protected void autoChooserInit() {
         autoChooser.addObject("Break Baseline", new BreakBaseline(drivetrain));
-        autoChooser.addObject("Left Start Switch ONLY", new GameFeatureSide(
-                GameFeature.SWITCH_NEAR,
-                new LeftSwitchFromLeft(intake, elevator, drivetrain),
-                new BreakBaseline(drivetrain)
-        ));
-        autoChooser.addObject("Left Start Scale Preferred", new GameFeatureSide(
+        autoChooser.addObject("Left Start - Scale PREFERRED", new GameFeatureSide(
                 GameFeature.SCALE,
                 new LeftScaleFromLeft(intake, elevator, drivetrain),
                 new GameFeatureSide(
@@ -165,7 +161,7 @@ public class Robot extends RoboRio {
                         new BreakBaseline(drivetrain)
                 )
         ));
-        autoChooser.addObject("Left Start Switch Preferred", new GameFeatureSide(
+        autoChooser.addObject("Left Start - Switch PREFERRED", new GameFeatureSide(
                 GameFeature.SWITCH_NEAR,
                 new LeftSwitchFromLeft(intake, elevator, drivetrain),
                 new GameFeatureSide(
@@ -174,26 +170,22 @@ public class Robot extends RoboRio {
                         new BreakBaseline(drivetrain)
                 )
         ));
-        autoChooser.addObject("Center Switch", new GameFeatureSide(
+        autoChooser.addObject("Left Start - Switch ONLY", new GameFeatureSide(
+                GameFeature.SWITCH_NEAR,
+                new LeftSwitchFromLeft(intake, elevator, drivetrain),
+                new BreakBaseline(drivetrain)
+        ));
+        autoChooser.addObject("Center Start - Switch ONLY", new GameFeatureSide(
                 GameFeature.SWITCH_NEAR,
                 new LeftSwitchFromCenter(intake, elevator, drivetrain),
                 new RightSwitchFromCenter(intake, elevator, drivetrain)
         ));
-        autoChooser.addObject("Right Start Switch ONLY", new GameFeatureSide(
+        autoChooser.addObject("Right Start - Switch ONLY", new GameFeatureSide(
                 GameFeature.SWITCH_NEAR,
                 new BreakBaseline(drivetrain),
                 new RightSwitchFromRight(intake, elevator, drivetrain)
         ));
-        autoChooser.addObject("Right Start Scale Preferred", new GameFeatureSide(
-                GameFeature.SCALE,
-                new GameFeatureSide(
-                        GameFeature.SWITCH_NEAR,
-                        new BreakBaseline(drivetrain),
-                        new RightSwitchFromRight(intake, elevator, drivetrain)
-                ),
-                new RightScaleFromRight(intake, elevator, drivetrain)
-        ));
-        autoChooser.addObject("Right Start Switch Preferred", new GameFeatureSide(
+        autoChooser.addObject("Right Start - Switch PREFERRED", new GameFeatureSide(
                 GameFeature.SWITCH_NEAR,
                 new GameFeatureSide(
                         GameFeature.SCALE,
@@ -202,6 +194,16 @@ public class Robot extends RoboRio {
                 ),
                 new RightSwitchFromRight(intake, elevator, drivetrain)
         ));
+        autoChooser.addObject("Right Start - Scale PREFERRED", new GameFeatureSide(
+                GameFeature.SCALE,
+                new GameFeatureSide(
+                        GameFeature.SWITCH_NEAR,
+                        new BreakBaseline(drivetrain),
+                        new RightSwitchFromRight(intake, elevator, drivetrain)
+                ),
+                new RightScaleFromRight(intake, elevator, drivetrain)
+        ));
+        autoChooser.addObject("DEBUG: Tune Motion Profile", drivetrain);
     }
 
     @Override
