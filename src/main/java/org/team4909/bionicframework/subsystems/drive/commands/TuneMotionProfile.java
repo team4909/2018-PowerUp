@@ -23,10 +23,8 @@ public class TuneMotionProfile extends Command {
     }
 
     private MPTuningState state = MPTuningState.Initialization;
-    private Timer stateTimer = new Timer(),
-            accelerationTimer = new Timer();
-    private double throttle = 0,
-            lastVelocity = 0;
+    private Timer stateTimer = new Timer();
+    private double throttle = 0, lastVelocity = 0, lastTime = 0;
     private final double voltageStep = 0.025;
     private boolean isFinished = false;
 
@@ -45,6 +43,9 @@ public class TuneMotionProfile extends Command {
         RioFS.makeDir("telemetry");
         RioFS.writeFile("telemetry", "voltage", "ELAPSED TIME,LINEAR DISTANCE,OUTPUT VOLTAGE,LINEAR VELOCITY\n");
         RioFS.writeFile("telemetry", "acceleration", "ELAPSED TIME,OUTPUT VOLTAGE,LINEAR VELOCITY,COMPUTED ACCELERATION\n");
+
+        stateTimer.reset();
+        stateTimer.start();
     }
 
     @Override
@@ -64,6 +65,9 @@ public class TuneMotionProfile extends Command {
                 bionicDrive.resetHeading();
 
                 state = MPTuningState.TrackwidthRotation;
+                stateTimer.reset();
+                stateTimer.start();
+
                 break;
             case TrackwidthRotation:
                 System.out.println("MOTION PROFILE TUNING TRACKWIDTH ROTATION");
@@ -72,6 +76,8 @@ public class TuneMotionProfile extends Command {
                     rightSRX.set(ControlMode.PercentOutput, 0);
 
                     state = MPTuningState.TrackwidthCalculation;
+                    stateTimer.reset();
+                    stateTimer.start();
                 } else {
                     System.out.println("- ROTATIONS: " + rotations);
                     leftSRX.set(ControlMode.PercentOutput, 0.45);
@@ -113,8 +119,6 @@ public class TuneMotionProfile extends Command {
                     state = MPTuningState.AccelerationTelemetry;
                     stateTimer.reset();
                     stateTimer.start();
-
-                    accelerationTimer.start();
                 } else {
                     state = MPTuningState.VoltageRamp;
                 }
@@ -122,25 +126,27 @@ public class TuneMotionProfile extends Command {
                 break;
             case AccelerationTelemetry:
                 System.out.println("MOTION PROFILE TUNING ACCELERATION TELEMETRY");
-                if (!stateTimer.hasPeriodPassed(1)) {
+                if (stateTimer.get() < 1) {
                     leftSRX.set(ControlMode.PercentOutput, 0);
                     rightSRX.set(ControlMode.PercentOutput, 0);
-                } else if (!stateTimer.hasPeriodPassed(5)) {
+                } else if (stateTimer.get() < 5) {
                     leftSRX.set(ControlMode.PercentOutput, 0.6);
                     rightSRX.set(ControlMode.PercentOutput, -0.6);
 
-                    double dt = accelerationTimer.get(),
+                    double dt = stateTimer.get() - lastTime,
                             acceleration = (velocity - lastVelocity) / (dt);
+
                     lastVelocity = velocity;
+                    lastTime = stateTimer.get();
 
                     RioFS.appendFile("telemetry", "acceleration",
                             toCSVFormat(stateTimer.get()) + "," + toCSVFormat(voltage) + "," + toCSVFormat(velocity) + "," + toCSVFormat(acceleration) + "\n");
                 } else {
+                    leftSRX.set(ControlMode.PercentOutput, 0);
+                    rightSRX.set(ControlMode.PercentOutput, 0);
+
                     isFinished = true;
                 }
-
-                accelerationTimer.reset();
-                accelerationTimer.start();
 
                 break;
         }
