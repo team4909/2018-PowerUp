@@ -7,6 +7,8 @@ import org.team4909.bionicframework.hardware.core.RioFS;
 import org.team4909.bionicframework.hardware.motor.BionicSRX;
 import org.team4909.bionicframework.subsystems.drive.BionicDrive;
 
+import java.text.DecimalFormat;
+
 public class TuneMotionProfile extends Command {
     private final BionicDrive bionicDrive;
     private final BionicSRX leftSRX, rightSRX;
@@ -41,13 +43,13 @@ public class TuneMotionProfile extends Command {
         System.out.println("MOTION PROFILE TUNING STARTED");
 
         RioFS.makeDir("telemetry");
-        RioFS.writeFile("telemetry", "voltage", "ELAPSED TIME, LINEAR DISTANCE, OUTPUT VOLTAGE, LINEAR VELOCITY");
-        RioFS.writeFile("telemetry", "acceleration", "ELAPSED TIME, OUTPUT VOLTAGE, LINEAR VELOCITY, COMPUTED ACCELERATION");
+        RioFS.writeFile("telemetry", "voltage", "ELAPSED TIME,LINEAR DISTANCE,OUTPUT VOLTAGE,LINEAR VELOCITY\n");
+        RioFS.writeFile("telemetry", "acceleration", "ELAPSED TIME,OUTPUT VOLTAGE,LINEAR VELOCITY,COMPUTED ACCELERATION\n");
     }
 
     @Override
     protected void execute() {
-        double voltage = (leftSRX.getMotorOutputVoltage() + rightSRX.getMotorOutputVoltage()) / 2,
+        double voltage = (Math.abs(leftSRX.getMotorOutputVoltage()) + Math.abs(rightSRX.getMotorOutputVoltage())) / 2,
                 rotations = (bionicDrive.getHeading() / 360),
                 distance = bionicDrive.ticksToFeet / 2 *
                         (Math.abs(leftSRX.getSelectedSensorPosition()) + Math.abs(rightSRX.getSelectedSensorPosition())),
@@ -56,6 +58,7 @@ public class TuneMotionProfile extends Command {
 
         switch (state) {
             case Initialization:
+                System.out.println("MOTION PROFILE TUNING INIT");
                 leftSRX.zeroEncoderPosition();
                 rightSRX.zeroEncoderPosition();
                 bionicDrive.resetHeading();
@@ -63,28 +66,35 @@ public class TuneMotionProfile extends Command {
                 state = MPTuningState.TrackwidthRotation;
                 break;
             case TrackwidthRotation:
+                System.out.println("MOTION PROFILE TUNING TRACKWIDTH ROTATION");
                 if (rotations > 10){
                     leftSRX.set(ControlMode.PercentOutput, 0);
                     rightSRX.set(ControlMode.PercentOutput, 0);
 
                     state = MPTuningState.TrackwidthCalculation;
                 } else {
-                    System.out.println("ROTATIONS: " + rotations);
+                    System.out.println("- ROTATIONS: " + rotations);
                     leftSRX.set(ControlMode.PercentOutput, 0.45);
                     rightSRX.set(ControlMode.PercentOutput, -0.45);
                 }
 
                 break;
             case TrackwidthCalculation:
+                System.out.println("MOTION PROFILE TUNING TRACKWIDTH CALCULATION");
                 double trackwidth = distance / (rotations * Math.PI);
 
-                System.out.println("EMPIRICAL TRACKWIDTH: " + trackwidth + " FEET");
+                System.out.println(" - EMPIRICAL TRACKWIDTH: " + toCSVFormat(trackwidth) + " FEET");
 
                 state = MPTuningState.VoltageRamp;
                 stateTimer.reset();
+                stateTimer.start();
+
                 break;
             case VoltageRamp:
-                if(stateTimer.hasPeriodPassed(2000)) {
+                System.out.println("MOTION PROFILE TUNING VOLTAGE RAMP");
+                System.out.println(" - THROTTLE: " + throttle);
+
+                if(stateTimer.hasPeriodPassed(2)) {
                     state = MPTuningState.VoltageTelemetry;
                 } else {
                     leftSRX.set(ControlMode.PercentOutput, throttle);
@@ -93,40 +103,56 @@ public class TuneMotionProfile extends Command {
 
                 break;
             case VoltageTelemetry:
+                System.out.println("MOTION PROFILE TUNING VOLTAGE TELEMETRY");
                 RioFS.appendFile("telemetry", "voltage",
-                        stateTimer.get() + "," + distance + "," + voltage + "," + velocity + "\n");
+                        toCSVFormat(stateTimer.get()) + "," + toCSVFormat(distance) + "," + toCSVFormat(voltage) + "," + toCSVFormat(velocity) + "\n");
 
                 throttle += voltageStep;
 
                 if (throttle > 1.0) {
                     state = MPTuningState.AccelerationTelemetry;
+                    stateTimer.reset();
+                    stateTimer.start();
+
+                    accelerationTimer.start();
                 } else {
                     state = MPTuningState.VoltageRamp;
                 }
 
-                stateTimer.reset();
                 break;
             case AccelerationTelemetry:
-                if (!stateTimer.hasPeriodPassed(1000)) {
+                System.out.println("MOTION PROFILE TUNING ACCELERATION TELEMETRY");
+                if (!stateTimer.hasPeriodPassed(1)) {
                     leftSRX.set(ControlMode.PercentOutput, 0);
                     rightSRX.set(ControlMode.PercentOutput, 0);
-                } else if (!stateTimer.hasPeriodPassed(5000)) {
+                } else if (!stateTimer.hasPeriodPassed(5)) {
                     leftSRX.set(ControlMode.PercentOutput, 0.6);
                     rightSRX.set(ControlMode.PercentOutput, -0.6);
 
-                    double dt = accelerationTimer.get() / 1000.0,
+                    double dt = accelerationTimer.get(),
                             acceleration = (velocity - lastVelocity) / (dt);
                     lastVelocity = velocity;
 
                     RioFS.appendFile("telemetry", "acceleration",
-                            stateTimer.get() + "," + voltage + "," + velocity + "," + acceleration + "\n");
+                            toCSVFormat(stateTimer.get()) + "," + toCSVFormat(voltage) + "," + toCSVFormat(velocity) + "," + toCSVFormat(acceleration) + "\n");
                 } else {
                     isFinished = true;
                 }
 
                 accelerationTimer.reset();
+                accelerationTimer.start();
+
                 break;
         }
+
+        System.out.println(" - TIME ELAPSED: " + stateTimer.get());
+    }
+
+    public String toCSVFormat(double number){
+        DecimalFormat df = new DecimalFormat("#");
+        df.setMaximumFractionDigits(4);
+
+        return df.format(number);
     }
 
     @Override

@@ -71,7 +71,7 @@ public class Robot extends RoboRio {
                 driverGamepad, BionicF310.RX, -0.75, 0.10,
                 new BionicNavX(),
                 0.5,360,
-                0,
+                2.5024,
                 0,0,0,0,0,0,
                 0,0
         );
