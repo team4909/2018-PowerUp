@@ -31,7 +31,7 @@ public class DriveRotate extends PIDCommand {
 
     @Override
     protected void initialize() {
-        bionicDrive.resetProfiling();
+        bionicDrive.resetHeading();
     }
 
     @Override
