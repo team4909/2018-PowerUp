@@ -64,7 +64,7 @@ public class TuneMotionProfile extends Command {
                 break;
             case TrackwidthRotation:
                 System.out.println("MOTION PROFILE TUNING TRACKWIDTH ROTATION");
-                System.out.println("- ROTATIONS: " + rotations);
+                System.out.println(" - ROTATIONS: " + rotations);
 
                 if (rotations > 10){
                     leftSRX.set(ControlMode.PercentOutput, 0);
