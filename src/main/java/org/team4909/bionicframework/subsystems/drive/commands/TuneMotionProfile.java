@@ -21,8 +21,10 @@ public class TuneMotionProfile extends Command {
     }
 
     private MPTuningState state = MPTuningState.Initialization;
-    private Timer stateTimer, accelerationTimer;
-    private double throttle, lastVelocity = 0;
+    private Timer stateTimer = new Timer(),
+            accelerationTimer = new Timer();
+    private double throttle = 0,
+            lastVelocity = 0;
     private final double voltageStep = 0.025;
     private boolean isFinished = false;
 
@@ -67,8 +69,9 @@ public class TuneMotionProfile extends Command {
 
                     state = MPTuningState.TrackwidthCalculation;
                 } else {
-                    leftSRX.set(ControlMode.PercentOutput, 1);
-                    rightSRX.set(ControlMode.PercentOutput, -1);
+                    System.out.println("ROTATIONS: " + rotations);
+                    leftSRX.set(ControlMode.PercentOutput, 0.45);
+                    rightSRX.set(ControlMode.PercentOutput, -0.45);
                 }
 
                 break;

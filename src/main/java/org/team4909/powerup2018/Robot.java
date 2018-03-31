@@ -203,7 +203,7 @@ public class Robot extends RoboRio {
                 ),
                 new RightScaleFromRight(intake, elevator, drivetrain)
         ));
-        autoChooser.addObject("DEBUG: Tune Motion Profile", drivetrain);
+        autoChooser.addObject("DEBUG: Tune Motion Profile", drivetrain.tuneMotionProfile());
     }
 
     @Override

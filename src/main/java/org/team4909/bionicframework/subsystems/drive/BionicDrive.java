@@ -11,10 +11,7 @@ import org.team4909.bionicframework.hardware.pneumatics.BionicSingleSolenoid;
 import org.team4909.bionicframework.interfaces.Commandable;
 import org.team4909.bionicframework.operator.controllers.BionicF310;
 import org.team4909.bionicframework.operator.generic.BionicAxis;
-import org.team4909.bionicframework.subsystems.drive.commands.DriveOI;
-import org.team4909.bionicframework.subsystems.drive.commands.DriveRotate;
-import org.team4909.bionicframework.subsystems.drive.commands.DriveTrajectory;
-import org.team4909.bionicframework.subsystems.drive.commands.InvertDriveDirection;
+import org.team4909.bionicframework.subsystems.drive.commands.*;
 
 /**
  * BionicDrive abstracts away much of the underlying drivetrain functionality
@@ -156,5 +153,9 @@ public class BionicDrive extends Subsystem {
 
     public Command driveRotation(double angle) {
         return new DriveRotate(this, leftSRX, rightSRX, angle);
+    }
+
+    public Command tuneMotionProfile(){
+        return new TuneMotionProfile(this, leftSRX,rightSRX);
     }
 }
