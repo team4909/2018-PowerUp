@@ -70,7 +70,7 @@ public class Robot extends RoboRio {
                         1, 0, 0,
                         4
                 ),
-                driverGamepad, BionicF310.LY, -1.0, 0.10,
+                driverGamepad, BionicF310.LY, 1.0, 0.10,
                 driverGamepad, BionicF310.RX, -0.75, 0.10,
                 new DrivetrainConfig(
                         25, 0.5, 120,
@@ -85,12 +85,12 @@ public class Robot extends RoboRio {
 
         elevator = new ElevatorSubsystem(
                 new BionicSRX(
-                        3, true,
-                        FeedbackDevice.CTRE_MagEncoder_Relative, false,
-                        1.0, 0, 0,
+                        3, false,
+                        FeedbackDevice.CTRE_MagEncoder_Relative, true,
+                        0.28, 0, 0,
                         3
                 ),
-                manipulatorGamepad, BionicF310.LY, -1,
+                manipulatorGamepad, BionicF310.LY, -.6,
                 33150
         );
         manipulatorGamepad.povActive(BionicF310.Top, elevator.holdPosition(28400));
