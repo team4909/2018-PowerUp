@@ -1,6 +1,7 @@
 package org.team4909.powerup2018;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -55,26 +56,27 @@ public class Robot extends RoboRio {
 
     @Override
     protected void subsystemInit() {
-        CameraServer.getInstance().startAutomaticCapture();
+        UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+        camera.setResolution(960, 540);
 
         drivetrain = new BionicDrive(
                 new BionicSRX(
-                        2, false,
-                        FeedbackDevice.QuadEncoder, false,
+                        2, true,
+                        FeedbackDevice.QuadEncoder, true,
                         1, 0, 0,
                         1
                 ),
                 new BionicSRX(
-                        4, true,
-                        FeedbackDevice.QuadEncoder, false,
+                        4, false,
+                        FeedbackDevice.QuadEncoder, true,
                         1, 0, 0,
                         4
                 ),
                 driverGamepad, BionicF310.LY, -1.0, 0.10,
-                driverGamepad, BionicF310.RX, -0.75, 0.10,
+                driverGamepad, BionicF310.RX, 0.65, 0.10,
                 new DrivetrainConfig(
-                        25, 0.5, 120,
-                        12.000, 11.126, 117.809,
+                        25, 0.5, 360,
+                        21.76, 41.88, 654.49,
                         3, 2.74
                 ),
                 new BionicNavX(),
@@ -85,11 +87,12 @@ public class Robot extends RoboRio {
 
         elevator = new ElevatorSubsystem(
                 new BionicSRX(
-                        3, true,
-                        FeedbackDevice.CTRE_MagEncoder_Relative, false,
-                        1.0, 0, 0
+                        3, false,
+                        FeedbackDevice.CTRE_MagEncoder_Relative, true,
+                        0.28, 0, 0,
+                        3
                 ),
-                manipulatorGamepad, BionicF310.LY, -1,
+                manipulatorGamepad, BionicF310.LY, -.6,
                 33150
         );
         manipulatorGamepad.povActive(BionicF310.Top, elevator.holdPosition(28400));
