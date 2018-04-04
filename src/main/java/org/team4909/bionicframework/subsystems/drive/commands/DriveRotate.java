@@ -19,8 +19,6 @@ public class DriveRotate extends PIDCommand {
         this.leftSRX = leftSRX;
         this.rightSRX = rightSRX;
 
-        angle = -angle;
-
         if(angle<0){
             direction = -1;
         }else{

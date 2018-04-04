@@ -61,19 +61,19 @@ public class Robot extends RoboRio {
 
         drivetrain = new BionicDrive(
                 new BionicSRX(
-                        2, true,
-                        FeedbackDevice.QuadEncoder, true,
+                        2, false,
+                        FeedbackDevice.QuadEncoder, false,
                         1, 0, 0,
                         1
                 ),
                 new BionicSRX(
-                        4, false,
-                        FeedbackDevice.QuadEncoder, true,
+                        4, true,
+                        FeedbackDevice.QuadEncoder, false,
                         1, 0, 0,
                         4
                 ),
                 driverGamepad, BionicF310.LY, -1.0, 0.10,
-                driverGamepad, BionicF310.RX, 0.65, 0.10,
+                driverGamepad, BionicF310.RX, -0.65, 0.10,
                 new DrivetrainConfig(
                         25, 0.5, 360,
                         21.76, 41.88, 654.49,
