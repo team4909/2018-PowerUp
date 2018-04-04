@@ -71,7 +71,7 @@ public class Robot extends RoboRio {
                         4
                 ),
                 driverGamepad, BionicF310.LY, 1.0, 0.10,
-                driverGamepad, BionicF310.RX, -0.75, 0.10,
+                driverGamepad, BionicF310.RX, -0.65, 0.10,
                 new DrivetrainConfig(
                         25, 0.5, 120,
                         12.000, 11.126, 117.809,
