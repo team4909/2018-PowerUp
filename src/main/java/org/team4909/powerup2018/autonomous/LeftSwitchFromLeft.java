@@ -26,9 +26,9 @@ public class LeftSwitchFromLeft extends CommandGroup {
 //        addSequential(elevator.holdPosition(0));
         /******* NEW CODE *******/
         //Drive up to the left side of the switch
-        addSequential(new DriveDistance(125, 0.02,0,0));
+        addSequential(new DriveDistance(115, 0.02,0,0));
         //Rotate 90 degrees to the right
-        addSequential(drivetrain.driveRotation(-90));
+        addSequential(drivetrain.driveRotation(-90,.0085,0,0));
         //Elevator raised
         addSequential(elevator.holdPosition(11000));
         addSequential(new WaitCommand(.25));
@@ -39,9 +39,9 @@ public class LeftSwitchFromLeft extends CommandGroup {
         addSequential(new WaitCommand(1.5));
         addSequential(intake.setPercentOutput(0));
         //Back away from cube
-        addSequential(new DriveDistance(-24, .02, 0, 0));
+       // addSequential(new DriveDistance(-24, .02, 0, 0));
         //Elevator down
-        addSequential(elevator.holdPosition(0));
+       // addSequential(elevator.holdPosition(0));
 
     }
 }
