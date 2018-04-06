@@ -58,7 +58,7 @@ public class Robot extends RoboRio {
     @Override
     protected void subsystemInit() {
         UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-        camera.setResolution(960, 540);
+        camera.setResolution(768, 432);
 
         drivetrain = new BionicDrive(
                 new BionicSRX(
@@ -151,30 +151,30 @@ public class Robot extends RoboRio {
 
     @Override
     protected void autoChooserInit() {
-        autoChooser.addObject("Break Baseline", new BreakBaseline(drivetrain));
+        autoChooser.addObject("Break Baseline", new DriveDistance(125, 0.02,0,0));
         autoChooser.addObject("Left Start Switch ONLY", new GameFeatureSide(
                 GameFeature.SWITCH_NEAR,
                 new LeftSwitchFromLeft(intake, elevator, drivetrain),
                 new BreakBaseline(drivetrain)
         ));
-        autoChooser.addObject("Left Start Scale Preferred", new GameFeatureSide(
-                GameFeature.SCALE,
-                new LeftScaleFromLeft(intake, elevator, drivetrain),
-                new GameFeatureSide(
-                        GameFeature.SWITCH_NEAR,
-                        new LeftSwitchFromLeft(intake, elevator, drivetrain),
-                        new BreakBaseline(drivetrain)
-                )
-        ));
-        autoChooser.addObject("Left Start Switch Preferred", new GameFeatureSide(
-                GameFeature.SWITCH_NEAR,
-                new LeftSwitchFromLeft(intake, elevator, drivetrain),
-                new GameFeatureSide(
-                        GameFeature.SCALE,
-                        new LeftScaleFromLeft(intake, elevator, drivetrain),
-                        new BreakBaseline(drivetrain)
-                )
-        ));
+//        autoChooser.addObject("Left Start Scale Preferred", new GameFeatureSide(
+//                GameFeature.SCALE,
+//                new LeftScaleFromLeft(intake, elevator, drivetrain),
+//                new GameFeatureSide(
+//                        GameFeature.SWITCH_NEAR,
+//                        new LeftSwitchFromLeft(intake, elevator, drivetrain),
+//                        new BreakBaseline(drivetrain)
+//                )
+//        ));
+//        autoChooser.addObject("Left Start Switch Preferred", new GameFeatureSide(
+//                GameFeature.SWITCH_NEAR,
+//                new LeftSwitchFromLeft(intake, elevator, drivetrain),
+//                new GameFeatureSide(
+//                        GameFeature.SCALE,
+//                        new LeftScaleFromLeft(intake, elevator, drivetrain),
+//                        new BreakBaseline(drivetrain)
+//                )
+//        ));
         autoChooser.addObject("Center Switch", new GameFeatureSide(
                 GameFeature.SWITCH_NEAR,
                 new LeftSwitchFromCenter(intake, elevator, drivetrain),
@@ -185,28 +185,28 @@ public class Robot extends RoboRio {
                 new BreakBaseline(drivetrain),
                 new RightSwitchFromRight(intake, elevator, drivetrain)
         ));
-        autoChooser.addObject("Right Start Scale Preferred", new GameFeatureSide(
-                GameFeature.SCALE,
-                new GameFeatureSide(
-                        GameFeature.SWITCH_NEAR,
-                        new BreakBaseline(drivetrain),
-                        new RightSwitchFromRight(intake, elevator, drivetrain)
-                ),
-                new RightScaleFromRight(intake, elevator, drivetrain)
-        ));
-        autoChooser.addObject("Right Start Switch Preferred", new GameFeatureSide(
-                GameFeature.SWITCH_NEAR,
-                new GameFeatureSide(
-                        GameFeature.SCALE,
-                        new BreakBaseline(drivetrain),
-                        new RightScaleFromRight(intake, elevator, drivetrain)
-                ),
-                new RightSwitchFromRight(intake, elevator, drivetrain)
-        ));
-        autoChooser.addObject("DEBUG: Drive Straight", drivetrain.driveDistance(6));
-        autoChooser.addObject("DEBUG: Drive Rotate", drivetrain.driveRotation(90));
-        autoChooser.addObject("DEBUG: Base Line", new DriveDistance(125, 0.02,0,0));
-        autoChooser.addObject("DEBUG: Right", new RightSwitchFromCenter(125, 0.02,0,0));
+//        autoChooser.addObject("Right Start Scale Preferred", new GameFeatureSide(
+//                GameFeature.SCALE,
+//                new GameFeatureSide(
+//                        GameFeature.SWITCH_NEAR,
+//                        new BreakBaseline(drivetrain),
+//                        new RightSwitchFromRight(intake, elevator, drivetrain)
+//                ),
+//                new RightScaleFromRight(intake, elevator, drivetrain)
+//        ));
+//        autoChooser.addObject("Right Start Switch Preferred", new GameFeatureSide(
+//                GameFeature.SWITCH_NEAR,
+//                new GameFeatureSide(
+//                        GameFeature.SCALE,
+//                        new BreakBaseline(drivetrain),
+//                        new RightScaleFromRight(intake, elevator, drivetrain)
+//                ),
+//                new RightSwitchFromRight(intake, elevator, drivetrain)
+//        ));
+//        autoChooser.addObject("DEBUG: Drive Straight", drivetrain.driveDistance(6));
+//        autoChooser.addObject("DEBUG: Drive Rotate", drivetrain.driveRotation(90));
+//        autoChooser.addObject("DEBUG: Base Line", );
+//        autoChooser.addObject("DEBUG: Right", new RightSwitchFromCenter(125, 0.02,0,0));
     }
 
     @Override

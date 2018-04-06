@@ -41,7 +41,7 @@ public class DriveRotate extends PIDCommand {
 
     @Override
     protected boolean isFinished() {
-        return Math.abs(getPIDController().getError()) < 3;
+        return Math.abs(getPIDController().getError()) < 4;
     }
 
     @Override

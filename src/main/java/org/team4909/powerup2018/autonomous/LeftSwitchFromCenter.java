@@ -18,17 +18,17 @@ public class LeftSwitchFromCenter extends CommandGroup {
         addSequential(drivetrain.driveRotation(55,.0092,0.0002,0));
 
         //Drive to the switch
-        addSequential(new DriveDistance(5*12, 0.02,0,0));
+        addSequential(new DriveDistance(6*12, 0.02,0,0));
 //                drivetrain.d
 
         //turn to score
-        addSequential(drivetrain.driveRotation(-55, .0095,0.0005,0));
+        addSequential(drivetrain.driveRotation(-50, .0092,0.0002,0));
 
         // Move elevator to height
-        addSequential(elevator.holdPosition(11000));
-        addSequential(new WaitCommand(.25)); //wait to get there
+        addSequential(elevator.holdPosition(15000));
+        addSequential(new WaitCommand(.5)); //wait to get there
 //
-        addSequential(new DriveDistance(2*12, 0.02,0,0));
+        addSequential(new DriveDistance(5*12, 0.02,0,0),2);
 //                drivetrain.driveDistance(1.833));
 
         addSequential(intake.setPercentOutput(-1.0));
