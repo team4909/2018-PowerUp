@@ -22,8 +22,8 @@ import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainTrajectory
  */
 public class BionicDrive extends Subsystem {
     /* Hardware */
-    private final BionicSRX leftSRX;
-    private final BionicSRX rightSRX;
+    public final BionicSRX leftSRX;
+    public final BionicSRX rightSRX;
     private final BionicSingleSolenoid shifter;
 
     public final DriveOI defaultCommand;
@@ -116,6 +116,10 @@ public class BionicDrive extends Subsystem {
          rightSRX.setSelectedSensorPosition(0,0,0);
     }
 
+    public void resetGyro(){
+        bionicGyro.reset();
+    }
+
     public double getVelocity(){
         double currentLeftVelocity = getLeftVelocity();
         double currentRightVelocity = getRightVelocity();
@@ -155,27 +159,32 @@ public class BionicDrive extends Subsystem {
         return shifter.invert();
     }
 
-    private Command driveTrajectory(DrivetrainTrajectory trajectory) {
-        return new DriveTrajectory(this, leftSRX, rightSRX, trajectory);
+    private Command driveTrajectory(DrivetrainTrajectory trajectory, double kp) {
+        return new DriveTrajectory(this, leftSRX, rightSRX, trajectory, kp);
     }
 
-    public Command driveDistance(double distance){
-
+    public Command driveDistance(double distance) {
+        return driveDistance(distance, -1);
+    }
+    public Command driveDistance(double distance, double kp){
         return driveWaypoints(new Waypoint[]{
                 new Waypoint(0,0,0),
                 new Waypoint(distance,0,0)
-        });
+        }, kp);
     }
 
     public Command driveRotation(double angle) {
-        return new DriveRotate(this, leftSRX, rightSRX, angle);
+        return new DriveRotate(this, leftSRX, rightSRX, angle,.0046,0,0);
+    }
+    public Command driveRotation(double angle, double kp, double ki, double kd) {
+        return new DriveRotate(this, leftSRX, rightSRX, angle, kp, ki, kd);
     }
 
-    public Command driveRotationTest() {
-        return driveTrajectory(pathgen.getRotationTestTrajectory());
-    }
+//    public Command driveRotationTest() {
+//        return driveTrajectory(pathgen.getRotationTestTrajectory());
+//    }
 
-    public Command driveWaypoints(Waypoint[] points) {
-        return driveTrajectory(pathgen.getTrajectory(points));
+    public Command driveWaypoints(Waypoint[] points, double kp) {
+        return driveTrajectory(pathgen.getTrajectory(points), kp);
     }
 }

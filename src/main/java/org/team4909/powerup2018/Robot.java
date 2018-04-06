@@ -17,6 +17,7 @@ import org.team4909.bionicframework.hardware.pneumatics.BionicSingleSolenoid;
 import org.team4909.bionicframework.hardware.sensors.gyro.BionicNavX;
 import org.team4909.bionicframework.operator.controllers.BionicF310;
 import org.team4909.bionicframework.subsystems.drive.BionicDrive;
+import org.team4909.bionicframework.subsystems.drive.commands.DriveDistance;
 import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainConfig;
 import org.team4909.bionicframework.subsystems.elevator.ElevatorSubsystem;
 import org.team4909.bionicframework.subsystems.leds.arduino.Neopixels;
@@ -30,7 +31,7 @@ public class Robot extends RoboRio {
     private static BionicF310 debugGamepad;
 
     /* Subsystem Initialization */
-    private static BionicDrive drivetrain;
+    public static BionicDrive drivetrain;
     private static ElevatorSubsystem elevator;
     private static MotorSubsystem intake;
     private static MotorSubsystem winch;
@@ -62,14 +63,14 @@ public class Robot extends RoboRio {
         drivetrain = new BionicDrive(
                 new BionicSRX(
                         2, false,
-                        FeedbackDevice.QuadEncoder, false,
-                        1, 0, 0,
+                        FeedbackDevice.QuadEncoder, true,
+                        1, 0.00001, 0,
                         1
                 ),
                 new BionicSRX(
                         4, true,
-                        FeedbackDevice.QuadEncoder, false,
-                        1, 0, 0,
+                        FeedbackDevice.QuadEncoder, true,
+                        1, 0.00001, 0,
                         4
                 ),
                 driverGamepad, BionicF310.LY, -1.0, 0.10,
@@ -202,12 +203,17 @@ public class Robot extends RoboRio {
                 ),
                 new RightSwitchFromRight(intake, elevator, drivetrain)
         ));
-        autoChooser.addObject("DEBUG: Drive Straight", drivetrain.driveDistance(8));
+        autoChooser.addObject("DEBUG: Drive Straight", drivetrain.driveDistance(6));
+        autoChooser.addObject("DEBUG: Drive Rotate", drivetrain.driveRotation(90));
+        autoChooser.addObject("DEBUG: Base Line", new DriveDistance(125, 0.02,0,0));
+        autoChooser.addObject("DEBUG: Right", new RightSwitchFromCenter(125, 0.02,0,0));
     }
 
     @Override
     protected void dashboardPeriodic() {
         super.dashboardPeriodic();
+
+        SmartDashboard.putNumber("Left Encoder", Robot.drivetrain.leftSRX.getSelectedSensorPosition());
 
         drivetrain.profiling = SmartDashboard.getBoolean("Drivetrain Profiling", false);
         drivetrain.encoderOverride = SmartDashboard.getBoolean("Drivetrain Encoder Override", false);
@@ -239,6 +245,7 @@ public class Robot extends RoboRio {
         }
 
         drivetrain.rotationDeltaLimit = 0.04 - (elevatorCoefficient * elevator.getCurrentPosition());
+        SmartDashboard.putNumber("Heading" ,Robot.drivetrain.getHeading());
     }
 
     @Override

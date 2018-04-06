@@ -1,6 +1,5 @@
 package org.team4909.bionicframework.hardware.motor;
 
-import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motion.MotionProfileStatus;
 import com.ctre.phoenix.motion.SetValueMotionProfile;
@@ -11,9 +10,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
-
 import edu.wpi.first.wpilibj.Notifier;
-
 import jaci.pathfinder.Trajectory;
 import org.team4909.bionicframework.hardware.motor.commandables.PercentOutputCommandable;
 import org.team4909.bionicframework.hardware.motor.commandables.SmartOutputCommandable;
@@ -127,7 +124,7 @@ public class BionicSRX extends WPI_TalonSRX {
 
             // Profile Data: Position is in Ticks, Velo is in ft/s
             point.position = (invert ? -1 : 1) * (trajectory.get(i).x / conversionFactor);
-            point.velocity = (invert ? -1 : 1) * trajectory.get(i).velocity;
+            point.velocity = 0;//(invert ? -1 : 1) * trajectory.get(i).velocity;
 
             // Configuration Data
             point.timeDur = TrajectoryDuration.Trajectory_Duration_0ms;
