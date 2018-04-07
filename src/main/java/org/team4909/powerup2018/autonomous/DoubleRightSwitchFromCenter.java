@@ -24,39 +24,36 @@ public class DoubleRightSwitchFromCenter extends CommandGroup{
         // Move elevator to height
         addSequential(elevator.holdPosition(11000));
         addSequential(new WaitCommand(.5)); //wait to get there
-        addSequential(new DriveDistance(4*12, 0.02,0,0),2);
+        addSequential(new DriveDistance(4*12, 0.02,0,0),3);
 
         addSequential(intake.setPercentOutput(-1.0));
         addSequential(new WaitCommand(1.5));
         addSequential(intake.setPercentOutput(0));
 
-        addSequential(new DriveDistance(-12,.02,0,0));
+        addSequential(new DriveDistance(-4*12,.02,0,0));
         addSequential(elevator.holdPosition(0));
-        addSequential(new DriveDistance(-48,.02,0,0));
-        addSequential(drivetrain.driveRotation(90,.0085,0, 0));
-        addSequential(new DriveDistance(48,.02,0,0));
-        addSequential(drivetrain.driveRotation(-90,0.0085,0,0));
+        addSequential(drivetrain.driveRotation(-50,.009,0.0002, 0));
+        addSequential(new DriveDistance(4.5*12,.02,0,0));
+        addSequential(drivetrain.driveRotation(55,0.0085,0,0));
         addSequential(intake.setPercentOutput(1));
-        addSequential(new DriveDistance(1.5,.02,0,0));
+        addSequential(new DriveDistance(110,.02,0,0));
         addSequential(intake.setPercentOutput(-0.5));
-        addSequential(new WaitCommand(.1));
+        addSequential(new WaitCommand(.2));
         addSequential(intake.setPercentOutput(1));
         addSequential(new WaitCommand(.5));
         addSequential(intake.setPercentOutput(0));
 
-        addSequential(new DriveDistance(-1.5,.02,0,0));
-        addSequential(drivetrain.driveRotation(-90,.0085,0,0));
-        addSequential(new DriveDistance(48,.02,0,0));
-        addSequential(drivetrain.driveRotation(90,.0085,0,0));
-        addSequential(new DriveDistance(48,.02,0,0));
-        addSequential(elevator.holdPosition(11000));
-        addSequential(new WaitCommand(.5));
-        addSequential(new DriveDistance(12,.02,0,0));
+        addSequential(new DriveDistance(-86,.02,0,0));
+        addSequential(drivetrain.driveRotation(-55,.0085,0,0));
+        addSequential(new DriveDistance(4.5*12,.02,0,0));
+        addSequential(drivetrain.driveRotation(55,.0085,0,0));
+        addSequential(new DriveDistance(4*12,.02,0,0),3);
 
         addSequential(intake.setPercentOutput(-1.0));
         addSequential(new WaitCommand(1.5));
         addSequential(intake.setPercentOutput(0));
 
-
+        addSequential(new DriveDistance(-24,.02,0,0));
+        addSequential(elevator.holdPosition(0));
     }
 }
