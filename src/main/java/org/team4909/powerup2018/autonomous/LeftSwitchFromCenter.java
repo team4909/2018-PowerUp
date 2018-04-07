@@ -25,7 +25,7 @@ public class LeftSwitchFromCenter extends CommandGroup {
         addSequential(drivetrain.driveRotation(-50, .0092,0.0002,0));
 
         // Move elevator to height
-        addSequential(elevator.holdPosition(15000));
+        addSequential(elevator.holdPosition(13000));
         addSequential(new WaitCommand(.5)); //wait to get there
 //
         addSequential(new DriveDistance(5*12, 0.02,0,0),2);

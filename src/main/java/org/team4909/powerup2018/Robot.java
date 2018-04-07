@@ -178,6 +178,11 @@ public class Robot extends RoboRio {
                 new LeftSwitchFromCenter(intake, elevator, drivetrain),
                 new RightSwitchFromCenter(intake, elevator, drivetrain)
         ));
+        autoChooser.addObject("Center Switch Double (Single Left)", new GameFeatureSide(
+                GameFeature.SWITCH_NEAR,
+                new LeftSwitchFromCenter(intake, elevator, drivetrain),
+                new DoubleRightSwitchFromCenter(intake, elevator, drivetrain)
+        ));
         autoChooser.addObject("Right Start Switch ONLY", new GameFeatureSide(
                 GameFeature.SWITCH_NEAR,
                 new BreakBaseline(drivetrain),

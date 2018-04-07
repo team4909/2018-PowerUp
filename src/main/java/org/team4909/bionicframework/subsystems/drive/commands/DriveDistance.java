@@ -10,7 +10,8 @@ public class DriveDistance extends PIDCommand {
     {
         super(kp,ki,kd);
         requires(Robot.drivetrain);
-        getPIDController().setSetpoint(Math.abs(distance));
+        //getPIDController().setSetpoint(Math.abs(distance));
+        getPIDController().setSetpoint(distance);
     }
     @Override
     protected void initialize() {
