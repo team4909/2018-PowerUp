@@ -26,7 +26,7 @@ public class RightSwitchFromRight extends CommandGroup {
 //        addSequential(elevator.holdPosition(0));
         /******* NEW CODE *******/
         //Drive up to the right side of the switch
-        addSequential(new DriveDistance(115, 0.02,0,0));
+        addSequential(new DriveDistance(106, 0.02,0,0));
         //Rotate 90 degrees to the left
         addSequential(drivetrain.driveRotation(90,.0085,0,0),2);
         //Elevator raised

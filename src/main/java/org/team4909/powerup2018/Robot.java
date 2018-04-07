@@ -45,7 +45,7 @@ public class Robot extends RoboRio {
 
     @Override
     protected void controllerInit() {
-        driverGamepad = new BionicF310(0, 0.1, 0.8);
+        driverGamepad = new BionicF310(0, 0, 0.8);
         manipulatorGamepad = new BionicF310(1, 0.1, 0.5);
     }
 
@@ -72,7 +72,7 @@ public class Robot extends RoboRio {
                         4
                 ),
                 driverGamepad, BionicF310.LY, -1.0, 0.10,
-                driverGamepad, BionicF310.RX, -0.60, 0.10,
+                driverGamepad, BionicF310.RX, -0.75, 0.10,
                 new DrivetrainConfig(
                         25, 0.5, 360,
                         21.76, 41.88, 654.49,
