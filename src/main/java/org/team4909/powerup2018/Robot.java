@@ -47,7 +47,6 @@ public class Robot extends RoboRio {
     protected void controllerInit() {
         driverGamepad = new BionicF310(0, 0.1, 0.8);
         manipulatorGamepad = new BionicF310(1, 0.1, 0.5);
-        debugGamepad = new BionicF310(2, 0.1, 0.5);
     }
 
     @Override
@@ -58,7 +57,6 @@ public class Robot extends RoboRio {
     @Override
     protected void subsystemInit() {
         UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-        camera.setResolution(768, 432);
 
         drivetrain = new BionicDrive(
                 new BionicSRX(
@@ -74,7 +72,7 @@ public class Robot extends RoboRio {
                         4
                 ),
                 driverGamepad, BionicF310.LY, -1.0, 0.10,
-                driverGamepad, BionicF310.RX, -0.65, 0.10,
+                driverGamepad, BionicF310.RX, -0.60, 0.10,
                 new DrivetrainConfig(
                         25, 0.5, 360,
                         21.76, 41.88, 654.49,
@@ -113,7 +111,7 @@ public class Robot extends RoboRio {
                 new BionicVictorSP(2, true),
                 new BionicVictorSP(3, true)
         );
-        debugGamepad.buttonHeld(BionicF310.LB, winch.setPercentOutput(-0.5));
+        driverGamepad.buttonHeld(BionicF310.Back, winch.setPercentOutput(-0.5));
         driverGamepad.buttonHeld(BionicF310.RB, winch.setPercentOutput(1.0));
 
         hookDeploy = new MotorSubsystem(
@@ -236,7 +234,7 @@ public class Robot extends RoboRio {
     public void robotPeriodic() {
         super.robotPeriodic();
 
-        double elevatorCoefficient = (.02 / 34000);
+        double elevatorCoefficient = (.03 / 34000);
 
         if (elevator.getCurrentPosition() > 20000) {
             drivetrain.speedDeltaLimit = 0.0085;
