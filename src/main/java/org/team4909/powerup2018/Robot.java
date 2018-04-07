@@ -178,9 +178,9 @@ public class Robot extends RoboRio {
                 new LeftSwitchFromCenter(intake, elevator, drivetrain),
                 new RightSwitchFromCenter(intake, elevator, drivetrain)
         ));
-        autoChooser.addObject("Center Switch Double (Single Left)", new GameFeatureSide(
+        autoChooser.addObject("Center Switch Double", new GameFeatureSide(
                 GameFeature.SWITCH_NEAR,
-                new LeftSwitchFromCenter(intake, elevator, drivetrain),
+                new DoubleLeftSwitchFromCenter(intake, elevator, drivetrain),
                 new DoubleRightSwitchFromCenter(intake, elevator, drivetrain)
         ));
         autoChooser.addObject("Right Start Switch ONLY", new GameFeatureSide(
@@ -208,7 +208,7 @@ public class Robot extends RoboRio {
 //        ));
 //        autoChooser.addObject("DEBUG: Drive Straight", drivetrain.driveDistance(6));
 //        autoChooser.addObject("DEBUG: Drive Rotate", drivetrain.driveRotation(90));
-//        autoChooser.addObject("DEBUG: Base Line", );
+//        autoChooser.addObject("DEBUG: Base Line", new DriveDistance(-12,0.02,0,0));
 //        autoChooser.addObject("DEBUG: Right", new RightSwitchFromCenter(125, 0.02,0,0));
     }
 

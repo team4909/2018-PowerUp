@@ -6,12 +6,19 @@ import org.team4909.powerup2018.Robot;
 
 public class DriveDistance extends PIDCommand {
 
+    double direction;
+
     public DriveDistance(double distance, double kp, double ki, double kd)
     {
+
         super(kp,ki,kd);
         requires(Robot.drivetrain);
-        //getPIDController().setSetpoint(Math.abs(distance));
-        getPIDController().setSetpoint(distance);
+        if(distance<0){
+            direction = -1;
+        }else{
+            direction = 1;
+        }
+        getPIDController().setSetpoint(Math.abs(distance));
     }
     @Override
     protected void initialize() {
@@ -34,7 +41,7 @@ public class DriveDistance extends PIDCommand {
             double ticks = Robot.drivetrain.leftSRX.getSelectedSensorPosition();
             double dist = (ticks/1440)*(Math.PI*6);
 //            System.out.println("VALUE: "+ticks + " DIST: "+dist);
-            return dist;
+            return dist * direction;
         }
 
 
@@ -48,8 +55,8 @@ public class DriveDistance extends PIDCommand {
         }
 
         // limit the max speed
-        output = Math.min(.5, output);
-
+                       output = Math.min(.5, output);
+            output = output * direction;
 
         Robot.drivetrain.leftSRX.set(ControlMode.PercentOutput,  output);
         Robot.drivetrain.rightSRX.set(ControlMode.PercentOutput, output);
