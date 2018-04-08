@@ -18,7 +18,7 @@ public class LeftSwitchFromCenter extends CommandGroup {
         addSequential(drivetrain.driveRotation(55,.0092,0.0002,0));
 
         //Drive to the switch
-        addSequential(new DriveDistance(5.5*12, 0.02,0,0));
+        addSequential(new DriveDistance(5*12, 0.02,0,0));
 //                drivetrain.d
 
         //turn to score

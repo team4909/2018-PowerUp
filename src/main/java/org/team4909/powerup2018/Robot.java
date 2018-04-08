@@ -36,7 +36,7 @@ public class Robot extends RoboRio {
     private static MotorSubsystem intake;
     private static MotorSubsystem winch;
     private static MotorSubsystem hookDeploy;
-    private static MotorSubsystem intakeRotator;
+    public static MotorSubsystem intakeRotator;
 
     /* Cosmetic Subsystems */
     private static Arduino arduino;

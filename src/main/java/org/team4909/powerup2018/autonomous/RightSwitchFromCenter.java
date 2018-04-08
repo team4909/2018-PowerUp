@@ -30,12 +30,11 @@ public class RightSwitchFromCenter extends CommandGroup {
         //Drive far enough to get away from the wall
         addSequential(new DriveDistance(24, .02, 0, 0));
 //                drivetrain.driveDistance(1.5, 1));
-
         //Turn to avoid the pile of cubes
         addSequential(drivetrain.driveRotation(-55,.009,0.0002,0));
 
         //Drive to the switch
-        addSequential(new DriveDistance(4.5*12, 0.02,0,0));
+        addSequential(new DriveDistance(4*12, 0.02,0,0));
 //                drivetrain.d
 
         //turn to score
