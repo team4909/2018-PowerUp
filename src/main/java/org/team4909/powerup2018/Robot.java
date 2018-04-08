@@ -36,6 +36,7 @@ public class Robot extends RoboRio {
     private static MotorSubsystem intake;
     private static MotorSubsystem winch;
     private static MotorSubsystem hookDeploy;
+    private static MotorSubsystem intakeRotator;
 
     /* Cosmetic Subsystems */
     private static Arduino arduino;
@@ -117,6 +118,13 @@ public class Robot extends RoboRio {
         hookDeploy = new MotorSubsystem(
                 new BionicSpark(4, false)
         );
+
+        intakeRotator = new MotorSubsystem(
+                new BionicVictorSP(5,false)
+        );
+
+        manipulatorGamepad.buttonHeld(BionicF310.RB,intakeRotator.setPercentOutput(-.85));
+        manipulatorGamepad.buttonHeld(BionicF310.LB,intakeRotator.setPercentOutput(0.5));
 
         arduino = new Arduino(4);
         lightSaberNeopixels = new Neopixels(arduino, 5, 32);
