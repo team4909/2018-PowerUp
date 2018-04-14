@@ -15,20 +15,20 @@ public class DoubleLeftSwitchFromCenter extends CommandGroup{
 //                drivetrain.driveDistance(1.5, 1));
 
         //Turn to avoid the pile of cubes
-        addSequential(drivetrain.driveRotation(55,.0092,0.0002,0));
+        addSequential(drivetrain.driveRotation(45,.0092,0.0002,0));
 
         //Drive to the switch
-        addSequential(new DriveDistance(5.5*12, 0.02,0,0),2);
+        addSequential(new DriveDistance(5*12, 0.02,0,0),2);
 //                drivetrain.d
 
         //turn to score
-        addSequential(drivetrain.driveRotation(-50, .0092,0.0002,0));
+        addSequential(drivetrain.driveRotation(-50, .0062,0.0002,0));
 
         // Move elevator to height
         addSequential(elevator.holdPosition(13000));
         addSequential(new WaitCommand(.5)); //wait to get there
 //
-        addSequential(new DriveDistance(5*12, 0.01,0,0),2);
+        addSequential(new DriveDistance(4.5*12, 0.01,0,0),2);
 //                drivetrain.driveDistance(1.833));
 
         addSequential(intake.setPercentOutput(-1.0));
@@ -44,7 +44,7 @@ public class DoubleLeftSwitchFromCenter extends CommandGroup{
         //Intake on
         addSequential(intake.setPercentOutput(1));
         //forward 4 feet
-        addSequential(new DriveDistance(5*12,.02,0,0),2.5);
+        addSequential(new DriveDistance(3.5*12,.02,0,0),2.5);
         //Make sure cube is in
         addSequential(intake.setPercentOutput(-0.5));
         addSequential(new WaitCommand(.1));

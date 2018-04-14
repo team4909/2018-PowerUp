@@ -46,7 +46,7 @@ public class Robot extends RoboRio {
 
     @Override
     protected void controllerInit() {
-        driverGamepad = new BionicF310(0, 0, 0.8);
+        driverGamepad = new BionicF310(0, 0, 0.6);//.8
         manipulatorGamepad = new BionicF310(1, 0.1, 0.5);
     }
 
@@ -73,7 +73,7 @@ public class Robot extends RoboRio {
                         4
                 ),
                 driverGamepad, BionicF310.LY, -1.0, 0.10,
-                driverGamepad, BionicF310.RX, -0.75, 0.10,
+                driverGamepad, BionicF310.RX, -0.6, 0.10, //rotationMult: -.75
                 new DrivetrainConfig(
                         25, 0.5, 360,
                         21.76, 41.88, 654.49,
@@ -250,12 +250,12 @@ public class Robot extends RoboRio {
         double elevatorCoefficient = (.03 / 34000);
 
         if (elevator.getCurrentPosition() > 20000) {
-            drivetrain.speedDeltaLimit = 0.0085;
+            drivetrain.speedDeltaLimit = 0.01;
         } else {
             drivetrain.speedDeltaLimit = 0.04 - (elevatorCoefficient * elevator.getCurrentPosition());
         }
 
-        drivetrain.rotationDeltaLimit = 0.04 - (elevatorCoefficient * elevator.getCurrentPosition());
+        drivetrain.rotationDeltaLimit = 2; //0.04 - (elevatorCoefficient * elevator.getCurrentPosition());
         SmartDashboard.putNumber("Heading" ,Robot.drivetrain.getHeading());
     }
 

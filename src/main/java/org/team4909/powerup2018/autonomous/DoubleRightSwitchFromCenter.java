@@ -13,10 +13,10 @@ public class DoubleRightSwitchFromCenter extends CommandGroup{
         addSequential(new DriveDistance(24, .02, 0, 0));
 
         //Turn to avoid the pile of cubes
-        addSequential(drivetrain.driveRotation(-55,.0075,0.0002,0));
+        addSequential(drivetrain.driveRotation(-55,.006,0.0002,0));
 
         //Drive to the switch
-        addSequential(new DriveDistance(4.25*12, 0.02,0,0));
+        addSequential(new DriveDistance(4.5*12, 0.02,0,0));
 
         //Turn to score
         addSequential(drivetrain.driveRotation(50, .009,0.0002,0));
@@ -29,16 +29,17 @@ public class DoubleRightSwitchFromCenter extends CommandGroup{
         addSequential(intake.setPercentOutput(-1.0));
         addSequential(new WaitCommand(.5));
         //Back up
-        addSequential(new DriveDistance(-3*12,.02,0,0));
+        addSequential(new DriveDistance(-2*12,.02,0,0));
         addSequential(intake.setPercentOutput(0));
         //elevator down
         addSequential(elevator.holdPosition(0));
         //turn left
-        addSequential(drivetrain.driveRotation(40,.00095,0.0002, 0));
+        addSequential(drivetrain.driveRotation(70,.006,0.0002, 0),1);
         //Intake on
         addSequential(intake.setPercentOutput(1));
         //forward 4 feet
-        addSequential(new DriveDistance(5*12,.02,0,0),3);
+        addSequential(new DriveDistance(5.5*12,.005,0,0),2);
+//        addSequential(new DriveDistance(1,.005,0,0),1);
         //Make sure cube is in
         addSequential(intake.setPercentOutput(-0.5));
         addSequential(new WaitCommand(.2));
@@ -47,14 +48,14 @@ public class DoubleRightSwitchFromCenter extends CommandGroup{
         //intake off
         addSequential(intake.setPercentOutput(0));
         //back up
-        addSequential(new DriveDistance(-5*12,.02,0,0));
+        addSequential(new DriveDistance(-4*12,.02,0,0));
         //turn right
         addSequential(drivetrain.driveRotation(-70,0.0085,0,0),1);
         //Elevator up
         addSequential(elevator.holdPosition(11000));
         addSequential(new WaitCommand(.5));
         //drive forward 4 feet
-        addSequential(new DriveDistance(5*12,.02,0,0),2);
+        addSequential(new DriveDistance(5*12,.02,0,0),1.5);
         //Shoot
         addSequential(intake.setPercentOutput(-1.0));
         addSequential(new WaitCommand(.75));

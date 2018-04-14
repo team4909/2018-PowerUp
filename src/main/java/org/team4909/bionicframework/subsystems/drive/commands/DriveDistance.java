@@ -38,7 +38,7 @@ public class DriveDistance extends PIDCommand {
 
         @Override
         protected double returnPIDInput() {
-            double ticks = Robot.drivetrain.leftSRX.getSelectedSensorPosition();
+            double ticks = Robot.drivetrain.rightSRX.getSelectedSensorPosition();
             double dist = (ticks/1440)*(Math.PI*6);
 //            System.out.println("VALUE: "+ticks + " DIST: "+dist);
             return dist * direction;
