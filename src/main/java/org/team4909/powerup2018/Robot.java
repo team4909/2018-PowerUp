@@ -1,6 +1,7 @@
 package org.team4909.powerup2018;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -16,6 +17,7 @@ import org.team4909.bionicframework.hardware.pneumatics.BionicSingleSolenoid;
 import org.team4909.bionicframework.hardware.sensors.gyro.BionicNavX;
 import org.team4909.bionicframework.operator.controllers.BionicF310;
 import org.team4909.bionicframework.subsystems.drive.BionicDrive;
+import org.team4909.bionicframework.subsystems.drive.commands.DriveDistance;
 import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainConfig;
 import org.team4909.bionicframework.subsystems.elevator.ElevatorSubsystem;
 import org.team4909.bionicframework.subsystems.leds.arduino.Neopixels;
@@ -29,11 +31,12 @@ public class Robot extends RoboRio {
     private static BionicF310 debugGamepad;
 
     /* Subsystem Initialization */
-    private static BionicDrive drivetrain;
+    public static BionicDrive drivetrain;
     private static ElevatorSubsystem elevator;
     private static MotorSubsystem intake;
     private static MotorSubsystem winch;
     private static MotorSubsystem hookDeploy;
+    public static MotorSubsystem intakeRotator;
 
     /* Cosmetic Subsystems */
     private static Arduino arduino;
@@ -43,9 +46,8 @@ public class Robot extends RoboRio {
 
     @Override
     protected void controllerInit() {
-        driverGamepad = new BionicF310(0, 0.1, 0.8);
+        driverGamepad = new BionicF310(0, 0, 0.6);//.8
         manipulatorGamepad = new BionicF310(1, 0.1, 0.5);
-        debugGamepad = new BionicF310(2, 0.1, 0.5);
     }
 
     @Override
@@ -55,26 +57,26 @@ public class Robot extends RoboRio {
 
     @Override
     protected void subsystemInit() {
-        CameraServer.getInstance().startAutomaticCapture();
+        UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
 
         drivetrain = new BionicDrive(
                 new BionicSRX(
                         2, false,
-                        FeedbackDevice.QuadEncoder, false,
-                        1, 0, 0,
+                        FeedbackDevice.QuadEncoder, true,
+                        1, 0.00001, 0,
                         1
                 ),
                 new BionicSRX(
                         4, true,
-                        FeedbackDevice.QuadEncoder, false,
-                        1, 0, 0,
+                        FeedbackDevice.QuadEncoder, true,
+                        1, 0.00001, 0,
                         4
                 ),
-                driverGamepad, BionicF310.LY, 1.0, 0.10,
-                driverGamepad, BionicF310.RX, -0.65, 0.10,
+                driverGamepad, BionicF310.LY, -1.0, 0.10,
+                driverGamepad, BionicF310.RX, -0.6, 0.10, //rotationMult: -.75
                 new DrivetrainConfig(
-                        25, 0.5, 120,
-                        12.000, 11.126, 117.809,
+                        25, 0.5, 360,
+                        21.76, 41.88, 654.49,
                         3, 2.74
                 ),
                 new BionicNavX(),
@@ -110,12 +112,19 @@ public class Robot extends RoboRio {
                 new BionicVictorSP(2, true),
                 new BionicVictorSP(3, true)
         );
-        debugGamepad.buttonHeld(BionicF310.LB, winch.setPercentOutput(-0.5));
+        driverGamepad.buttonHeld(BionicF310.Back, winch.setPercentOutput(-0.5));
         driverGamepad.buttonHeld(BionicF310.RB, winch.setPercentOutput(1.0));
 
         hookDeploy = new MotorSubsystem(
                 new BionicSpark(4, false)
         );
+
+        intakeRotator = new MotorSubsystem(
+                new BionicVictorSP(5,false)
+        );
+
+        manipulatorGamepad.buttonHeld(BionicF310.RB,intakeRotator.setPercentOutput(-.85));
+        manipulatorGamepad.buttonHeld(BionicF310.LB,intakeRotator.setPercentOutput(0.5));
 
         arduino = new Arduino(4);
         lightSaberNeopixels = new Neopixels(arduino, 5, 32);
@@ -148,64 +157,74 @@ public class Robot extends RoboRio {
 
     @Override
     protected void autoChooserInit() {
-        autoChooser.addObject("Break Baseline", new BreakBaseline(drivetrain));
+        autoChooser.addObject("Break Baseline", new DriveDistance(125, 0.02,0,0));
         autoChooser.addObject("Left Start Switch ONLY", new GameFeatureSide(
                 GameFeature.SWITCH_NEAR,
                 new LeftSwitchFromLeft(intake, elevator, drivetrain),
                 new BreakBaseline(drivetrain)
         ));
-        autoChooser.addObject("Left Start Scale Preferred", new GameFeatureSide(
-                GameFeature.SCALE,
-                new LeftScaleFromLeft(intake, elevator, drivetrain),
-                new GameFeatureSide(
-                        GameFeature.SWITCH_NEAR,
-                        new LeftSwitchFromLeft(intake, elevator, drivetrain),
-                        new BreakBaseline(drivetrain)
-                )
-        ));
-        autoChooser.addObject("Left Start Switch Preferred", new GameFeatureSide(
-                GameFeature.SWITCH_NEAR,
-                new LeftSwitchFromLeft(intake, elevator, drivetrain),
-                new GameFeatureSide(
-                        GameFeature.SCALE,
-                        new LeftScaleFromLeft(intake, elevator, drivetrain),
-                        new BreakBaseline(drivetrain)
-                )
-        ));
+//        autoChooser.addObject("Left Start Scale Preferred", new GameFeatureSide(
+//                GameFeature.SCALE,
+//                new LeftScaleFromLeft(intake, elevator, drivetrain),
+//                new GameFeatureSide(
+//                        GameFeature.SWITCH_NEAR,
+//                        new LeftSwitchFromLeft(intake, elevator, drivetrain),
+//                        new BreakBaseline(drivetrain)
+//                )
+//        ));
+//        autoChooser.addObject("Left Start Switch Preferred", new GameFeatureSide(
+//                GameFeature.SWITCH_NEAR,
+//                new LeftSwitchFromLeft(intake, elevator, drivetrain),
+//                new GameFeatureSide(
+//                        GameFeature.SCALE,
+//                        new LeftScaleFromLeft(intake, elevator, drivetrain),
+//                        new BreakBaseline(drivetrain)
+//                )
+//        ));
         autoChooser.addObject("Center Switch", new GameFeatureSide(
                 GameFeature.SWITCH_NEAR,
                 new LeftSwitchFromCenter(intake, elevator, drivetrain),
                 new RightSwitchFromCenter(intake, elevator, drivetrain)
+        ));
+        autoChooser.addObject("Center Switch Double", new GameFeatureSide(
+                GameFeature.SWITCH_NEAR,
+                new DoubleLeftSwitchFromCenter(intake, elevator, drivetrain),
+                new DoubleRightSwitchFromCenter(intake, elevator, drivetrain)
         ));
         autoChooser.addObject("Right Start Switch ONLY", new GameFeatureSide(
                 GameFeature.SWITCH_NEAR,
                 new BreakBaseline(drivetrain),
                 new RightSwitchFromRight(intake, elevator, drivetrain)
         ));
-        autoChooser.addObject("Right Start Scale Preferred", new GameFeatureSide(
-                GameFeature.SCALE,
-                new GameFeatureSide(
-                        GameFeature.SWITCH_NEAR,
-                        new BreakBaseline(drivetrain),
-                        new RightSwitchFromRight(intake, elevator, drivetrain)
-                ),
-                new RightScaleFromRight(intake, elevator, drivetrain)
-        ));
-        autoChooser.addObject("Right Start Switch Preferred", new GameFeatureSide(
-                GameFeature.SWITCH_NEAR,
-                new GameFeatureSide(
-                        GameFeature.SCALE,
-                        new BreakBaseline(drivetrain),
-                        new RightScaleFromRight(intake, elevator, drivetrain)
-                ),
-                new RightSwitchFromRight(intake, elevator, drivetrain)
-        ));
-        autoChooser.addObject("DEBUG: Drive Straight", drivetrain.driveDistance(8));
+//        autoChooser.addObject("Right Start Scale Preferred", new GameFeatureSide(
+//                GameFeature.SCALE,
+//                new GameFeatureSide(
+//                        GameFeature.SWITCH_NEAR,
+//                        new BreakBaseline(drivetrain),
+//                        new RightSwitchFromRight(intake, elevator, drivetrain)
+//                ),
+//                new RightScaleFromRight(intake, elevator, drivetrain)
+//        ));
+//        autoChooser.addObject("Right Start Switch Preferred", new GameFeatureSide(
+//                GameFeature.SWITCH_NEAR,
+//                new GameFeatureSide(
+//                        GameFeature.SCALE,
+//                        new BreakBaseline(drivetrain),
+//                        new RightScaleFromRight(intake, elevator, drivetrain)
+//                ),
+//                new RightSwitchFromRight(intake, elevator, drivetrain)
+//        ));
+//        autoChooser.addObject("DEBUG: Drive Straight", drivetrain.driveDistance(6));
+//        autoChooser.addObject("DEBUG: Drive Rotate", drivetrain.driveRotation(90));
+//        autoChooser.addObject("DEBUG: Base Line", new DriveDistance(-12,0.02,0,0));
+//        autoChooser.addObject("DEBUG: Right", new RightSwitchFromCenter(125, 0.02,0,0));
     }
 
     @Override
     protected void dashboardPeriodic() {
         super.dashboardPeriodic();
+
+        SmartDashboard.putNumber("Left Encoder", Robot.drivetrain.leftSRX.getSelectedSensorPosition());
 
         drivetrain.profiling = SmartDashboard.getBoolean("Drivetrain Profiling", false);
         drivetrain.encoderOverride = SmartDashboard.getBoolean("Drivetrain Encoder Override", false);
@@ -228,15 +247,16 @@ public class Robot extends RoboRio {
     public void robotPeriodic() {
         super.robotPeriodic();
 
-        double elevatorCoefficient = (.02 / 34000);
+        double elevatorCoefficient = (.03 / 34000);
 
         if (elevator.getCurrentPosition() > 20000) {
-            drivetrain.speedDeltaLimit = 0.0085;
+            drivetrain.speedDeltaLimit = 0.01;
         } else {
             drivetrain.speedDeltaLimit = 0.04 - (elevatorCoefficient * elevator.getCurrentPosition());
         }
 
-        drivetrain.rotationDeltaLimit = 0.04 - (elevatorCoefficient * elevator.getCurrentPosition());
+        drivetrain.rotationDeltaLimit = 2; //0.04 - (elevatorCoefficient * elevator.getCurrentPosition());
+        SmartDashboard.putNumber("Heading" ,Robot.drivetrain.getHeading());
     }
 
     @Override

@@ -2,6 +2,7 @@ package org.team4909.bionicframework.subsystems.drive.commands;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.command.PIDCommand;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.team4909.bionicframework.hardware.motor.BionicSRX;
 import org.team4909.bionicframework.subsystems.drive.BionicDrive;
 
@@ -10,14 +11,18 @@ public class DriveRotate extends PIDCommand {
     private final BionicSRX leftSRX, rightSRX;
     private int direction = 0;
 
-    public DriveRotate(BionicDrive bionicDrive, BionicSRX leftSRX, BionicSRX rightSRX, double angle) {
-        super(.007,.00001,0);
+    public DriveRotate(BionicDrive bionicDrive, BionicSRX leftSRX, BionicSRX rightSRX, double angle, double kp, double ki, double kd) {
+        super(kp,ki,kd);
 
         requires(bionicDrive);
 
+
+        bionicDrive.resetGyro();
         this.bionicDrive = bionicDrive;
         this.leftSRX = leftSRX;
         this.rightSRX = rightSRX;
+
+        angle = -angle;
 
         if(angle<0){
             direction = -1;
@@ -36,8 +41,7 @@ public class DriveRotate extends PIDCommand {
 
     @Override
     protected boolean isFinished() {
-
-        return getPIDController().getError() < 1.5;
+        return Math.abs(getPIDController().getError()) < 4;
     }
 
     @Override
@@ -77,6 +81,20 @@ public class DriveRotate extends PIDCommand {
         // Limit Left/Right Percentage Output to -100% to 100%
         leftMotorOutput = limit(leftMotorOutput);
         rightMotorOutput = limit(rightMotorOutput);
+
+        SmartDashboard.putNumber("leftSpeed", leftMotorOutput);
+
+//        if (leftMotorOutput < .15 && leftMotorOutput > .05) {
+//            leftMotorOutput = .15;
+//        }if (leftMotorOutput < -.15 && leftMotorOutput > -.05) {
+//            leftMotorOutput = -.15;
+//        }
+//        if (rightMotorOutput < .15 && rightMotorOutput > .05) {
+//            rightMotorOutput = .15;
+//        }
+//        if (rightMotorOutput < -.15 && rightMotorOutput > -.05) {
+//            rightMotorOutput = -.15;
+//        }
 
         leftSRX.set(ControlMode.PercentOutput,  leftMotorOutput);
         rightSRX.set(ControlMode.PercentOutput, rightMotorOutput);

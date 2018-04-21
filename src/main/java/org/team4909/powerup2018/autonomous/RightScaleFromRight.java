@@ -8,16 +8,20 @@ import org.team4909.bionicframework.subsystems.elevator.ElevatorSubsystem;
 
 public class RightScaleFromRight extends CommandGroup {
     public RightScaleFromRight(MotorSubsystem intake, ElevatorSubsystem elevator, BionicDrive drivetrain) {
-//        addSequential(elevator.holdPosition(1410));
-        addSequential(drivetrain.driveDistance(27));
-        addSequential(drivetrain.driveRotation(-90), 3);
+        addSequential(drivetrain.driveDistance(25.95));
+        addSequential(drivetrain.driveRotation(-90));
+
         addSequential(elevator.holdPosition(33000));
         addSequential(new WaitCommand(3));
-        addSequential(drivetrain.driveDistance(1), 2);
-        addSequential(intake.setPercentOutput(-1.0), 1.5);
+
+        addSequential(drivetrain.driveDistance(2));
+
+        addSequential(intake.setPercentOutput(-1.0));
         addSequential(new WaitCommand(1.5));
         addSequential(intake.setPercentOutput(0));
-        addSequential(drivetrain.driveDistance(-1), 2);
+
+        addSequential(drivetrain.driveDistance(-2));
+        addSequential(new WaitCommand(.25));
         addSequential(elevator.holdPosition(0));
     }
 }

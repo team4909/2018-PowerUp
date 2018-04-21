@@ -40,7 +40,9 @@ public class BionicJoystick extends Joystick {
     public double getSensitiveAxis(BionicAxis axis) {
         double axisValue = getThresholdAxis(axis);
 
-        return (1 - sensitivity) * axisValue + sensitivity * Math.pow(axisValue, 3);
+//        return (1 - sensitivity) * axisValue + sensitivity * Math.pow(axisValue, 3);
+        return (1 - sensitivity) * axisValue + sensitivity * Math.pow(axisValue, 2)*Math.signum(axisValue);
+
     }
 
     public void povActive(BionicPOV povAngle, Commandable commandable) {

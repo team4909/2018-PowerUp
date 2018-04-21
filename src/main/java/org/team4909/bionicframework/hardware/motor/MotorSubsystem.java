@@ -2,6 +2,8 @@ package org.team4909.bionicframework.hardware.motor;
 
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.command.Command;
+import org.team4909.bionicframework.hardware.motor.commandables.PercentOutputCommand;
 import org.team4909.bionicframework.hardware.motor.commandables.PercentOutputCommandable;
 import org.team4909.bionicframework.interfaces.Commandable;
 import org.team4909.bionicframework.operator.generic.BionicAxis;
@@ -32,5 +34,9 @@ public class MotorSubsystem extends SpeedControllerGroup {
      */
     public Commandable setPercentOutput(double setpoint) {
         return new PercentOutputCommandable(setpoint,this);
+    }
+
+    public Command setPercentOutputPeriodic(double setpoint) {
+        return new PercentOutputCommand(setpoint,this);
     }
 }
