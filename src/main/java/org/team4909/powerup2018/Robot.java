@@ -72,7 +72,7 @@ public class Robot extends RoboRio {
                         1, 0.00001, 0,
                         4
                 ),
-                driverGamepad, BionicF310.LY, -1.0, 0.10,
+                driverGamepad, BionicF310.LY, 1.0, 0.10,
                 driverGamepad, BionicF310.RX, -0.6, 0.10, //rotationMult: -.75
                 new DrivetrainConfig(
                         25, 0.5, 360,
