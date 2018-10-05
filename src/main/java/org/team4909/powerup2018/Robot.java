@@ -24,6 +24,12 @@ import org.team4909.bionicframework.subsystems.leds.arduino.Neopixels;
 import org.team4909.bionicframework.subsystems.leds.pcm.RGBStrip;
 import org.team4909.powerup2018.autonomous.*;
 
+/*
+   Controls on Gamepads:
+   Port 0: Drive, Using Joysticks
+   Port 1: Elevator (needs mechanical and/or software work as of 10/04/18), Hook, and Arm/Intake
+ */
+
 public class Robot extends RoboRio {
     /* Controller Initialization */
     private static BionicF310 driverGamepad;
