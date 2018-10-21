@@ -27,7 +27,10 @@ import org.team4909.powerup2018.autonomous.*;
 /*
    Controls on Gamepads:
    Port 0: Drive, Using Joysticks
-   Port 1: Elevator (needs mechanical and/or software work as of 10/04/18), Hook, and Arm/Intake
+   Port 1: Elevator & Intake (LY = up and down elevator,
+   RY = up and down climber, LT = intake, RT = outtake,
+   RB/LB = up and down on intake arm rotation,
+   B = slow outtake
  */
 
 public class Robot extends RoboRio {
@@ -94,17 +97,20 @@ public class Robot extends RoboRio {
         elevator = new ElevatorSubsystem(
                 new BionicSRX(
                         3, false,
-                        FeedbackDevice.CTRE_MagEncoder_Relative, true,
+                        FeedbackDevice.CTRE_MagEncoder_Relative, false,
                         0.28, 0, 0,
                         3
                 ),
-                manipulatorGamepad, BionicF310.LY, -.6,
+                manipulatorGamepad, BionicF310.LY, -0.45,
                 33150
         );
+
+        /**
         manipulatorGamepad.povActive(BionicF310.Top, elevator.holdPosition(28400));
         manipulatorGamepad.povActive(BionicF310.Left, elevator.holdPosition(11000));
         manipulatorGamepad.povActive(BionicF310.Right, elevator.holdPosition(11000));
         manipulatorGamepad.povActive(BionicF310.Bottom, elevator.holdPosition(1410));
+        **/
 
         intake = new MotorSubsystem(
                 new BionicSpark(0, true),
