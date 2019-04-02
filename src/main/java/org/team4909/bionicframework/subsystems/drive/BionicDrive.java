@@ -41,6 +41,9 @@ public class BionicDrive extends Subsystem {
     private double lastVelocity, lastAcceleration = 0;
     public boolean profiling;
 
+    final double kP = 0.035;
+    final double kD = 0;
+
     /**
      * @param leftSRX              Left Drivetrain SRX
      * @param rightSRX             Right Drivetrain SRX
@@ -187,4 +190,10 @@ public class BionicDrive extends Subsystem {
     public Command driveWaypoints(Waypoint[] points, double kp) {
         return driveTrajectory(pathgen.getTrajectory(points), kp);
     }
+
+    public void driveAssisted(double throttle, double angleOffset) {
+        // System.out.println("Angle offset = " + angleOffset);
+        double correction = angleOffset * kP - angleOffset * kD;
+        arcadeDrive(throttle * 0.5, correction);
+      }
 }

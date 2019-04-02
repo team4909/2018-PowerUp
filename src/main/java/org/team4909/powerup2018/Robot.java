@@ -53,6 +53,8 @@ public class Robot extends RoboRio {
     private static RGBStrip underglowLEDs;
     private static SendableChooser underglowChooser = new SendableChooser();
 
+    public static Vision vision = new Vision();
+
     @Override
     protected void controllerInit() {
         driverGamepad = new BionicF310(0, 0, 0.6);//.8
@@ -93,6 +95,8 @@ public class Robot extends RoboRio {
         );
         driverGamepad.buttonPressed(BionicF310.LT, 0.1, drivetrain.invertDirection());
         driverGamepad.buttonPressed(BionicF310.RT, 0.1, drivetrain.changeGear());
+
+        driverGamepad.buttonHeld(BionicF310.LB, new AssistedDrive());
 
         elevator = new ElevatorSubsystem(
                 new BionicSRX(
@@ -269,6 +273,8 @@ public class Robot extends RoboRio {
 
         drivetrain.rotationDeltaLimit = 2; //0.04 - (elevatorCoefficient * elevator.getCurrentPosition());
         SmartDashboard.putNumber("Heading" ,Robot.drivetrain.getHeading());
+
+        vision.updateVisionDashboard();
     }
 
     @Override
