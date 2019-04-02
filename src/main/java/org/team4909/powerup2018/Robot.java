@@ -98,16 +98,16 @@ public class Robot extends RoboRio {
 
         driverGamepad.buttonHeld(BionicF310.LB, new AssistedDrive());
 
-        elevator = new ElevatorSubsystem(
-                new BionicSRX(
-                        3, false,
-                        FeedbackDevice.CTRE_MagEncoder_Relative, false,
-                        0.28, 0, 0,
-                        3
-                ),
-                manipulatorGamepad, BionicF310.LY, -0.45,
-                33150
-        );
+        // elevator = new ElevatorSubsystem(
+        //         new BionicSRX(
+        //                 3, false,
+        //                 FeedbackDevice.CTRE_MagEncoder_Relative, false,
+        //                 0.28, 0, 0,
+        //                 3
+        //         ),
+        //         manipulatorGamepad, BionicF310.LY, -0.45,
+        //         33150
+        // );
 
         /**
         manipulatorGamepad.povActive(BionicF310.Top, elevator.holdPosition(28400));
@@ -261,18 +261,18 @@ public class Robot extends RoboRio {
 
     @Override
     public void robotPeriodic() {
-        super.robotPeriodic();
+        // super.robotPeriodic();
 
-        double elevatorCoefficient = (.03 / 34000);
+        // double elevatorCoefficient = (.03 / 34000);
 
-        if (elevator.getCurrentPosition() > 20000) {
-            drivetrain.speedDeltaLimit = 0.01;
-        } else {
-            drivetrain.speedDeltaLimit = 0.04 - (elevatorCoefficient * elevator.getCurrentPosition());
-        }
+        // if (elevator.getCurrentPosition() > 20000) {
+        //     drivetrain.speedDeltaLimit = 0.01;
+        // } else {
+        //     drivetrain.speedDeltaLimit = 0.04 - (elevatorCoefficient * elevator.getCurrentPosition());
+        // }
 
-        drivetrain.rotationDeltaLimit = 2; //0.04 - (elevatorCoefficient * elevator.getCurrentPosition());
-        SmartDashboard.putNumber("Heading" ,Robot.drivetrain.getHeading());
+        // drivetrain.rotationDeltaLimit = 2; //0.04 - (elevatorCoefficient * elevator.getCurrentPosition());
+        // SmartDashboard.putNumber("Heading" ,Robot.drivetrain.getHeading());
 
         vision.updateVisionDashboard();
     }
