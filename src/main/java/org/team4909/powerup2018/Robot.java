@@ -70,29 +70,32 @@ public class Robot extends RoboRio {
     protected void subsystemInit() {
         UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
 
-        drivetrain = new BionicDrive(
-                new BionicSRX(
-                        2, false,
-                        FeedbackDevice.QuadEncoder, true,
-                        1, 0.00001, 0,
-                        1
-                ),
-                new BionicSRX(
-                        4, true,
-                        FeedbackDevice.QuadEncoder, true,
-                        1, 0.00001, 0,
-                        4
-                ),
-                driverGamepad, BionicF310.LY, -1.0, 0.10,
-                driverGamepad, BionicF310.RX, -0.6, 0.10, //rotationMult: -.75
-                new DrivetrainConfig(
-                        25, 0.5, 360,
-                        21.76, 41.88, 654.49,
-                        3, 2.74
-                ),
-                new BionicNavX(),
-                new BionicSingleSolenoid(0)
-        );
+        // drivetrain = new BionicDrive(
+        //         new BionicSRX(
+        //                 2, false,
+        //                 FeedbackDevice.QuadEncoder, true,
+        //                 1, 0.00001, 0,
+        //                 1
+        //         ),
+        //         new BionicSRX(
+        //                 4, true,
+        //                 FeedbackDevice.QuadEncoder, true,
+        //                 1, 0.00001, 0,
+        //                 4
+        //         ),
+        //         driverGamepad, BionicF310.LY, -1.0, 0.10,
+        //         driverGamepad, BionicF310.RX, -0.6, 0.10, //rotationMult: -.75
+        //         new DrivetrainConfig(
+        //                 25, 0.5, 360,
+        //                 21.76, 41.88, 654.49,
+        //                 3, 2.74
+        //         ),
+        //         new BionicNavX(),
+        //         new BionicSingleSolenoid(0)
+        // );
+
+        drivetrain = new Drive();
+        
         driverGamepad.buttonPressed(BionicF310.LT, 0.1, drivetrain.invertDirection());
         driverGamepad.buttonPressed(BionicF310.RT, 0.1, drivetrain.changeGear());
 
