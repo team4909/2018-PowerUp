@@ -1,23 +1,24 @@
-package main.java.org.team4909.bionicframework.subsystems.drive.commands;
+package org.team4909.bionicframework.subsystems.drive.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.team4909.robot.Robot;
-import frc.team4909.robot.operator.controllers.BionicF310;
+import org.team4909.bionicframework.interfaces.Commandable;
+import org.team4909.powerup2018.Robot;
+import org.team4909.bionicframework.operator.controllers.BionicF310;
 
 
- public class AssistedDrive extends Command {
+ public class AssistedDrive extends Commandable {
 
    // Threshold of how far off the target we can be for the drive assisted to work
   private static double thresh = 0.7;
   private static double max_offset = 23;
 
    public AssistedDrive() {
-    requires(Robot.drivetrainSubsystem);
+    requires(Robot.drivetrain);
     requires(Robot.vision);
   }
 
-   protected void initialize() {
+  public void initialize() {
       Robot.vision.setLights(3.0);
   }
 
@@ -26,17 +27,17 @@ import frc.team4909.robot.operator.controllers.BionicF310;
       System.out.println("X offset" + Robot.vision.getXOffset());
     if (Math.abs(Robot.vision.getXOffset()) > thresh
         && Math.abs(Robot.vision.getXOffset()) < max_offset) {
-        Robot.drivetrainSubsystem.driveAssisted(
-        Robot.driverGamepad.getThresholdAxis(BionicF310.LY), Robot.vision.getXOffset());
+        Robot.drivetrain.driveAssisted(
+        Robot.driverGamepad.getSensitiveAxis(BionicF310.LY), Robot.vision.getXOffset());
         SmartDashboard.putNumber("Block", 1);
 
      } else if (Math.abs(Robot.vision.getXOffset()) > max_offset) {
-        Robot.drivetrainSubsystem.arcadeDrive(Robot.driverGamepad.getThresholdAxis(BionicF310.LY),
-         -Robot.driverGamepad.getThresholdAxis(BionicF310.RX));
+        Robot.drivetrain.arcadeDrive(Robot.driverGamepad.getSensitiveAxis(BionicF310.LY),
+         -Robot.driverGamepad.getSensitiveAxis(BionicF310.RX));
          SmartDashboard.putNumber("Block", 2);
 
      } else {
-      Robot.drivetrainSubsystem.arcadeDrive(Robot.driverGamepad.getThresholdAxis(BionicF310.LY), 0.0);
+      Robot.drivetrain.arcadeDrive(Robot.driverGamepad.getSensitiveAxis(BionicF310.LY), 0.0);
       SmartDashboard.putNumber("Block", 3);
 
      }

@@ -17,12 +17,14 @@ import org.team4909.bionicframework.hardware.pneumatics.BionicSingleSolenoid;
 import org.team4909.bionicframework.hardware.sensors.gyro.BionicNavX;
 import org.team4909.bionicframework.operator.controllers.BionicF310;
 import org.team4909.bionicframework.subsystems.drive.BionicDrive;
+import org.team4909.bionicframework.subsystems.drive.commands.AssistedDrive;
 import org.team4909.bionicframework.subsystems.drive.commands.DriveDistance;
 import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainConfig;
 import org.team4909.bionicframework.subsystems.elevator.ElevatorSubsystem;
 import org.team4909.bionicframework.subsystems.leds.arduino.Neopixels;
 import org.team4909.bionicframework.subsystems.leds.pcm.RGBStrip;
 import org.team4909.powerup2018.autonomous.*;
+import org.team4909.powerup2018.Vision;
 
 /*
    Controls on Gamepads:
@@ -35,8 +37,8 @@ import org.team4909.powerup2018.autonomous.*;
 
 public class Robot extends RoboRio {
     /* Controller Initialization */
-    private static BionicF310 driverGamepad;
-    private static BionicF310 manipulatorGamepad;
+    public static BionicF310 driverGamepad;
+    public static BionicF310 manipulatorGamepad;
     private static BionicF310 debugGamepad;
 
     /* Subsystem Initialization */
@@ -70,31 +72,30 @@ public class Robot extends RoboRio {
     protected void subsystemInit() {
         UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
 
-        // drivetrain = new BionicDrive(
-        //         new BionicSRX(
-        //                 2, false,
-        //                 FeedbackDevice.QuadEncoder, true,
-        //                 1, 0.00001, 0,
-        //                 1
-        //         ),
-        //         new BionicSRX(
-        //                 4, true,
-        //                 FeedbackDevice.QuadEncoder, true,
-        //                 1, 0.00001, 0,
-        //                 4
-        //         ),
-        //         driverGamepad, BionicF310.LY, -1.0, 0.10,
-        //         driverGamepad, BionicF310.RX, -0.6, 0.10, //rotationMult: -.75
-        //         new DrivetrainConfig(
-        //                 25, 0.5, 360,
-        //                 21.76, 41.88, 654.49,
-        //                 3, 2.74
-        //         ),
-        //         new BionicNavX(),
-        //         new BionicSingleSolenoid(0)
-        // );
+         drivetrain = new BionicDrive(
+                 new BionicSRX(
+                         2, false,
+                         FeedbackDevice.QuadEncoder, true,
+                         1, 0.00001, 0,
+                         1
+                 ),
+                 new BionicSRX(
+                         4, true,
+                         FeedbackDevice.QuadEncoder, true,
+                         1, 0.00001, 0,
+                         4
+                 ),
+                 driverGamepad, BionicF310.LY, -1.0, 0.10,
+                 driverGamepad, BionicF310.RX, -0.6, 0.10, //rotationMult: -.75
+                 new DrivetrainConfig(
+                         25, 0.5, 360,
+                         21.76, 41.88, 654.49,
+                         3, 2.74
+                 ),
+                 new BionicNavX(),
+                 new BionicSingleSolenoid(0)
+         );
 
-        drivetrain = new Drive();
         
         driverGamepad.buttonPressed(BionicF310.LT, 0.1, drivetrain.invertDirection());
         driverGamepad.buttonPressed(BionicF310.RT, 0.1, drivetrain.changeGear());
@@ -243,13 +244,13 @@ public class Robot extends RoboRio {
     protected void dashboardPeriodic() {
         super.dashboardPeriodic();
 
-        SmartDashboard.putNumber("Left Encoder", Robot.drivetrain.leftSRX.getSelectedSensorPosition());
-
-        drivetrain.profiling = SmartDashboard.getBoolean("Drivetrain Profiling", false);
-        drivetrain.encoderOverride = SmartDashboard.getBoolean("Drivetrain Encoder Override", false);
-        SmartDashboard.putBoolean("Drivetrain Profiling", drivetrain.profiling);
-        SmartDashboard.putBoolean("Drivetrain Encoder Override", drivetrain.encoderOverride);
-        SmartDashboard.putBoolean("Is High Gear?", drivetrain.getGear());
+//        SmartDashboard.putNumber("Left Encoder", Robot.drivetrain.leftSRX.getSelectedSensorPosition());
+//
+//        drivetrain.profiling = SmartDashboard.getBoolean("Drivetrain Profiling", false);
+//        drivetrain.encoderOverride = SmartDashboard.getBoolean("Drivetrain Encoder Override", false);
+//        SmartDashboard.putBoolean("Drivetrain Profiling", drivetrain.profiling);
+//        SmartDashboard.putBoolean("Drivetrain Encoder Override", drivetrain.encoderOverride);
+//        SmartDashboard.putBoolean("Is High Gear?", drivetrain.getGear());
 
         elevator.encoderOverride = SmartDashboard.getBoolean("Elevator Encoder Override", false);
         SmartDashboard.putBoolean("Elevator Encoder Override", elevator.encoderOverride);
@@ -284,7 +285,7 @@ public class Robot extends RoboRio {
     protected void robotEnabled() {
         super.robotEnabled();
 
-        drivetrain.resetProfiling();
-        elevator.holdCurrentPosition();
+//        drivetrain.resetProfiling();
+//        elevator.holdCurrentPosition();
     }
 }
