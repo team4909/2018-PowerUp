@@ -18,12 +18,11 @@ import org.team4909.bionicframework.hardware.sensors.gyro.BionicNavX;
 import org.team4909.bionicframework.operator.controllers.BionicF310;
 import org.team4909.bionicframework.subsystems.drive.BionicDrive;
 import org.team4909.bionicframework.subsystems.drive.commands.AssistedDrive;
-import org.team4909.bionicframework.subsystems.drive.commands.DriveDistance;
+import org.team4909.bionicframework.subsystems.drive.commands.DriveOI;
 import org.team4909.bionicframework.subsystems.drive.motion.DrivetrainConfig;
 import org.team4909.bionicframework.subsystems.elevator.ElevatorSubsystem;
 import org.team4909.bionicframework.subsystems.leds.arduino.Neopixels;
 import org.team4909.bionicframework.subsystems.leds.pcm.RGBStrip;
-import org.team4909.powerup2018.autonomous.*;
 import org.team4909.powerup2018.Vision;
 
 /*
@@ -72,33 +71,9 @@ public class Robot extends RoboRio {
     protected void subsystemInit() {
         UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
 
-         drivetrain = new BionicDrive(
-                 new BionicSRX(
-                         2, false,
-                         FeedbackDevice.QuadEncoder, true,
-                         1, 0.00001, 0,
-                         1
-                 ),
-                 new BionicSRX(
-                         4, true,
-                         FeedbackDevice.QuadEncoder, true,
-                         1, 0.00001, 0,
-                         4
-                 ),
-                 driverGamepad, BionicF310.LY, -1.0, 0.10,
-                 driverGamepad, BionicF310.RX, -0.6, 0.10, //rotationMult: -.75
-                 new DrivetrainConfig(
-                         25, 0.5, 360,
-                         21.76, 41.88, 654.49,
-                         3, 2.74
-                 ),
-                 new BionicNavX(),
-                 new BionicSingleSolenoid(0)
-         );
+         drivetrain = new BionicDrive();
 
-        
-        driverGamepad.buttonPressed(BionicF310.LT, 0.1, drivetrain.invertDirection());
-        driverGamepad.buttonPressed(BionicF310.RT, 0.1, drivetrain.changeGear());
+
 
         driverGamepad.buttonHeld(BionicF310.LB, new AssistedDrive());
 
@@ -177,72 +152,72 @@ public class Robot extends RoboRio {
 
     @Override
     protected void autoChooserInit() {
-        autoChooser.addObject("Break Baseline", new DriveDistance(125, 0.02,0,0));
-        autoChooser.addObject("Left Start Switch ONLY", new GameFeatureSide(
-                GameFeature.SWITCH_NEAR,
-                new LeftSwitchFromLeft(intake, elevator, drivetrain),
-                new BreakBaseline(drivetrain)
-        ));
-//        autoChooser.addObject("Left Start Scale Preferred", new GameFeatureSide(
-//                GameFeature.SCALE,
-//                new LeftScaleFromLeft(intake, elevator, drivetrain),
-//                new GameFeatureSide(
-//                        GameFeature.SWITCH_NEAR,
-//                        new LeftSwitchFromLeft(intake, elevator, drivetrain),
-//                        new BreakBaseline(drivetrain)
-//                )
-//        ));
-//        autoChooser.addObject("Left Start Switch Preferred", new GameFeatureSide(
+//        autoChooser.addObject("Break Baseline", new DriveDistance(125, 0.02,0,0));
+//        autoChooser.addObject("Left Start Switch ONLY", new GameFeatureSide(
 //                GameFeature.SWITCH_NEAR,
 //                new LeftSwitchFromLeft(intake, elevator, drivetrain),
-//                new GameFeatureSide(
-//                        GameFeature.SCALE,
-//                        new LeftScaleFromLeft(intake, elevator, drivetrain),
-//                        new BreakBaseline(drivetrain)
-//                )
+//                new BreakBaseline(drivetrain)
 //        ));
-        autoChooser.addObject("Center Switch", new GameFeatureSide(
-                GameFeature.SWITCH_NEAR,
-                new LeftSwitchFromCenter(intake, elevator, drivetrain),
-                new RightSwitchFromCenter(intake, elevator, drivetrain)
-        ));
-        autoChooser.addObject("Center Switch Double", new GameFeatureSide(
-                GameFeature.SWITCH_NEAR,
-                new DoubleLeftSwitchFromCenter(intake, elevator, drivetrain),
-                new DoubleRightSwitchFromCenter(intake, elevator, drivetrain)
-        ));
-        autoChooser.addObject("Right Start Switch ONLY", new GameFeatureSide(
-                GameFeature.SWITCH_NEAR,
-                new BreakBaseline(drivetrain),
-                new RightSwitchFromRight(intake, elevator, drivetrain)
-        ));
-//        autoChooser.addObject("Right Start Scale Preferred", new GameFeatureSide(
-//                GameFeature.SCALE,
-//                new GameFeatureSide(
-//                        GameFeature.SWITCH_NEAR,
-//                        new BreakBaseline(drivetrain),
-//                        new RightSwitchFromRight(intake, elevator, drivetrain)
-//                ),
-//                new RightScaleFromRight(intake, elevator, drivetrain)
-//        ));
-//        autoChooser.addObject("Right Start Switch Preferred", new GameFeatureSide(
+////        autoChooser.addObject("Left Start Scale Preferred", new GameFeatureSide(
+////                GameFeature.SCALE,
+////                new LeftScaleFromLeft(intake, elevator, drivetrain),
+////                new GameFeatureSide(
+////                        GameFeature.SWITCH_NEAR,
+////                        new LeftSwitchFromLeft(intake, elevator, drivetrain),
+////                        new BreakBaseline(drivetrain)
+////                )
+////        ));
+////        autoChooser.addObject("Left Start Switch Preferred", new GameFeatureSide(
+////                GameFeature.SWITCH_NEAR,
+////                new LeftSwitchFromLeft(intake, elevator, drivetrain),
+////                new GameFeatureSide(
+////                        GameFeature.SCALE,
+////                        new LeftScaleFromLeft(intake, elevator, drivetrain),
+////                        new BreakBaseline(drivetrain)
+////                )
+////        ));
+//        autoChooser.addObject("Center Switch", new GameFeatureSide(
 //                GameFeature.SWITCH_NEAR,
-//                new GameFeatureSide(
-//                        GameFeature.SCALE,
-//                        new BreakBaseline(drivetrain),
-//                        new RightScaleFromRight(intake, elevator, drivetrain)
-//                ),
+//                new LeftSwitchFromCenter(intake, elevator, drivetrain),
+//                new RightSwitchFromCenter(intake, elevator, drivetrain)
+//        ));
+//        autoChooser.addObject("Center Switch Double", new GameFeatureSide(
+//                GameFeature.SWITCH_NEAR,
+//                new DoubleLeftSwitchFromCenter(intake, elevator, drivetrain),
+//                new DoubleRightSwitchFromCenter(intake, elevator, drivetrain)
+//        ));
+//        autoChooser.addObject("Right Start Switch ONLY", new GameFeatureSide(
+//                GameFeature.SWITCH_NEAR,
+//                new BreakBaseline(drivetrain),
 //                new RightSwitchFromRight(intake, elevator, drivetrain)
 //        ));
-//        autoChooser.addObject("DEBUG: Drive Straight", drivetrain.driveDistance(6));
-//        autoChooser.addObject("DEBUG: Drive Rotate", drivetrain.driveRotation(90));
-//        autoChooser.addObject("DEBUG: Base Line", new DriveDistance(-12,0.02,0,0));
-//        autoChooser.addObject("DEBUG: Right", new RightSwitchFromCenter(125, 0.02,0,0));
+////        autoChooser.addObject("Right Start Scale Preferred", new GameFeatureSide(
+////                GameFeature.SCALE,
+////                new GameFeatureSide(
+////                        GameFeature.SWITCH_NEAR,
+////                        new BreakBaseline(drivetrain),
+////                        new RightSwitchFromRight(intake, elevator, drivetrain)
+////                ),
+////                new RightScaleFromRight(intake, elevator, drivetrain)
+////        ));
+////        autoChooser.addObject("Right Start Switch Preferred", new GameFeatureSide(
+////                GameFeature.SWITCH_NEAR,
+////                new GameFeatureSide(
+////                        GameFeature.SCALE,
+////                        new BreakBaseline(drivetrain),
+////                        new RightScaleFromRight(intake, elevator, drivetrain)
+////                ),
+////                new RightSwitchFromRight(intake, elevator, drivetrain)
+////        ));
+////        autoChooser.addObject("DEBUG: Drive Straight", drivetrain.driveDistance(6));
+////        autoChooser.addObject("DEBUG: Drive Rotate", drivetrain.driveRotation(90));
+////        autoChooser.addObject("DEBUG: Base Line", new DriveDistance(-12,0.02,0,0));
+////        autoChooser.addObject("DEBUG: Right", new RightSwitchFromCenter(125, 0.02,0,0));
     }
 
     @Override
     protected void dashboardPeriodic() {
-        super.dashboardPeriodic();
+        //super.dashboardPeriodic();
 
 //        SmartDashboard.putNumber("Left Encoder", Robot.drivetrain.leftSRX.getSelectedSensorPosition());
 //
@@ -252,20 +227,20 @@ public class Robot extends RoboRio {
 //        SmartDashboard.putBoolean("Drivetrain Encoder Override", drivetrain.encoderOverride);
 //        SmartDashboard.putBoolean("Is High Gear?", drivetrain.getGear());
 
-        elevator.encoderOverride = SmartDashboard.getBoolean("Elevator Encoder Override", false);
-        SmartDashboard.putBoolean("Elevator Encoder Override", elevator.encoderOverride);
+        //elevator.encoderOverride = SmartDashboard.getBoolean("Elevator Encoder Override", false);
+        //SmartDashboard.putBoolean("Elevator Encoder Override", elevator.encoderOverride);
     }
 
     @Override
     public void autonomousInit() {
-        super.autonomousInit();
+//        super.autonomousInit();
 
         ((Command) underglowChooser.getSelected()).start();
     }
 
     @Override
     public void robotPeriodic() {
-        // super.robotPeriodic();
+        super.robotPeriodic();
 
         // double elevatorCoefficient = (.03 / 34000);
 
@@ -284,7 +259,6 @@ public class Robot extends RoboRio {
     @Override
     protected void robotEnabled() {
         super.robotEnabled();
-
 //        drivetrain.resetProfiling();
 //        elevator.holdCurrentPosition();
     }

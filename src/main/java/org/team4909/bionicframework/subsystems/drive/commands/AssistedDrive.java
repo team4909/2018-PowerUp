@@ -10,8 +10,8 @@ import org.team4909.bionicframework.operator.controllers.BionicF310;
  public class AssistedDrive extends Commandable {
 
    // Threshold of how far off the target we can be for the drive assisted to work
-  private static double thresh = 0.7;
-  private static double max_offset = 23;
+  private static double thresh = 0.5;
+  private static double max_offset = 30;
 
    public AssistedDrive() {
     requires(Robot.drivetrain);
@@ -28,7 +28,7 @@ import org.team4909.bionicframework.operator.controllers.BionicF310;
     if (Math.abs(Robot.vision.getXOffset()) > thresh
         && Math.abs(Robot.vision.getXOffset()) < max_offset) {
         Robot.drivetrain.driveAssisted(
-        Robot.driverGamepad.getSensitiveAxis(BionicF310.LY), Robot.vision.getXOffset());
+        -Robot.driverGamepad.getSensitiveAxis(BionicF310.LY), Robot.vision.getXOffset());
         SmartDashboard.putNumber("Block", 1);
 
      } else if (Math.abs(Robot.vision.getXOffset()) > max_offset) {
